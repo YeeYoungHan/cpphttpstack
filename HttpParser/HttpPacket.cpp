@@ -46,7 +46,7 @@ bool CHttpPacket::AddPacket( const char * pszPacket, int iPacketLen )
 		{
 			int iHeaderLen = pszHeaderEnd + 4 - pszBuf;
 
-			if( m_clsMessage.Parse( pszBuf, iHeaderLen ) != iHeaderLen )
+			if( m_clsMessage.ParseHeader( pszBuf, iHeaderLen ) != iHeaderLen )
 			{
 				return false;
 			}

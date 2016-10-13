@@ -16,7 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "SipPlatformDefine.h"
 #include "HttpPacket.h"
+#include "MemoryDebug.h"
 
 static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody, int iLine )
 {
@@ -119,10 +121,90 @@ static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody,
 	return true;
 }
 
+static bool TestHttpPacketContentLength( const char * pszRecvBody, const char * pszBody, int iLine )
+{
+	char szPacket[1024];
+	int iContentLength = strlen( pszRecvBody );
+	std::string strPacket;
+
+	snprintf( szPacket, sizeof(szPacket), "HTTP/1.1 200 OK\r\n"
+		"Content-Type: application/json; charset=UTF-8\r\n"
+		"Content-Length: %d\r\n"
+		"\r\n"
+		, iContentLength );
+
+	strPacket = szPacket;
+	strPacket.append( pszRecvBody );
+
+	CHttpPacket clsPacket;
+
+	// 하나의 패킷으로 모두 수신된 경우
+	if( clsPacket.AddPacket( strPacket.c_str(), strPacket.length() ) == false )
+	{
+		printf( "%s line(%d) clsPacket.AddPacket error\n", __FUNCTION__, iLine );
+		return false;
+	}
+
+	if( clsPacket.IsCompleted() == false )
+	{
+		printf( "%s line(%d) clsPacket.IsCompleted error\n", __FUNCTION__, iLine );
+		return false;
+	}
+
+	CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+	if( strcmp( pclsMessage->m_strBody.c_str(), pszBody ) )
+	{
+		printf( "%s line(%d) body(%s) != want body(%s)\n", __FUNCTION__, iLine, pclsMessage->m_strBody.c_str(), pszBody );
+		return false;
+	}
+
+	return true;
+}
+
+static bool TestHttpPacketNoContentLength( const char * pszRecvBody, const char * pszBody, int iLine )
+{
+	std::string strPacket;
+
+	strPacket = "HTTP/1.1 200 OK\r\n"
+		"Content-Type: application/json; charset=UTF-8\r\n"
+		"\r\n";
+	strPacket.append( pszRecvBody );
+
+	CHttpPacket clsPacket;
+
+	// 하나의 패킷으로 모두 수신된 경우
+	if( clsPacket.AddPacket( strPacket.c_str(), strPacket.length() ) == false )
+	{
+		printf( "%s line(%d) clsPacket.AddPacket error\n", __FUNCTION__, iLine );
+		return false;
+	}
+
+	if( clsPacket.IsCompleted() == false )
+	{
+		printf( "%s line(%d) clsPacket.IsCompleted error\n", __FUNCTION__, iLine );
+		return false;
+	}
+
+	CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+	if( strcmp( pclsMessage->m_strBody.c_str(), pszBody ) )
+	{
+		printf( "%s line(%d) body(%s) != want body(%s)\n", __FUNCTION__, iLine, pclsMessage->m_strBody.c_str(), pszBody );
+		return false;
+	}
+
+	return true;
+}
+
 bool TestHttpPacket( )
 {
 	if( TestHttpPacketChunk( "4\r\nWiki\r\n5\r\npedia\r\nE\r\n in\r\n\r\nchunks.\r\n0\r\n\r\n"
 				, "Wikipedia in\r\n\r\nchunks.", __LINE__ ) == false ) return false;
+
+	if( TestHttpPacketContentLength( "1234567890", "1234567890", __LINE__ ) == false ) return false;
+
+	if( TestHttpPacketNoContentLength( "1234567890", "1234567890", __LINE__ ) == false ) return false;
 
 	return true;
 }
