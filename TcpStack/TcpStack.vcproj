@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="HttpParser"
-	ProjectGUID="{FDC90DE9-6824-47BE-B089-2B22CF515D7F}"
-	RootNamespace="HttpParser"
+	Name="TcpStack"
+	ProjectGUID="{890E7A34-CA21-498B-B5F2-12665DC54D43}"
+	RootNamespace="TcpStack"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,11 +41,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SipPlatform"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -83,7 +82,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -105,7 +104,6 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../SipPlatform"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -151,23 +149,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\HttpHeader.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpMessage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpPacket.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStatusCode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpUri.cpp"
+				RelativePath=".\TcpStack.cpp"
 				>
 			</File>
 		</Filter>
@@ -177,23 +159,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\HttpHeader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpMessage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpPacket.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStatusCode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpUri.h"
+				RelativePath=".\TcpStack.h"
 				>
 			</File>
 		</Filter>

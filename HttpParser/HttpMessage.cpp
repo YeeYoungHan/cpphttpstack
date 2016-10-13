@@ -333,9 +333,10 @@ CHttpHeader * CHttpMessage::GetHeader( const char * pszName )
  * @brief HTTP 요청 메시지에 기본적으로 입력되어야 할 내용을 추가한다.
  * @param pszMethod HTTP 메소드
  * @param pclsUri		HTTP URI
+ * @param pszUserAgent	HTTP User Agent 헤더에 저장될 문자열
  * @returns true 를 리턴한다.
  */
-bool CHttpMessage::SetRequest( const char * pszMethod, CHttpUri * pclsUri )
+bool CHttpMessage::SetRequest( const char * pszMethod, CHttpUri * pclsUri, const char * pszUserAgent )
 {
 	m_strHttpMethod = pszMethod;
 
@@ -361,7 +362,11 @@ bool CHttpMessage::SetRequest( const char * pszMethod, CHttpUri * pclsUri )
 	}
 
 	AddHeader( "Host", strHost.c_str() );
-	//AddHeader( "User-Agent", HTTP_CLIENT_API_USER_AGENT );
+
+	if( pszUserAgent && strlen(pszUserAgent) > 0 )
+	{
+		AddHeader( "User-Agent", pszUserAgent );
+	}
 
 	return true;
 }

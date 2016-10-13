@@ -29,8 +29,9 @@
 #define _CRTDBG_MAP_ALLOC
 
 #include <stdlib.h>
-#include <crtdbg.h>
 #endif
+
+#include <crtdbg.h>
 
 #define snprintf		_snprintf
 #define strcasecmp	_stricmp

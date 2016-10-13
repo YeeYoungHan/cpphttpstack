@@ -76,7 +76,7 @@ public:
 	
 	CHttpHeader * GetHeader( const char * pszName );
 
-	bool SetRequest( const char * pszMethod, CHttpUri * pclsUri );
+	bool SetRequest( const char * pszMethod, CHttpUri * pclsUri, const char * pszUserAgent = NULL );
 
 private:
 	int ParseStatusLine( const char * pszText, int iTextLen );
