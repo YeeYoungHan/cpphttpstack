@@ -21,6 +21,10 @@
 
 #include "HttpMessage.h"
 
+/**
+ * @ingroup HttpParser
+ * @brief HTTP 프로토콜 파싱 단계
+ */
 enum EHttpPacketStatus
 {
 	H_HPS_HEADER = 0,
@@ -30,7 +34,7 @@ enum EHttpPacketStatus
 
 /**
  * @ingroup HttpParser
- * @brief 수신된 HTTP 프로토콜 패킷을 저장한다.
+ * @brief 수신된 HTTP 프로토콜 패킷을 저장하고 파싱하는 클래스
  */
 class CHttpPacket
 {

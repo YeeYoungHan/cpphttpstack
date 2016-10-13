@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include "MemoryDebug.h"
 
-CHttpMessage::CHttpMessage() : m_iStatusCode(-1), m_iContentLength(0), m_bChunked(false)
+CHttpMessage::CHttpMessage() : m_iStatusCode(-1), m_iContentLength(-1), m_bChunked(false)
 {
 }
 
@@ -39,58 +39,10 @@ CHttpMessage::~CHttpMessage()
  */
 int CHttpMessage::Parse( const char * pszText, int iTextLen )
 {
-	if( pszText == NULL || iTextLen <= 4 ) return -1;
+	int iCurPos;
 
-	Clear();
-
-	int iPos, iCurPos, iNameLen;
-	const char * pszName, * pszValue;
-	CHttpHeader	clsHeader;
-
-	if( !strncmp( pszText, "HTTP/", 4 ) )
-	{
-		iCurPos = ParseStatusLine( pszText, iTextLen );
-	}
-	else
-	{
-		iCurPos = ParseRequestLine( pszText, iTextLen );
-	}
-
+	iCurPos = ParseHeader( pszText, iTextLen );
 	if( iCurPos == -1 ) return -1;
-
-	while( iCurPos < iTextLen )
-	{
-		iPos = clsHeader.Parse( pszText + iCurPos, iTextLen - iCurPos );
-		if( iPos == -1 ) return -1;
-		iCurPos += iPos;
-
-		iNameLen = (int)clsHeader.m_strName.length();
-		if( iNameLen == 0 ) break;
-
-		pszName = clsHeader.m_strName.c_str();
-		pszValue = clsHeader.m_strValue.c_str();
-
-		if( !strcasecmp( pszName, "Content-Type" ) )
-		{
-			m_strContentType = pszValue;
-		}
-		else if( !strcasecmp( pszName, "Content-Length" ) )
-		{
-			m_iContentLength = atoi( pszValue );
-		}
-		else
-		{
-			if( !strcasecmp( pszName, "transfer-encoding" ) )
-			{
-				if( strstr( pszValue, "chunked" ) )
-				{
-					m_bChunked = true;
-				}
-			}
-
-			m_clsHeaderList.push_back( clsHeader );
-		}
-	}
 
 	if( m_iContentLength > 0 )
 	{
@@ -99,7 +51,7 @@ int CHttpMessage::Parse( const char * pszText, int iTextLen )
 		m_strBody.append( pszText + iCurPos, m_iContentLength );
 		return iTextLen;
 	}
-	else if( iTextLen - iCurPos > 0 )
+	else if( m_iContentLength == -1 && iTextLen - iCurPos > 0 )
 	{
 		m_strBody.append( pszText + iCurPos );
 		return iTextLen;
@@ -185,7 +137,7 @@ void CHttpMessage::Clear()
 	m_iStatusCode = -1;
 	m_strReasonPhrase.clear();
 	m_strContentType.clear();
-	m_iContentLength = 0;
+	m_iContentLength = -1;
 	m_clsHeaderList.clear();
 	m_strBody.clear();
 }
@@ -225,6 +177,7 @@ int CHttpMessage::ToString( char * pszText, int iTextSize )
 		iLen += snprintf( pszText + iLen, iTextSize - iLen, "Content-Type: %s\r\n", m_strContentType.c_str() );
 	}
 
+	m_iContentLength = m_strBody.length();
 	iLen += snprintf( pszText + iLen, iTextSize - iLen, "Content-Length: %d\r\n", m_iContentLength );
 
 	for( HTTP_HEADER_LIST::iterator itList = m_clsHeaderList.begin(); itList != m_clsHeaderList.end(); ++itList )
