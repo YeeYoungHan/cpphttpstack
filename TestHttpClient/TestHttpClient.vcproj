@@ -175,7 +175,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\TestHttpClient.cpp"
+				RelativePath=".\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestHttpClientGet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestHttpClientSoap.cpp"
 				>
 			</File>
 		</Filter>
