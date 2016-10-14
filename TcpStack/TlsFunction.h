@@ -16,39 +16,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TCP_STACK_H_
-#define _TCP_STACK_H_
+#ifndef _TLS_FUNCTION_H_
+#define _TLS_FUNCTION_H_
 
-#include "TcpThreadList.h"
-#include "TcpStackSetup.h"
-#include "TcpClientMap.h"
-#include "TcpStackCallBack.h"
-#include "TcpStackSetup.h"
+#include "SipTcp.h"
+#include "openssl/rsa.h"
+#include "openssl/crypto.h"
+#include "openssl/x509.h"
+#include "openssl/pem.h"
+#include "openssl/ssl.h"
+#include "openssl/err.h"
 
-/**
- * @ingroup TcpStack
- * @brief TCP listen / connect 및 수신/전송 클래스
- */
-class CTcpStack
-{
-public:
-	CTcpStack();
-	~CTcpStack();
+bool SSLServerStart( const char * szCertFile, const char * szCaCertFile );
+bool SSLServerStop( );
+void SSLFinal();
 
-	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
-	bool Stop( );
+bool SSLClientStart( );
+bool SSLClientStop( );
 
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
-	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
+bool SSLConnect( Socket iFd, SSL ** ppsttSsl );
+bool SSLAccept( Socket iFd, SSL ** ppsttSsl, bool bCheckClientCert, int iVerifyDepth, int iAcceptTimeout );
+int SSLSend( SSL * ssl, const char * szBuf, int iBufLen );
+int SSLRecv( SSL * ssl, char * szBuf, int iBufLen );
+bool SSLClose( SSL * ssl );
 
-	CTcpStackSetup m_clsSetup;
-	CTcpThreadList	m_clsThreadList;
-	CTcpClientMap		m_clsClientMap;
-
-	ITcpStackCallBack * m_pclsCallBack;
-
-	Socket m_hTcpListenFd;
-	bool m_bStop;
-};
+void SSLPrintLogServerCipherList( );
+void SSLPrintLogClientCipherList( );
 
 #endif

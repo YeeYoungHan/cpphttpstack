@@ -17,6 +17,11 @@
  */
 
 #include "TcpStack.h"
+#include "ServerUtility.h"
+#include "Log.h"
+#include "MemoryDebug.h"
+
+THREAD_API TcpListenThread( LPVOID lpParameter );
 
 CTcpStack::CTcpStack()
 {
@@ -24,4 +29,116 @@ CTcpStack::CTcpStack()
 
 CTcpStack::~CTcpStack()
 {
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief TCP stack 을 시작한다.
+ * @param pclsSetup			TCP stack 설정
+ * @param pclsCallBack	TCP stack callback
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack )
+{
+	if( pclsSetup == NULL || pclsCallBack == NULL ) return false;
+
+	m_clsSetup = *pclsSetup;
+	m_pclsCallBack = pclsCallBack;
+	m_clsClientMap.Create( this );
+
+	if( pclsSetup->m_iListenPort > 0 )
+	{
+		if( pclsSetup->m_bUseTls )
+		{
+			if( SSLServerStart( pclsSetup->m_strCertFile.c_str(), pclsSetup->m_strCertFile.c_str() ) == false )
+			{
+				CLog::Print( LOG_ERROR, "SSLServerStart error" );
+				return false;
+			}
+		}
+
+		m_hTcpListenFd = TcpListen( pclsSetup->m_iListenPort, 255 );
+		if( m_hTcpListenFd == INVALID_SOCKET )
+		{
+			CLog::Print( LOG_ERROR, "TcpListen(%d) error(%d)", pclsSetup->m_iListenPort, GetError() );
+			return false;
+		}
+
+		if( StartThread( "TcpListenThread", TcpListenThread, this ) == false )
+		{
+			Stop();
+			return false;
+		}
+	}
+	else if( pclsSetup->m_bUseTls )
+	{
+		SSLClientStart();
+	}
+
+	if( m_clsThreadList.Create( this ) == false )
+	{
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief TCP stack 을 중지한다.
+ * @returns true 를 리턴한다.
+ */
+bool CTcpStack::Stop( )
+{
+	m_bStop = true;
+
+	if( m_clsSetup.m_bUseTls )
+	{
+		if( m_clsSetup.m_iListenPort > 0 )
+		{
+			SSLServerStop();
+		}
+		else
+		{
+			SSLClientStop();
+		}
+	}
+
+	m_clsThreadList.Destroy();
+
+	if( m_hTcpListenFd != INVALID_SOCKET )
+	{
+		closesocket( m_hTcpListenFd );
+		m_hTcpListenFd = INVALID_SOCKET;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief TCP 패킷을 전송한다.
+ * @param pszIp				IP 주소
+ * @param iPort				포트 번호
+ * @param pszPacket		패킷
+ * @param iPacketLen	패킷 길이
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen )
+{
+	return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief TCP 패킷을 전송한다.
+ * @param iThreadIndex	TCP 쓰레드 번호
+ * @param iSessionIndex TCP 세션 번호
+ * @param pszPacket			패킷
+ * @param iPacketLen		패킷 길이
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
+{
+	return m_clsThreadList.Send( iThreadIndex, iSessionIndex, pszPacket, iPacketLen );
 }

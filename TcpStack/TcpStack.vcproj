@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -104,6 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -149,7 +151,39 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\TcpClientMap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpClientThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpListenThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpSessionList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TcpStack.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpStackSetup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpThreadList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TlsFunction.cpp"
 				>
 			</File>
 		</Filter>
@@ -159,7 +193,31 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\TcpClientMap.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpSessionList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TcpStack.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpStackCallBack.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpStackSetup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpThreadList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TlsFunction.h"
 				>
 			</File>
 		</Filter>

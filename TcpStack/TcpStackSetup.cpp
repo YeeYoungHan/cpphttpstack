@@ -16,39 +16,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TCP_STACK_H_
-#define _TCP_STACK_H_
-
-#include "TcpThreadList.h"
+#include "SipPlatformDefine.h"
 #include "TcpStackSetup.h"
-#include "TcpClientMap.h"
-#include "TcpStackCallBack.h"
-#include "TcpStackSetup.h"
+#include "MemoryDebug.h"
 
-/**
- * @ingroup TcpStack
- * @brief TCP listen / connect 및 수신/전송 클래스
- */
-class CTcpStack
+CTcpStackSetup::CTcpStackSetup() : m_iListenPort(0)
+	, m_iThreadInitCount(1), m_iThreadMaxCount(10), m_iMaxSocketPerThread(10)
+	, m_iTcpRecvTimeout(3600), m_iTcpNoPacketTimeout(10), m_iTcpConnectTimeout(10)
+	, m_bUseTls(false)
 {
-public:
-	CTcpStack();
-	~CTcpStack();
+}
 
-	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
-	bool Stop( );
-
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
-	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
-
-	CTcpStackSetup m_clsSetup;
-	CTcpThreadList	m_clsThreadList;
-	CTcpClientMap		m_clsClientMap;
-
-	ITcpStackCallBack * m_pclsCallBack;
-
-	Socket m_hTcpListenFd;
-	bool m_bStop;
-};
-
-#endif
+CTcpStackSetup::~CTcpStackSetup()
+{
+}

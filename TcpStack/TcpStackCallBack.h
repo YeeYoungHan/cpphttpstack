@@ -16,39 +16,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TCP_STACK_H_
-#define _TCP_STACK_H_
+#ifndef _TCP_STACK_CALLBACK_H_
+#define _TCP_STACK_CALLBACK_H_
 
-#include "TcpThreadList.h"
-#include "TcpStackSetup.h"
-#include "TcpClientMap.h"
-#include "TcpStackCallBack.h"
-#include "TcpStackSetup.h"
+#include "TcpSessionList.h"
 
 /**
  * @ingroup TcpStack
- * @brief TCP listen / connect 및 수신/전송 클래스
+ * @brief CTcpStack 을 사용하는 응용 callback 인터페이스
  */
-class CTcpStack
+class ITcpStackCallBack
 {
 public:
-	CTcpStack();
-	~CTcpStack();
+	virtual ~ITcpStackCallBack(){};
 
-	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
-	bool Stop( );
+	/**
+	 * @brief TCP 서버로 클라이언트가 연결된 경우 호출된다.
+	 * @param pclsSessionInfo 세션 정보
+	 */
+	virtual bool InComingConnected( CTcpSessionInfo * pclsSessionInfo ) = 0;
+	virtual void SessionClosed( CTcpSessionInfo * pclsSessionInfo ) = 0;
 
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
-	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
-
-	CTcpStackSetup m_clsSetup;
-	CTcpThreadList	m_clsThreadList;
-	CTcpClientMap		m_clsClientMap;
-
-	ITcpStackCallBack * m_pclsCallBack;
-
-	Socket m_hTcpListenFd;
-	bool m_bStop;
+	virtual bool RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo ) = 0;
 };
 
 #endif

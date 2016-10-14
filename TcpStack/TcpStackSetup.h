@@ -16,39 +16,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TCP_STACK_H_
-#define _TCP_STACK_H_
+#ifndef _TCP_STACK_SETUP_H_
+#define _TCP_STACK_SETUP_H_
 
-#include "TcpThreadList.h"
-#include "TcpStackSetup.h"
-#include "TcpClientMap.h"
-#include "TcpStackCallBack.h"
-#include "TcpStackSetup.h"
+#include <string>
 
 /**
  * @ingroup TcpStack
- * @brief TCP listen / connect 및 수신/전송 클래스
+ * @brief TCP stack 설정
  */
-class CTcpStack
+class CTcpStackSetup
 {
 public:
-	CTcpStack();
-	~CTcpStack();
+	CTcpStackSetup();
+	~CTcpStackSetup();
 
-	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
-	bool Stop( );
+	/** TCP listen 포트 번호 - TCP listen 하지 않는 경우에는 설정하지 않으면 된다. */
+	int m_iListenPort;
 
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
-	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
+	/** 최초 실행 Thread 개수 */
+	int m_iThreadInitCount;
 
-	CTcpStackSetup m_clsSetup;
-	CTcpThreadList	m_clsThreadList;
-	CTcpClientMap		m_clsClientMap;
+	/** 최대 실행 Thread 개수 */
+	int m_iThreadMaxCount;
 
-	ITcpStackCallBack * m_pclsCallBack;
+	/** 하나의 Thread 에서 사용할 수 있는 최대 소켓 개수 */
+	int m_iMaxSocketPerThread;
 
-	Socket m_hTcpListenFd;
-	bool m_bStop;
+	/** TCP 수신 timeout */
+	int m_iTcpRecvTimeout;
+
+	/** TCP 연결 후, 최초 패킷이 수신되지 않은 경우의 timeout */
+	int m_iTcpNoPacketTimeout;
+
+	/** TCP 연결 timeout */
+	int m_iTcpConnectTimeout;
+
+	/** TLS 를 사용하는가? */
+	bool m_bUseTls;
+
+	/** TLS 서버를 위한 개인키/인증서 PEM 저장 파일 이름 ( full path ) */
+	std::string m_strCertFile;
 };
 
 #endif
