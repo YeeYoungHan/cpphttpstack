@@ -262,6 +262,23 @@ bool CHttpMessage::UpdateHeader( const char * pszName, const char * pszValue )
 
 /**
  * @ingroup HttpParser
+ * @brief HTTP 헤더 자료구조에서 이름을 검색한 후, 해당 헤더가 존재하면 값을 수정하고 존재하지 않으면 새로 추가한다.
+ * @param pszName		HTTP 헤더 이름
+ * @param pszValue	HTTP 헤더 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CHttpMessage::ReplaceHeader( const char * pszName, const char * pszValue )
+{
+	if( UpdateHeader( pszName, pszValue ) == false )
+	{
+		AddHeader( pszName, pszValue );
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup HttpParser
  * @brief 헤더 리스트를 검색하여서 입력된 이름과 일치하는 헤더를 리턴한다.
  * @param pszName 헤더 이름
  * @returns 헤더 리스트에 존재하면 헤더 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
@@ -314,11 +331,11 @@ bool CHttpMessage::SetRequest( const char * pszMethod, CHttpUri * pclsUri, const
 		strHost.append( szPort );
 	}
 
-	AddHeader( "Host", strHost.c_str() );
+	ReplaceHeader( "Host", strHost.c_str() );
 
 	if( pszUserAgent && strlen(pszUserAgent) > 0 )
 	{
-		AddHeader( "User-Agent", pszUserAgent );
+		ReplaceHeader( "User-Agent", pszUserAgent );
 	}
 
 	return true;

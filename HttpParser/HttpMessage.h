@@ -43,6 +43,7 @@ public:
 	bool AddHeader( const char * pszName, int iValue );
 
 	bool UpdateHeader( const char * pszName, const char * pszValue );
+	bool ReplaceHeader( const char * pszName, const char * pszValue );
 	
 	CHttpHeader * GetHeader( const char * pszName );
 

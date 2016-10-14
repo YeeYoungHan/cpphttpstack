@@ -28,6 +28,10 @@
 
 #include "MemoryDebug.h"
 
+#ifdef WIN32
+#pragma comment( lib, "ws2_32" )
+#endif
+
 /** 
  * @ingroup SipPlatform
  * @brief		UDP 家南阑 积己茄促.

@@ -20,6 +20,10 @@
 #include "SipTcp.h"
 #include "MemoryDebug.h"
 
+#ifdef WIN32
+#pragma comment( lib, "ws2_32" )
+#endif
+
 #ifndef WIN32
 #include <ctype.h>
 

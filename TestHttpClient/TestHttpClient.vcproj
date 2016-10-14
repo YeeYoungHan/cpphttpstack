@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="TcpStack"
-	ProjectGUID="{890E7A34-CA21-498B-B5F2-12665DC54D43}"
-	RootNamespace="TcpStack"
+	Name="TestHttpClient"
+	ProjectGUID="{B8286312-90CB-4B78-8466-FA28195B6FFD}"
+	RootNamespace="TestHttpClient"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SipPlatform;../openssl/window/32bit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../SipPlatform"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -60,10 +60,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,6 +83,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -82,7 +93,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -105,8 +116,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../SipPlatform;../openssl/window/32bit/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../SipPlatform"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -123,10 +134,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,6 +156,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -151,80 +174,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\TcpClientMap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpClientThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpListenThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpSessionList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpStack.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpStackSetup.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpThreadList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TlsFunction.cpp"
+				RelativePath=".\TestHttpClient.cpp"
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="헤더 파일"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\TcpClientMap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpSessionList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpStack.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpStackCallBack.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpStackSetup.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpThreadList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TlsFunction.h"
-				>
-			</File>
-		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
