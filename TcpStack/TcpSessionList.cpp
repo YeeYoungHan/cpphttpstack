@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpThreadList.h"
+#include "StringUtility.h"
 #include "Log.h"
 #include <time.h>
 #include "MemoryDebug.h"
@@ -104,20 +105,27 @@ void CTcpSessionInfo::Log( const char * pszPacket, int iPacketLen, bool bSend )
 		}
 	}
 
-	char szBuf[250];
-	int iBufLen = sizeof(szBuf) - 1;
-
-	memset( szBuf, 0, sizeof(szBuf) );
-
-	iBufLen /= 2;
-	if( iBufLen > iPacketLen ) iBufLen = iPacketLen;
-
-	for( int i = 0; i < iBufLen; ++i )
+	if( iPacketLen >= 10 && IsPrintString( pszPacket, 10 ) )
 	{
-		sprintf( szBuf + i * 2, "%02X", ( pszPacket[i] & 0xFF ) );
+		CLog::Print( LOG_NETWORK, "%s(%s:%d) [%s] (%d)", pszFunction, m_strIp.c_str(), m_iPort, pszPacket, iPacketLen );
 	}
+	else
+	{
+		char szBuf[250];
+		int iBufLen = sizeof(szBuf) - 1;
 
-	CLog::Print( LOG_NETWORK, "%s(%s:%d) [%s] (%d)", pszFunction, m_strIp.c_str(), m_iPort, szBuf, iPacketLen );
+		memset( szBuf, 0, sizeof(szBuf) );
+
+		iBufLen /= 2;
+		if( iBufLen > iPacketLen ) iBufLen = iPacketLen;
+
+		for( int i = 0; i < iBufLen; ++i )
+		{
+			sprintf( szBuf + i * 2, "%02X", ( pszPacket[i] & 0xFF ) );
+		}
+
+		CLog::Print( LOG_NETWORK, "%s(%s:%d) [%s] (%d)", pszFunction, m_strIp.c_str(), m_iPort, szBuf, iPacketLen );
+	}
 }
 
 /**
