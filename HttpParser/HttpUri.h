@@ -31,14 +31,20 @@ public:
 	CHttpUri();
 	~CHttpUri();
 
-	std::string m_strProtocol;
-	std::string m_strHost;
-	int					m_iPort;
-
-	std::string m_strPath;
-
 	int Parse( const char * pszText, int iTextLen );
 	void Clear();
+
+	/** 프로토콜 */
+	std::string m_strProtocol;
+
+	/** 호스트 도메인 또는 IP 주소 */
+	std::string m_strHost;
+
+	/** 포트 번호 */
+	int					m_iPort;
+
+	/** 경로 */
+	std::string m_strPath;
 };
 
 #endif

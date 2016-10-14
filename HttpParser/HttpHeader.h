@@ -32,15 +32,15 @@ public:
 	CHttpHeader();
 	~CHttpHeader();
 
+	int Parse( const char * pszText, int iTextLen );
+	int ToString( char * pszText, int iTextSize );
+	void Clear();
+
 	/** ÀÌ¸§ */
 	std::string	m_strName;
 
 	/** °ª */
 	std::string	m_strValue;
-
-	int Parse( const char * pszText, int iTextLen );
-	int ToString( char * pszText, int iTextSize );
-	void Clear();
 };
 
 typedef std::list< CHttpHeader > HTTP_HEADER_LIST;

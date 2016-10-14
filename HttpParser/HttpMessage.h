@@ -34,6 +34,20 @@ public:
 	CHttpMessage();
 	~CHttpMessage();
 
+	int Parse( const char * pszText, int iTextLen );
+	int ParseHeader( const char * pszText, int iTextLen );
+	int ToString( char * pszText, int iTextSize );
+	void Clear();
+
+	bool AddHeader( const char * pszName, const char * pszValue );
+	bool AddHeader( const char * pszName, int iValue );
+
+	bool UpdateHeader( const char * pszName, const char * pszValue );
+	
+	CHttpHeader * GetHeader( const char * pszName );
+
+	bool SetRequest( const char * pszMethod, CHttpUri * pclsUri, const char * pszUserAgent = NULL );
+
 	/** HTTP ¸Þ¼Òµå ( GET, POST ) */
 	std::string		m_strHttpMethod;
 
@@ -63,20 +77,6 @@ public:
 
 	/** HTTP body */
 	std::string			m_strBody;
-
-	int Parse( const char * pszText, int iTextLen );
-	int ParseHeader( const char * pszText, int iTextLen );
-	int ToString( char * pszText, int iTextSize );
-	void Clear();
-
-	bool AddHeader( const char * pszName, const char * pszValue );
-	bool AddHeader( const char * pszName, int iValue );
-
-	bool UpdateHeader( const char * pszName, const char * pszValue );
-	
-	CHttpHeader * GetHeader( const char * pszName );
-
-	bool SetRequest( const char * pszMethod, CHttpUri * pclsUri, const char * pszUserAgent = NULL );
 
 private:
 	int ParseStatusLine( const char * pszText, int iTextLen );
