@@ -211,10 +211,7 @@ bool CHttpMessage::AddHeader( const char * pszName, const char * pszValue )
 {
 	if( pszName == NULL || pszValue == NULL ) return false;
 
-	CHttpHeader clsHeader;
-
-	clsHeader.m_strName = pszName;
-	clsHeader.m_strValue = pszValue;
+	CHttpHeader clsHeader( pszName, pszValue );
 
 	m_clsHeaderList.push_back( clsHeader );
 

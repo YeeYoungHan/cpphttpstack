@@ -30,10 +30,13 @@ class CHttpHeader
 {
 public:
 	CHttpHeader();
+	CHttpHeader( const char * pszName, const char * pszValue );
 	~CHttpHeader();
 
 	int Parse( const char * pszText, int iTextLen );
 	int ToString( char * pszText, int iTextSize );
+
+	void Set( const char * pszName, const char * pszValue );
 	void Clear();
 
 	/** ¿Ã∏ß */

@@ -78,6 +78,106 @@ bool CHttpClient::DoGet( const char * pszUrl, std::string & strOutputContentType
 
 /**
  * @ingroup HttpStack
+ * @brief	HTTP POST 명령을 실행한다.
+ * @param pszUrl								HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pszInputContentType		전송 Content-Type
+ * @param pszInputBody					전송 body
+ * @param strOutputContentType	수신 Content-Type
+ * @param strOutputBody					수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoPost( const char * pszUrl, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
+}
+
+/**
+ * @ingroup HttpStack
+ * @brief	HTTP POST 명령을 실행한다.
+ * @param pszUrl								HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pclsHeaderList				전송 헤더에 포함될 헤더 항목 리스트
+ * @param pszInputContentType		전송 Content-Type
+ * @param pszInputBody					전송 body
+ * @param strOutputContentType	수신 Content-Type
+ * @param strOutputBody					수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	strOutputContentType.clear();
+	strOutputBody.clear();
+
+	if( pszUrl == NULL || pszInputContentType == NULL || pszInputBody == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s pszUrl or input content type or input body is null", __FUNCTION__ );
+		return false;
+	}
+
+	CHttpUri clsUri;
+	int iUrlLen = strlen( pszUrl );
+	int iContentLength = strlen( pszInputBody );
+
+	if( iContentLength <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s pszInputBody's length(%d) error", __FUNCTION__, iContentLength );
+		return false;
+	}
+
+	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
+	{
+		CLog::Print( LOG_ERROR, "%s clsUri.Parse(%s) error", __FUNCTION__, pszUrl );
+		return false;
+	}
+
+	CHttpMessage clsRequest;
+	CHttpPacket clsPacket;
+
+	clsRequest.SetRequest( "POST", &clsUri );
+	clsRequest.m_strContentType = pszInputContentType;
+	clsRequest.m_iContentLength = iContentLength;
+	clsRequest.m_strBody = pszInputBody;
+
+	if( pclsHeaderList )
+	{
+		clsRequest.m_clsHeaderList.insert( clsRequest.m_clsHeaderList.end(), pclsHeaderList->begin(), pclsHeaderList->end() );
+	}
+
+	if( Execute( &clsUri, &clsRequest, &clsPacket ) )
+	{
+		CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+		strOutputContentType = pclsMessage->m_strContentType;
+		strOutputBody = pclsMessage->m_strBody;
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HttpClientApi
+ * @brief HTTP POST 기반으로 SOAP 명령을 실행한다.
+ * @param pszUrl				HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pszSoapAction HTTP SOAPAction 헤더에 저장될 문자열 (예:http://ws.cdyne.com/WeatherWS/GetWeatherInformation)
+ * @param pszInputBody	전송 body
+ * @param strOutputBody 수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputBody, std::string & strOutputBody )
+{
+	strOutputBody.clear();
+
+	HTTP_HEADER_LIST clsHeaderList;
+	CHttpHeader clsHeader( "SOAPAction", pszSoapAction );
+	std::string strOutputContentType;
+
+	clsHeaderList.push_back( clsHeader );
+
+	return DoPost( pszUrl, &clsHeaderList, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
+}
+
+/**
+ * @ingroup HttpStack
  * @brief HTTP 응답 메시지 수신 timeout 시간을 설정한다.
  * @param iRecvTimeout HTTP 응답 메시지 수신 timeout 시간 (초단위)
  */
