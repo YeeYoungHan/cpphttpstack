@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestHttpClientPost.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestHttpClientSoap.cpp"
 				>
 			</File>

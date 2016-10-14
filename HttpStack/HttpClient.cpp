@@ -25,6 +25,7 @@
 
 CHttpClient::CHttpClient() : m_iRecvTimeout(10)
 {
+	InitNetwork();
 }
 
 CHttpClient::~CHttpClient()

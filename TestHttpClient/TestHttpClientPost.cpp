@@ -21,26 +21,32 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
-int TestHttpClientGet( int argc, char * argv[] )
+int TestHttpClientPost( int argc, char * argv[] )
 {
-	std::string strUrl, strBodyType, strBody;
+	std::string strSendBody, strRecvBodyType, strRecvBody;
 	CHttpClient clsClient;
-
-	if( argc >= 3 )
-	{
-		strUrl = argv[2];
-	}
+	HTTP_HEADER_LIST clsHeaderList;
+	CHttpHeader clsHeader( "SOAPAction", "http://www.webserviceX.NET/GetWeather" );
 
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
-	if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
+	strSendBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://www.webserviceX.NET\">"
+   "<soapenv:Header/>"
+   "<soapenv:Body>"
+      "<web:GetWeather>"
+         "<web:CityName>seoul</web:CityName>"
+         "<web:CountryName>kr</web:CountryName>"
+      "</web:GetWeather>"
+   "</soapenv:Body>"
+	 "</soapenv:Envelope>";
+
+	if( clsClient.DoPost( "http://www.webserviceX.NET/globalweather.asmx", &clsHeaderList, "text/xml;charset=UTF-8", strSendBody.c_str(), strRecvBodyType, strRecvBody ) )
 	{
-		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), strBody.length() );
-		printf( "%s", strBody.c_str() );
+		printf( "[%s]\n", strRecvBody.c_str() );
 	}
 	else
 	{
-		printf( "clsClient.DoGet error\n" );
+		printf( "clsClient.DoSoap error\n" );
 	}
 
 	return 0;

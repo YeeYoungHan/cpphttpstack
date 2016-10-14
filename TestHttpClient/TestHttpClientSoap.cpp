@@ -26,12 +26,6 @@ int TestHttpClientSoap( int argc, char * argv[] )
 	std::string strSendBody, strRecvBody;
 	CHttpClient clsClient;
 
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	InitNetwork();
-
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
 	strSendBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://www.webserviceX.NET\">"

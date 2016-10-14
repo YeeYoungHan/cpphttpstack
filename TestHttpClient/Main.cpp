@@ -22,6 +22,7 @@
 #include "MemoryDebug.h"
 
 int TestHttpClientGet( int argc, char * argv[] );
+int TestHttpClientPost( int argc, char * argv[] );
 int TestHttpClientSoap( int argc, char * argv[] );
 
 int main( int argc, char * argv[] )
@@ -35,6 +36,10 @@ int main( int argc, char * argv[] )
 		if( !strcmp( argv[1], "soap" ) )
 		{
 			TestHttpClientSoap( argc, argv );
+		}
+		else if( !strcmp( argv[1], "post" ) )
+		{
+			TestHttpClientPost( argc, argv );
 		}
 		else
 		{
