@@ -50,7 +50,7 @@ bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallB
 	{
 		if( pclsSetup->m_bUseTls )
 		{
-			if( SSLServerStart( pclsSetup->m_strCertFile.c_str(), pclsSetup->m_strCertFile.c_str() ) == false )
+			if( SSLServerStart( pclsSetup->m_strCertFile.c_str() ) == false )
 			{
 				CLog::Print( LOG_ERROR, "SSLServerStart error" );
 				return false;

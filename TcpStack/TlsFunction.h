@@ -27,7 +27,7 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 
-bool SSLServerStart( const char * szCertFile, const char * szCaCertFile );
+bool SSLServerStart( const char * szCertFile );
 bool SSLServerStop( );
 void SSLFinal();
 

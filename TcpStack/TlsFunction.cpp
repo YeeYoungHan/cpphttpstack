@@ -42,6 +42,7 @@ static SSL_METHOD * gpsttClientMeth;
 
 static bool gbStartSslServer = false;
 static CSipMutex * garrMutex;
+static CSipMutex gclsMutex;
 
 /**
  * @ingroup TcpStack
@@ -134,10 +135,8 @@ static void SSLPrintError( )
  * @param szCaCertFile	CA 인증서 파일
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool SSLServerStart( const char * szCertFile, const char * szCaCertFile )
+bool SSLServerStart( const char * szCertFile )
 {
-	int	n;
-
 	if( szCertFile == NULL ) return false;
 	if( IsExistFile( szCertFile ) == false )
 	{
@@ -145,85 +144,51 @@ bool SSLServerStart( const char * szCertFile, const char * szCaCertFile )
 		return false;
 	}
 
-	if( SSLStart() == false ) return false;
-
-	SSL_load_error_strings();
-	SSLeay_add_ssl_algorithms();
-
-	gpsttServerMeth = TLSv1_server_method();
-	if( (gpsttServerCtx = SSL_CTX_new( gpsttServerMeth )) == NULL )
+	gclsMutex.acquire();
+	if( gbStartSslServer == false )
 	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_new error - server" );
-		return false;
-	}
+		int	n;
 
-	gpsttClientMeth = TLSv1_client_method();
-	if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
-	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
-		return false;
-	}
-
-	if( SSL_CTX_use_certificate_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM) <= 0 )
-	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
-		SSLPrintError( );
-		return false;
-	}
-
-	if( ( n = SSL_CTX_use_PrivateKey_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM)) <= 0 )
-	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d)", n );
-		return false;
-	}
-	
-	if( !SSL_CTX_check_private_key( gpsttServerCtx ) )
-	{
-		CLog::Print( LOG_ERROR, "[SSL] Private key does not match the certificate public key");
-		return false;
-	}
-
-	if( strlen( szCaCertFile ) > 0 )
-	{
-		if( SSL_CTX_load_verify_locations( gpsttServerCtx, szCaCertFile, NULL ) == 0 )
+		if( SSLStart() )
 		{
-			CLog::Print( LOG_ERROR, "[SSL] CaCertFile(%s) load error", szCaCertFile );
-			return false;
-		}
+			SSL_load_error_strings();
+			SSLeay_add_ssl_algorithms();
 
-		//SSL_CTX_set_verify( gpsttServerCtx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL );
-		//SSL_CTX_set_verify_depth( gpsttServerCtx, 1 );
-	}
-
-	SSL_CTX_set_cipher_list( gpsttServerCtx, "ECDHE-ECDSA-AES128-SHA" );
-
-	char szCurve[1024];
-
-	snprintf( szCurve, sizeof(szCurve), "prime256v1" );
-
-	int iId = OBJ_sn2nid( szCurve );
-	if( iId == 0 )
-	{
-		CLog::Print( LOG_ERROR, "OBJ_sn2nid error - ECC curve name(%s) is not found", szCurve );
-	}
-	else
-	{
-		EC_KEY * psttEcKey = EC_KEY_new_by_curve_name( iId );
-		if( psttEcKey == NULL )
-		{
-			CLog::Print( LOG_ERROR, "EC_KEY_new_by_curve_name error" );
-		}
-		else
-		{
-			CLog::Print( LOG_INFO, "TLS curve(%s)", szCurve );
-			SSL_CTX_set_tmp_ecdh( gpsttServerCtx, psttEcKey );
-			EC_KEY_free( psttEcKey );
+			gpsttServerMeth = TLSv1_server_method();
+			if( (gpsttServerCtx = SSL_CTX_new( gpsttServerMeth )) == NULL )
+			{
+				CLog::Print( LOG_ERROR, "SSL_CTX_new error - server" );
+			}
+			else
+			{
+				gpsttClientMeth = TLSv1_client_method();
+				if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
+				{
+					CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
+				}
+				else if( SSL_CTX_use_certificate_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM) <= 0 )
+				{
+					CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
+					SSLPrintError( );
+				}
+				else if( ( n = SSL_CTX_use_PrivateKey_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM)) <= 0 )
+				{
+					CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d)", n );
+				}
+				else if( !SSL_CTX_check_private_key( gpsttServerCtx ) )
+				{
+					CLog::Print( LOG_ERROR, "[SSL] Private key does not match the certificate public key");
+				}
+				else
+				{
+					gbStartSslServer = true;
+				}
+			}
 		}
 	}
+	gclsMutex.release();
 
-	gbStartSslServer = true;
-
-	return true;
+	return gbStartSslServer;
 }
 
 /**
@@ -233,6 +198,7 @@ bool SSLServerStart( const char * szCertFile, const char * szCaCertFile )
  */
 bool SSLServerStop( )
 {
+	gclsMutex.acquire();
 	if( gbStartSslServer )
 	{
 		SSLStop();
@@ -240,6 +206,7 @@ bool SSLServerStop( )
 
 		gbStartSslServer = false;
 	}
+	gclsMutex.release();
 
 	return true;
 }
@@ -251,24 +218,29 @@ bool SSLServerStop( )
  */
 bool SSLClientStart( )
 {
-	if( SSLStart() == false ) return false;
-
-	SSL_load_error_strings();
-	SSLeay_add_ssl_algorithms();
-
-	gpsttClientMeth = TLSv1_client_method();
-
-	if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
+	gclsMutex.acquire();
+	if( gbStartSslServer == false )
 	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
-		return false;
+		if( SSLStart() )
+		{
+			SSL_load_error_strings();
+			SSLeay_add_ssl_algorithms();
+
+			gpsttClientMeth = TLSv1_client_method();
+
+			if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
+			{
+				CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
+			}
+			else
+			{
+				gbStartSslServer = true;
+			}
+		}
 	}
+	gclsMutex.release();
 
-	SSL_CTX_set_cipher_list( gpsttClientCtx, "ECDHE-ECDSA-AES128-SHA" );
-
-	gbStartSslServer = true;
-
-	return true;
+	return gbStartSslServer;
 }
 
 /**
@@ -278,6 +250,7 @@ bool SSLClientStart( )
  */
 bool SSLClientStop( )
 {
+	gclsMutex.acquire();
 	if( gbStartSslServer )
 	{
 		SSLStop();
@@ -285,6 +258,7 @@ bool SSLClientStop( )
 
 		gbStartSslServer = false;
 	}
+	gclsMutex.release();
 
 	return true;
 }
@@ -317,6 +291,8 @@ void SSLFinal()
 bool SSLConnect( Socket iFd, SSL ** ppsttSsl )
 {
 	SSL * psttSsl;
+
+	SSLClientStart( );
 
 	if( (psttSsl = SSL_new(gpsttClientCtx)) == NULL )
 	{
