@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "HttpPacket.h"
+#include <stdlib.h>
 #include "MemoryDebug.h"
 
 static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody, int iLine )
