@@ -340,6 +340,18 @@ bool CHttpMessage::SetRequest( const char * pszMethod, CHttpUri * pclsUri, const
 
 /**
  * @ingroup HttpParser
+ * @brief HTTP 요청 메시지인지 검사한다.
+ * @returns HTTP 요청 메시지이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CHttpMessage::IsRequest( )
+{
+	if( m_strHttpMethod.empty() == false ) return true;
+
+	return false;
+}
+
+/**
+ * @ingroup HttpParser
  * @brief HTTP status line 을 파싱한다.
  * @param pszText		HTTP 헤더의 값을 저장한 문자열
  * @param iTextLen	pszText 문자열의 길이

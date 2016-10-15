@@ -152,7 +152,11 @@ THREAD_API TcpThread( LPVOID lpParameter )
 
 			pclsSessionList->m_pclsSession[iIndex].m_iRecvTime = iTime;
 
-			// QQQ: 수신 패킷에 대한 callback 호출
+			if( pclsStack->m_pclsCallBack->RecvPacket( szPacket, n, &pclsSessionList->m_pclsSession[iIndex] ) == false )
+			{
+				DeleteSession( pclsSessionList, pclsStack, iIndex );
+				continue;
+			}
 		}
 
 LOOP_END:

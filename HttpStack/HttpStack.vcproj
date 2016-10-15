@@ -154,6 +154,10 @@
 				RelativePath=".\HttpClient.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\HttpStack.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -162,6 +166,14 @@
 			>
 			<File
 				RelativePath=".\HttpClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpStack.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpStackCallBack.h"
 				>
 			</File>
 		</Filter>

@@ -31,12 +31,28 @@ public:
 	virtual ~ITcpStackCallBack(){};
 
 	/**
-	 * @brief TCP 서버로 클라이언트가 연결된 경우 호출된다.
+	 * @ingroup TcpStack
+	 * @brief TCP 클라이언트가 연결 이벤트 핸들러
 	 * @param pclsSessionInfo 세션 정보
+	 * @return TCP 클라이언트 연결을 허용하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
 	 */
 	virtual bool InComingConnected( CTcpSessionInfo * pclsSessionInfo ) = 0;
+
+	/**
+	 * @ingroup TcpStack
+	 * @brief TCP 클라이언트 세션이 종료 이벤트 핸들러
+	 * @param pclsSessionInfo 세션 정보
+	 */
 	virtual void SessionClosed( CTcpSessionInfo * pclsSessionInfo ) = 0;
 
+	/**
+	 * @ingroup TcpStack
+	 * @brief TCP 패킷 수신 이벤트 핸들러
+	 * @param pszPacket				수신 패킷
+	 * @param iPacketLen			수신 패킷 길이
+	 * @param pclsSessionInfo 세션 정보
+	 * @returns TCP 세션을 유지하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+	 */
 	virtual bool RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo ) = 0;
 };
 

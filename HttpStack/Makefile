@@ -14,7 +14,7 @@ INC=-I../TcpStack -I../HttpParser -I../SipPlatform
 
 all: libhttpstack.a
 
-LIB_OBJ=HttpClient.o
+LIB_OBJ=HttpClient.o HttpStack.o
 
 libhttpstack.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)

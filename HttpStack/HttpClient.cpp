@@ -204,7 +204,7 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 	SSL * psttSsl = NULL;
 	CHttpMessage * pclsResponse = pclsPacket->GetHttpMessage();
 
-	int iNewBufLen = 8192 + pclsRequest->m_iContentLength;
+	int iNewBufLen = 8192 + pclsRequest->m_strBody.length();
 	pszBuf = (char *)malloc( iNewBufLen );
 	if( pszBuf == NULL )
 	{
