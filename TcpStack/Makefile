@@ -14,7 +14,7 @@ INC=-I../SipPlatform
 
 all: libtcpstack.a
 
-LIB_OBJ=TcpClientMap.o TcpClientThread.o \
+LIB_OBJ=TcpClientMap.o TcpClientThread.o TcpListenThread.o \
 	TcpSessionList.o TcpStack.o TcpStackSetup.o \
 	TcpThread.o TcpThreadList.o TlsFunction.o
 
