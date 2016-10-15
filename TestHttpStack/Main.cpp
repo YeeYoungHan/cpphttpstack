@@ -36,7 +36,10 @@ int main( int argc, char * argv[] )
 	CHttpStack clsStack;
 	CTcpStackSetup clsSetup;
 
+	// HTTP 수신 포트 번호를 설정한다.
 	clsSetup.m_iListenPort = 8080;
+
+	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
 	clsServer.m_strDocumentRoot = argv[1];
 
 	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) != 0 )
@@ -45,6 +48,7 @@ int main( int argc, char * argv[] )
 		return 0;
 	}
 
+	// HTTP 서버를 시작한다. HTTP 요청이 수신되면 이에 대한 이벤트를 CSimpleHttpServer 객체로 전달한다.
 	if( clsStack.Start( &clsSetup, &clsServer ) == false )
 	{
 		printf( "clsStack.Start error\n" );

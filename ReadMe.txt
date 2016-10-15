@@ -16,7 +16,7 @@ C++ HTTP stack 라이브러리
 
  * 본 프로젝트의 라이선스는 GPLv3 이고 기업용 라이선스는 websearch@naver.com 으로 문의해 주세요.
 
-4. HTTP GET 사용법
+4. HTTP GET 요청/응답 개발 방법
 
  HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP GET 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
   - 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientGet.cpp 파일입니다.
@@ -26,7 +26,7 @@ C++ HTTP stack 라이브러리
 
  clsClient.DoGet( "http://www.naver.com", strBodyType, strBody );
 
-5. HTTP POST 사용법
+5. HTTP POST 요청/응답 개발 방법
 
  HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP POST 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
   - 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientPost.cpp 파일입니다.
@@ -48,7 +48,7 @@ C++ HTTP stack 라이브러리
 
   clsClient.DoPost( "http://www.webserviceX.NET/globalweather.asmx", &clsHeaderList, "text/xml;charset=UTF-8", strSendBody.c_str(), strRecvBodyType, strRecvBody );
 
-6. HTTP SOAP 사용법
+6. HTTP SOAP 요청/응답 개발 방법
 
  HttpStack 라이브러리의 CHttpClient 클래스를 이용한 웹 서비스 연동하는 소스 코드 예제는 다음과 같습니다.
   - 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientSoap.cpp 파일입니다.
@@ -67,3 +67,7 @@ C++ HTTP stack 라이브러리
   "</soapenv:Envelope>";
 
  clsClient.DoSoap( "http://www.webserviceX.NET/globalweather.asmx", "http://www.webserviceX.NET/GetWeather", strSendBody.c_str(), strRecvBody );
+
+7. 초간단 HTTP 서버 개발 방법
+
+ 초간단 HTTP 서버 개발 소스 코드 예제는 TestHttpStack 프로젝트에 있습니다. TestHttpStack 프로젝트 소스 코드를 참고하시면 CHttpStack 을 이용하여서 어떻게 HTTP 서버를 개발할 수 있을지 확인하실 수 있습니다.

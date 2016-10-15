@@ -46,6 +46,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 
 	CLog::Print( LOG_DEBUG, "req uri[%s]\n", pclsRequest->m_strReqUri.c_str() );
 
+	// 보안상 .. 을 포함한 URL 을 무시한다.
 	if( strstr( pclsRequest->m_strReqUri.c_str(), ".." ) )
 	{
 		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
@@ -81,6 +82,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		return true;
 	}
 
+	// 파일별 Content-Type 을 설정한다.
 	GetFileExt( strPath.c_str(), strExt );
 	const char * pszExt = strExt.c_str();
 	
@@ -111,6 +113,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		return true;
 	}
 
+	// 파일을 읽어서 HTTP body 에 저장한다.
 	FILE * fd = fopen( strPath.c_str(), "rb" );
 	if( fd == NULL )
 	{
