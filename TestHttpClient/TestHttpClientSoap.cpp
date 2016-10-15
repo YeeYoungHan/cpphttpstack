@@ -17,7 +17,6 @@
  */
 
 #include "HttpClient.h"
-#include "SipTcp.h"
 #include "Log.h"
 #include "MemoryDebug.h"
 
