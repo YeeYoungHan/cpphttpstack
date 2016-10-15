@@ -35,7 +35,7 @@ int TestHttpClientGet( int argc, char * argv[] )
 
 	if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
 	{
-		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), strBody.length() );
+		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
 		printf( "%s", strBody.c_str() );
 	}
 	else
