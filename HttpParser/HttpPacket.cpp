@@ -18,9 +18,10 @@
 
 #include "SipPlatformDefine.h"
 #include "HttpPacket.h"
+#include <stdlib.h>
 #include "MemoryDebug.h"
 
-CHttpPacket::CHttpPacket() : m_eStatus(H_HPS_HEADER), m_iChunkedLen(-1)
+CHttpPacket::CHttpPacket() : m_iChunkedLen(-1), m_eStatus(H_HPS_HEADER)
 {
 }
 
@@ -47,7 +48,6 @@ bool CHttpPacket::AddPacket( const char * pszPacket, int iPacketLen )
 	if( m_eStatus == H_HPS_HEADER )
 	{
 		const char * pszBuf = m_strBuf.c_str();
-		int iBufLen = m_strBuf.length();
 		const char * pszHeaderEnd = strstr( pszBuf, "\r\n\r\n" );
 		if( pszHeaderEnd )
 		{
