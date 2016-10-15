@@ -11,6 +11,7 @@ all:
 	cd HttpStack && make
 	cd TestHttpClient && make
 	cd TestHttpParser && make
+	cd TestHttpStack && make
 
 clean:
 	cd SipPlatform && make clean
@@ -19,6 +20,7 @@ clean:
 	cd HttpStack && make clean
 	cd TestHttpClient && make clean
 	cd TestHttpParser && make clean
+	cd TestHttpStack && make clean
 
 install:
 
