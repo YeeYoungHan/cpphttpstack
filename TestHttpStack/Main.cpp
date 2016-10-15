@@ -51,10 +51,15 @@ int main( int argc, char * argv[] )
 		return 0;
 	}
 
-	while( 1 )
+	while( clsServer.m_bStop == false )
 	{
 		sleep(1);
 	}
+
+	clsStack.Stop();
+
+	// 모든 쓰레드가 종료될 때까지 대기한다.
+	sleep(2);
 
 	return 0;
 }

@@ -24,7 +24,7 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
-CSimpleHttpServer::CSimpleHttpServer()
+CSimpleHttpServer::CSimpleHttpServer() : m_bStop(false)
 {
 }
 
@@ -32,6 +32,13 @@ CSimpleHttpServer::~CSimpleHttpServer()
 {
 }
 
+/**
+ * @ingroup TestHttpStack
+ * @brief HTTP 요청 수신 이벤트 callback
+ * @param pclsRequest		HTTP 요청 메시지
+ * @param pclsResponse	HTTP 응답 메시지 - 응용에서 저장한다.
+ * @returns 응용에서 HTTP 응답 메시지를 정상적으로 생성하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
 	std::string strPath = m_strDocumentRoot;
@@ -44,6 +51,16 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
 		return true;
 	}
+
+#ifdef _DEBUG
+	// 메모리 누수 검사를 위해서 exit.html 을 수신하면 프로그램을 종료한다.
+	if( !strcmp( pclsRequest->m_strReqUri.c_str(), "/exit.html" ) )
+	{
+		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
+		m_bStop = true;
+		return true;
+	}
+#endif
 
 	if( !strcmp( pclsRequest->m_strReqUri.c_str(), "/" ) )
 	{

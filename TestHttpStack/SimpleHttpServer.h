@@ -21,6 +21,10 @@
 
 #include "HttpStack.h"
 
+/**
+ * @ingroup TestHttpStack
+ * @brief HTTP 요청 callback 클래스
+ */
 class CSimpleHttpServer : public IHttpStackCallBack
 {
 public:
@@ -30,6 +34,7 @@ public:
 	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
 
 	std::string m_strDocumentRoot;
+	bool m_bStop;
 };
 
 #endif
