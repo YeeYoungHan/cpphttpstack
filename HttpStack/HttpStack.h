@@ -30,8 +30,8 @@
 class CHttpStackSession : public ITcpSessionApp
 {
 public:
-	CHttpStackSession();
-	virtual ~CHttpStackSession();
+	CHttpStackSession(){};
+	virtual ~CHttpStackSession(){};
 
 	CHttpPacket m_clsPacket;
 };

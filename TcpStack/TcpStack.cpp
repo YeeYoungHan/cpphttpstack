@@ -25,6 +25,7 @@ THREAD_API TcpListenThread( LPVOID lpParameter );
 
 CTcpStack::CTcpStack() : m_pclsCallBack(NULL), m_hTcpListenFd(INVALID_SOCKET), m_bStop(false)
 {
+	InitNetwork();
 }
 
 CTcpStack::~CTcpStack()

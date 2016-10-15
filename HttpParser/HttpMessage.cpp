@@ -194,7 +194,8 @@ int CHttpMessage::ToString( char * pszText, int iTextSize )
 			return -1;
 		}
 
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, "%s", m_strBody.c_str() );
+		memcpy( pszText + iLen, m_strBody.c_str(), m_strBody.length() );
+		iLen += m_iContentLength;
 	}
 
 	return iLen;

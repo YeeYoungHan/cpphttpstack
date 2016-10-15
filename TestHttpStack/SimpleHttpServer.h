@@ -16,29 +16,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP_STACK_CALLBACK_H_
-#define _HTTP_STACK_CALLBACK_H_
+#ifndef _SIMPLE_HTTP_SERVER_H_
+#define _SIMPLE_HTTP_SERVER_H_
 
-#include "HttpMessage.h"
+#include "HttpStack.h"
 
-/**
- * @ingroup HttpStack
- * @brief HTTP 서버 callback 인터페이스
- */
-class IHttpStackCallBack
+class CSimpleHttpServer : public IHttpStackCallBack
 {
 public:
-	IHttpStackCallBack(){};
-	virtual ~IHttpStackCallBack(){};
+	CSimpleHttpServer();
+	virtual ~CSimpleHttpServer();
 
-	/**
-	 * @ingroup HttpStack
-	 * @brief HTTP 요청 수신 이벤트 callback
-	 * @param pclsRequest		HTTP 요청 메시지
-	 * @param pclsResponse	HTTP 응답 메시지 - 응용에서 저장한다.
-	 * @returns 응용에서 HTTP 응답 메시지를 정상적으로 생성하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
-	 */
-	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse ) = 0;
+	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
+
+	std::string m_strDocumentRoot;
 };
 
 #endif

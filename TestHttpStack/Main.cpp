@@ -16,8 +16,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "SimpleHttpServer.h"
+#include "Directory.h"
+#include "MemoryDebug.h"
+
 int main( int argc, char * argv[] )
 {
+	if( argc != 2 )
+	{
+		printf( "[Usage] %s {Document root path}\n", argv[0] );
+		return 0;
+	}
+
+#ifdef WIN32
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+#endif
+
+	CSimpleHttpServer clsServer;
+	CHttpStack clsStack;
+	CTcpStackSetup clsSetup;
+
+	clsSetup.m_iListenPort = 8080;
+	clsServer.m_strDocumentRoot = argv[1];
+
+	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) != 0 )
+	{
+		printf( "[%s] is not directory\n", clsServer.m_strDocumentRoot.c_str() );
+		return 0;
+	}
+
+	if( clsStack.Start( &clsSetup, &clsServer ) == false )
+	{
+		printf( "clsStack.Start error\n" );
+		return 0;
+	}
+
+	while( 1 )
+	{
+		sleep(1);
+	}
 
 	return 0;
 }
