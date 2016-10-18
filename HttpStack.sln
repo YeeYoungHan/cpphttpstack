@@ -34,6 +34,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHttpClient", "TestHttpC
 		{FDC90DE9-6824-47BE-B089-2B22CF515D7F} = {FDC90DE9-6824-47BE-B089-2B22CF515D7F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlParser", "XmlParser\XmlParser.vcproj", "{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -86,6 +88,14 @@ Global
 		{B8286312-90CB-4B78-8466-FA28195B6FFD}.Release|Win32.ActiveCfg = Release|Win32
 		{B8286312-90CB-4B78-8466-FA28195B6FFD}.Release|Win32.Build.0 = Release|Win32
 		{B8286312-90CB-4B78-8466-FA28195B6FFD}.Release|x64.ActiveCfg = Release|Win32
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Debug|Win32.Build.0 = Debug|Win32
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Debug|x64.ActiveCfg = Debug|x64
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Debug|x64.Build.0 = Debug|x64
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Release|Win32.ActiveCfg = Release|Win32
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Release|Win32.Build.0 = Release|Win32
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Release|x64.ActiveCfg = Release|x64
+		{AF551BC2-1AF3-419B-9B54-04C2EF4FAC72}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
