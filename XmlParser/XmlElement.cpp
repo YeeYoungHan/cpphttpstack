@@ -716,7 +716,17 @@ void CXmlElement::InsertElementData( const char * pszName, const char * pszData 
 	CXmlElement clsElement;
 
 	clsElement.m_strName = pszName;
-	clsElement.m_strData = pszData;
+
+	if( strstr( pszData, "<" ) || strstr( pszData, ">" ) )
+	{
+		clsElement.m_strData = "<![CDATA[";
+		clsElement.m_strData.append( pszData );
+		clsElement.m_strData.append( "]]>" );
+	}
+	else
+	{
+		clsElement.m_strData = pszData;
+	}
 
 	m_clsElementList.push_back( clsElement );
 }
