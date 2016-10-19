@@ -37,6 +37,12 @@ C++ HTTP stack 라이브러리
    - TCP 클라이언트/서버 라이브러리
    - HttpStack 에서 HTTP 서버 개발에 사용된다.
 
+ * WsdlParser
+   - WSDL 문서를 파싱하는 라이브러리
+
+ * XmlParser
+   - XML 문서를 파싱하는 라이브러리
+
 6. HTTP GET 요청/응답 개발 방법
 
  HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP GET 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
