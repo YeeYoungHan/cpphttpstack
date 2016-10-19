@@ -291,6 +291,59 @@ int CXmlElement::ToString( char * pszText, int iTextSize )
 
 /**
  * @ingroup XmlParser
+ * @brief 멤버 변수에 저장된 값을 이용하여서 XML 문자열을 생성한다.
+ * @param strText XML 문자열을 저장할 변수
+ */
+void CXmlElement::ToString( std::string & strText )
+{
+	strText.append( "<" );
+	strText.append( m_strName );
+
+	if( m_clsAttributeMap.empty() == false )
+	{
+		XML_ATTRIBUTE_MAP::iterator	itAM;
+
+		for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
+		{
+			strText.append( " " );
+			strText.append( itAM->first );
+			strText.append( "=\"" );
+			strText.append( itAM->second );
+			strText.append( "\"" );
+		}
+	}
+
+	if( m_strData.empty() == false )
+	{
+		strText.append( ">" );
+		strText.append( m_strData );
+		strText.append( "</" );
+		strText.append( m_strName );
+		strText.append( ">\n" );
+	}
+	else if( m_clsElementList.empty() == false )
+	{
+		XML_ELEMENT_LIST::iterator	itEL;
+
+		strText.append( ">\n" );
+
+		for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+		{
+			itEL->ToString( strText );
+		}
+
+		strText.append( "</" );
+		strText.append( m_strName );
+		strText.append( ">\n" );
+	}
+	else
+	{
+		strText.append( "/>\n" );
+	}
+}
+
+/**
+ * @ingroup XmlParser
  * @brief 멤버 변수를 초기화시킨다.
  */
 void CXmlElement::Clear( )
@@ -640,6 +693,32 @@ const char * CXmlElement::GetData()
 bool CXmlElement::IsDataEmpty()
 {
 	return m_strData.empty();
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief Element 이름을 설정한다.
+ * @param pszName Element 이름
+ */
+void CXmlElement::SetName( const char * pszName )
+{
+	m_strName = pszName;
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param pszData 하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, const char * pszData )
+{
+	CXmlElement clsElement;
+
+	clsElement.m_strName = pszName;
+	clsElement.m_strData = pszData;
+
+	m_clsElementList.push_back( clsElement );
 }
 
 /**

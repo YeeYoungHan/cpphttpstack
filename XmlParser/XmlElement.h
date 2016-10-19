@@ -56,6 +56,7 @@ public:
 
 	int Parse( const char * pszText, int iTextLen );
 	int ToString( char * pszText, int iTextSize );
+	void ToString( std::string & strText );
 	void Clear( );
 
 	bool ParseFile( const char * pszFileName );
@@ -79,6 +80,9 @@ public:
 	const char * GetData();
 
 	bool IsDataEmpty();
+
+	void SetName( const char * pszName );
+	void InsertElementData( const char * pszName, const char * pszData );
 
 	XML_ELEMENT_LIST * GetElementList();
 
