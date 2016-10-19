@@ -47,6 +47,7 @@ CXmlElement::~CXmlElement()
 #define XML_ELEMENT_DATA_PARSE	5
 #define XML_ELEMENT_COMMENT			6
 #define XML_ELEMENT_CDATA				7
+#define XML_ELEMENT_DECLARATION	8
 
 /**
  * @ingroup XmlParser
@@ -74,6 +75,15 @@ int CXmlElement::Parse( const char * pszText, int iTextLen )
 					iPos += 2;
 					cType = cTypeOld;
 				}
+			}
+
+			continue;
+		}
+		else if( cType == XML_ELEMENT_DECLARATION )
+		{
+			if( pszText[iPos] == '>' )
+			{
+				cType = XML_ELEMENT_NULL;
 			}
 
 			continue;
@@ -120,6 +130,11 @@ int CXmlElement::Parse( const char * pszText, int iTextLen )
 				cTypeOld = cType;
 				cType = XML_ELEMENT_CDATA;
 				iStartPos = iPos + 9;
+			}
+			else if( iPos + 1 < iTextLen && pszText[iPos+1] == '?' )
+			{
+				cTypeOld = cType;
+				cType = XML_ELEMENT_DECLARATION;
 			}
 			else if( cType == XML_ELEMENT_NULL )
 			{
