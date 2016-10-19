@@ -733,6 +733,17 @@ void CXmlElement::InsertElementData( const char * pszName, const char * pszData 
 
 /**
  * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param strData 하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, std::string & strData )
+{
+	InsertElementData( pszName, strData.c_str() );
+}
+
+/**
+ * @ingroup XmlParser
  * @brief element list 의 포인터를 리턴한다.
  * @returns element list 의 포인터를 리턴한다.
  */
