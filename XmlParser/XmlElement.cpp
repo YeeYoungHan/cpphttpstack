@@ -744,6 +744,47 @@ void CXmlElement::InsertElementData( const char * pszName, std::string & strData
 
 /**
  * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param iData		하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, int iData )
+{
+	char szData[11];
+
+	snprintf( szData, sizeof(szData), "%d", iData );
+
+	InsertElementData( pszName, szData );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param iData		하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, int64_t iData )
+{
+	char szData[21];
+
+	snprintf( szData, sizeof(szData), LONG_LONG_FORMAT, iData );
+
+	InsertElementData( pszName, szData );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param bData		하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, bool bData )
+{
+	InsertElementData( pszName, bData ? "true" : "false" );
+}
+
+/**
+ * @ingroup XmlParser
  * @brief element list 의 포인터를 리턴한다.
  * @returns element list 의 포인터를 리턴한다.
  */

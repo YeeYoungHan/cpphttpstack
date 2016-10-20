@@ -84,6 +84,9 @@ public:
 	void SetName( const char * pszName );
 	void InsertElementData( const char * pszName, const char * pszData );
 	void InsertElementData( const char * pszName, std::string & strData );
+	void InsertElementData( const char * pszName, int iData );
+	void InsertElementData( const char * pszName, int64_t iData );
+	void InsertElementData( const char * pszName, bool bData );
 
 	XML_ELEMENT_LIST * GetElementList();
 
