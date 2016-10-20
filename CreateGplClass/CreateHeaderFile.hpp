@@ -16,27 +16,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+/**
+ * @ingroup CreateGplClass
+ * @brief GPL 라이선스 문구를 출력한다.
+ * @param fd 파일 핸들
+ */
 void PrintGPL( FILE * fd )
 {
-	fprintf( fd, "/* \r\n"
-	" * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)\r\n"
-	" *\r\n"
-	" * This program is free software; you can redistribute it and/or modify\r\n"
-	" * it under the terms of the GNU General Public License as published by\r\n"
-	" * the Free Software Foundation; either version 3 of the License, or\r\n"
-	" * (at your option) any later version.\r\n"
-	" *\r\n"
-	" * This program is distributed in the hope that it will be useful,\r\n"
-	" * but WITHOUT ANY WARRANTY; without even the implied warranty of\r\n"
-	" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\r\n"
-	" * GNU General Public License for more details.\r\n"
-	" *\r\n"
-	" * You should have received a copy of the GNU General Public License\r\n"
-	" * along with this program; if not, write to the Free Software\r\n"
-	" * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA \r\n"
-	" */\r\n\r\n" );
+	fprintf( fd, "/* \n"
+	" * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)\n"
+	" *\n"
+	" * This program is free software; you can redistribute it and/or modify\n"
+	" * it under the terms of the GNU General Public License as published by\n"
+	" * the Free Software Foundation; either version 3 of the License, or\n"
+	" * (at your option) any later version.\n"
+	" *\n"
+	" * This program is distributed in the hope that it will be useful,\n"
+	" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+	" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+	" * GNU General Public License for more details.\n"
+	" *\n"
+	" * You should have received a copy of the GNU General Public License\n"
+	" * along with this program; if not, write to the Free Software\n"
+	" * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA \n"
+	" */\n\n" );
 }
 
+/**
+ * @ingroup CreateGplClass
+ * @brief 헤더 파일에 사용할 선언문 이름을 생성한다.
+ * @param pszName		파일 이름
+ * @param strDefine 선언문 이름 저장용 변수
+ */
 void GetDefineName( const char * pszName, std::string & strDefine )
 {
 	int iLen = strlen( pszName );
@@ -54,7 +65,7 @@ void GetDefineName( const char * pszName, std::string & strDefine )
 		}
 		else if( islower( pszName[i] ) )
 		{
-			szOne[0] = pszName[i] - 'A';
+			szOne[0] = pszName[i] - 'a' + 'A';
 			strDefine.append( szOne, 1 );
 		}
 		else
@@ -66,6 +77,13 @@ void GetDefineName( const char * pszName, std::string & strDefine )
 	strDefine.append( "_H_" );
 }
 
+/**
+ * @ingroup CreateGplClass
+ * @brief 헤더 파일을 생성한다.
+ * @param pszFileName		확장자를 제외한 헤더 파일 이름
+ * @param pszClassName	클래스 이름
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
 {
 	std::string strDefine, strFileName;
@@ -90,20 +108,18 @@ bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
 
 	PrintGPL( fd );
 
-	fprintf( fd, "#ifndef %s\r\n", strDefine.c_str() );
-	fprintf( fd, "#define %s\r\n", strDefine.c_str() );
-	fprintf( fd, "\r\n" );
+	fprintf( fd, "#ifndef %s\n", strDefine.c_str() );
+	fprintf( fd, "#define %s\n", strDefine.c_str() );
+	fprintf( fd, "\n" );
 
-	fprintf( fd, "class %s\r\n", pszClassName );
-	fprintf( fd, "\r\n" );
+	fprintf( fd, "class %s\n", pszClassName );
+	fprintf( fd, "{\n" );
+	fprintf( fd, "public:\n" );
+	fprintf( fd, "\t%s();\n", pszClassName );
+	fprintf( fd, "\t~%s();\n", pszClassName );
+	fprintf( fd, "}\n" );
 
-	fprintf( fd, "{\r\n" );
-	fprintf( fd, "public:\r\n" );
-	fprintf( fd, "\t%s();\r\n", pszClassName );
-	fprintf( fd, "\t~%s();\r\n", pszClassName );
-	fprintf( fd, "}\r\n" );
-
-	fprintf( fd, "#endif\r\n" );
+	fprintf( fd, "#endif\n" );
 
 	fclose( fd );
 

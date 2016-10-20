@@ -16,6 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+/**
+ * @ingroup CreateGplClass
+ * @brief 소스 파일을 생성한다.
+ * @param pszFileName		확장자를 제외한 소스 파일 이름
+ * @param pszClassName	클래스 이름
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool MakeSourceFile( const char * pszFileName, const char * pszClassName )
 {
 	std::string strFileName;
@@ -38,15 +45,15 @@ bool MakeSourceFile( const char * pszFileName, const char * pszClassName )
 
 	PrintGPL( fd );
 
-	fprintf( fd, "#include \"%s.h\"\r\n\r\n", pszFileName );
-	fprintf( fd, "%s::%s()\r\n", pszClassName );
-	fprintf( fd, "{\r\n" );
-	fprintf( fd, "}\r\n" );
-	fprintf( fd, "\r\n" );
-	fprintf( fd, "%s::~%s()\r\n", pszClassName );
-	fprintf( fd, "{\r\n" );
-	fprintf( fd, "}\r\n" );
-	fprintf( fd, "\r\n" );
+	fprintf( fd, "#include \"%s.h\"\n\n", pszFileName );
+	fprintf( fd, "%s::%s()\n", pszClassName, pszClassName );
+	fprintf( fd, "{\n" );
+	fprintf( fd, "}\n" );
+	fprintf( fd, "\n" );
+	fprintf( fd, "%s::~%s()\n", pszClassName, pszClassName );
+	fprintf( fd, "{\n" );
+	fprintf( fd, "}\n" );
+	fprintf( fd, "\n" );
 
 	fclose( fd );
 
