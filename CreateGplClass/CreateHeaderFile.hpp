@@ -117,7 +117,7 @@ bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
 	fprintf( fd, "public:\n" );
 	fprintf( fd, "\t%s();\n", pszClassName );
 	fprintf( fd, "\t~%s();\n", pszClassName );
-	fprintf( fd, "}\n" );
+	fprintf( fd, "};\n" );
 
 	fprintf( fd, "#endif\n" );
 
