@@ -37,6 +37,8 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 
 	if( !strcmp( m_clsRoot.GetName(), "wsdl:definitions" ) )
 	{
+		m_clsRoot.SelectAttribute( "targetNamespace", m_clsSoap.m_strNameSpace );
+
 		for( int iBinding = 0; ; ++iBinding )
 		{
 			CXmlElement * pclsBinding = m_clsRoot.SelectElement( "wsdl:binding", iBinding );

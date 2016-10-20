@@ -29,6 +29,7 @@ public:
 
 	std::string m_strName;
 	std::string m_strUrl;
+	std::string m_strNameSpace;
 	SOAP_METHOD_MAP m_clsMethodMap;
 };
 
