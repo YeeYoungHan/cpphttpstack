@@ -22,16 +22,26 @@
 #include "SoapArg.h"
 #include <map>
 
+/**
+ * @ingroup WsdlParser
+ * @brief SOAP 메소드 정의 클래스
+ */
 class CSoapMethod
 {
 public:
 	CSoapMethod();
 	~CSoapMethod();
 
+	/** 메소드 이름 */
 	std::string m_strName;
+
+	/** SOAP Action */
 	std::string m_strSoapAction;
 
+	/** 메소드 입력 인자 리스트 */
 	SOAP_ARG_LIST m_clsInputList;
+
+	/** 메소드 출력 인자 리스트 */
 	SOAP_ARG_LIST m_clsOutputList;
 };
 

@@ -26,6 +26,13 @@ CWsdlMessage::~CWsdlMessage()
 {
 }
 
+/**
+ * @ingroup WsdlParser
+ * @brief WSDL 문자열을 파싱하여서 SOAP 클래스 및 메소드를 저장한다.
+ * @param pszText		WSDL 문자열
+ * @param iTextLen	WSDL 문자열 길이
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 {
 	std::string strName;
@@ -138,14 +145,22 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 	return true;
 }
 
+/**
+ * @ingroup WsdlParser
+ * @brief wsdl:message 리스트에서 입력된 이름과 동일한 항목에 대한 인자 리스트를 가져온다.
+ * @param pszName			wsdl:message 이름
+ * @param clsArgList	인자 리스트를 저장할 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CWsdlMessage::GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList )
 {
 	std::string strName, strElement;
 	bool bRes = false;
+	const char * pszPos = strstr( pszName, ":" );
 
-	if( !strncmp( pszName, "tns:", 4 ) )
+	if( pszPos )
 	{
-		pszName += 4;
+		pszName = pszPos + 1;
 	}
 
 	for( int iMessage = 0; ; ++iMessage )
@@ -174,14 +189,22 @@ bool CWsdlMessage::GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsA
 	return bRes;
 }
 
+/**
+ * @ingroup WsdlParser
+ * @brief wsdl:types 에서 입력한 이름의 타입에 대한 인자 리스트를 가져온다.
+ * @param pszName			타입 이름
+ * @param clsArgList	인자 리스트를 저장할 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CWsdlMessage::GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList )
 {
 	std::string strName, strType;
 	bool bRes = false;
+	const char * pszPos = strstr( pszName, ":" );
 
-	if( !strncmp( pszName, "tns:", 4 ) )
+	if( pszPos )
 	{
-		pszName += 4;
+		pszName = pszPos + 1;
 	}
 
 	CXmlElement * pclsType = m_clsRoot.SelectElement( "wsdl:types" );

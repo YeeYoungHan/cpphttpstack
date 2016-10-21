@@ -21,15 +21,26 @@
 
 #include "SoapMethod.h"
 
+/**
+ * @ingroup WsdlParser
+ * @brief SOAP 서비스를 저장하는 클래스
+ */
 class CSoapClass
 {
 public:
 	CSoapClass();
 	~CSoapClass();
 
+	/** 서비스 이름 */
 	std::string m_strName;
+
+	/** 서비스 URL - HTTP POST URL */
 	std::string m_strUrl;
+
+	/** 서비스 namespave */
 	std::string m_strNameSpace;
+
+	/** 서비스에 포함된 메소드 맵 */
 	SOAP_METHOD_MAP m_clsMethodMap;
 };
 

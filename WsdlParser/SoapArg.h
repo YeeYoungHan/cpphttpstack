@@ -22,12 +22,20 @@
 #include <string>
 #include <list>
 
+/**
+ * @ingroup WsdlParser
+ * @brief SOAP 메소드 인자 타입
+ */
 enum ESoapArgType
 {
 	E_SAT_NULL = 0,
 	E_SAT_STRING
 };
 
+/**
+ * @ingroup WsdlParser
+ * @brief SOAP 메소드 인자 정의 클래스
+ */
 class CSoapArg
 {
 public:
@@ -36,7 +44,10 @@ public:
 
 	void SetType( const char * pszType );
 
+	/** 메소드 인자 이름 */
 	std::string		m_strName;
+
+	/** 메소드 인자 타입 */
 	ESoapArgType	m_eType;
 };
 

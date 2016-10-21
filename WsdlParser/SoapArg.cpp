@@ -26,11 +26,18 @@ CSoapArg::~CSoapArg()
 {
 }
 
+/**
+ * @ingroup WsdlParser
+ * @brief 인자 타입 문자열로 타입을 설정한다.
+ * @param pszType 인자 타입 문자열
+ */
 void CSoapArg::SetType( const char * pszType )
 {
-	if( !strncmp( pszType, "s:", 2 ) )
+	const char * pszPos = strstr( pszType, ":" );
+
+	if( pszPos )
 	{
-		pszType += 2;
+		pszType = pszPos + 1;
 	}
 
 	if( !strcmp( pszType, "string" ) )
