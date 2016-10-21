@@ -717,15 +717,18 @@ void CXmlElement::InsertElementData( const char * pszName, const char * pszData 
 
 	clsElement.m_strName = pszName;
 
-	if( strstr( pszData, "<" ) || strstr( pszData, ">" ) )
+	if( pszData )
 	{
-		clsElement.m_strData = "<![CDATA[";
-		clsElement.m_strData.append( pszData );
-		clsElement.m_strData.append( "]]>" );
-	}
-	else
-	{
-		clsElement.m_strData = pszData;
+		if( strstr( pszData, "<" ) || strstr( pszData, ">" ) )
+		{
+			clsElement.m_strData = "<![CDATA[";
+			clsElement.m_strData.append( pszData );
+			clsElement.m_strData.append( "]]>" );
+		}
+		else
+		{
+			clsElement.m_strData = pszData;
+		}
 	}
 
 	m_clsElementList.push_back( clsElement );
@@ -781,6 +784,27 @@ void CXmlElement::InsertElementData( const char * pszName, int64_t iData )
 void CXmlElement::InsertElementData( const char * pszName, bool bData )
 {
 	InsertElementData( pszName, bData ? "true" : "false" );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
+ * @param pclsElement 하위 Element
+ */
+void CXmlElement::InsertElement( CXmlElement * pclsElement )
+{
+	m_clsElementList.push_back( *pclsElement );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 애트리뷰트를 추가한다.
+ * @param pszName		애트리뷰트 이름
+ * @param pszValue	애트리뷰트 값
+ */
+void CXmlElement::InsertAttribute( const char * pszName, const char * pszValue )
+{
+	m_clsAttributeMap.insert( XML_ATTRIBUTE_MAP::value_type( pszName, pszValue ) );
 }
 
 /**

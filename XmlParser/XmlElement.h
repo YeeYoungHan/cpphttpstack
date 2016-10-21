@@ -87,6 +87,8 @@ public:
 	void InsertElementData( const char * pszName, int iData );
 	void InsertElementData( const char * pszName, int64_t iData );
 	void InsertElementData( const char * pszName, bool bData );
+	void InsertElement( CXmlElement * pclsElement );
+	void InsertAttribute( const char * pszName, const char * pszValue );
 
 	XML_ELEMENT_LIST * GetElementList();
 
