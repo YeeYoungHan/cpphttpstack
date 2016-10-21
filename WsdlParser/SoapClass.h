@@ -31,6 +31,8 @@ public:
 	CSoapClass();
 	~CSoapClass();
 
+	bool MakeSource( const char * pszFolder );
+
 	/** 서비스 이름 */
 	std::string m_strName;
 
@@ -42,6 +44,11 @@ public:
 
 	/** 서비스에 포함된 메소드 맵 */
 	SOAP_METHOD_MAP m_clsMethodMap;
+
+private:
+	void GetDefineName( const char * pszName, std::string & strDefine );
+	bool MakeHeaderFile( const char * pszClassName, const char * pszFileName, const char * pszFilePath );
+	bool MakeSourceFile( const char * pszClassName, const char * pszFileName, const char * pszFilePath );
 };
 
 #endif

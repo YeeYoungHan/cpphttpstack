@@ -22,6 +22,8 @@
 #include "SoapArg.h"
 #include <map>
 
+class CSoapClass;
+
 /**
  * @ingroup WsdlParser
  * @brief SOAP 메소드 정의 클래스
@@ -31,6 +33,9 @@ class CSoapMethod
 public:
 	CSoapMethod();
 	~CSoapMethod();
+
+	bool GetPrototypeCode( const char * pszClassName, std::string & strCode );
+	bool GetCode( const char * pszClassName, CSoapClass * pclsSoap, std::string & strCode );
 
 	/** 메소드 이름 */
 	std::string m_strName;

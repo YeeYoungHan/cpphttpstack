@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../WsdlParser;../XmlParser;../SipPlatform"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../WsdlParser;../XmlParser;../SipPlatform"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,6 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -115,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../WsdlParser;../XmlParser;../SipPlatform"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../WsdlParser;../XmlParser;../SipPlatform"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -135,6 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -172,6 +174,18 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\SoapGlobalWeatherSoap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SoapGlobalWeatherSoap.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestGlobalWeatherSoap.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\TestWsdlParser.cpp"
 				>

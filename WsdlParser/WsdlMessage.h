@@ -29,6 +29,7 @@ public:
 	~CWsdlMessage();
 
 	bool Parse( const char * pszText, int iTextLen );
+	CSoapClass * GetSoap( );
 
 private:
 	CXmlElement m_clsRoot;

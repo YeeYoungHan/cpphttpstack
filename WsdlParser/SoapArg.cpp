@@ -17,6 +17,7 @@
  */
 
 #include "SoapArg.h"
+#include "Log.h"
 
 CSoapArg::CSoapArg() : m_eType(E_SAT_NULL)
 {
@@ -30,8 +31,9 @@ CSoapArg::~CSoapArg()
  * @ingroup WsdlParser
  * @brief 인자 타입 문자열로 타입을 설정한다.
  * @param pszType 인자 타입 문자열
+ * @return 성공하면 true 을 리턴하고 실패하면 false 를 리턴한다.
  */
-void CSoapArg::SetType( const char * pszType )
+bool CSoapArg::SetType( const char * pszType )
 {
 	const char * pszPos = strstr( pszType, ":" );
 
@@ -44,4 +46,53 @@ void CSoapArg::SetType( const char * pszType )
 	{
 		m_eType = E_SAT_STRING;
 	}
+	else
+	{
+		CLog::Print( LOG_ERROR, "%s type(%s) is not defined", __FUNCTION__, pszType );
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief 소스 코드의 함수 인자 생성에 사용할 문자열을 생성한다.
+ * @param strCode 변수 이름을 저장할 변수
+ * @returns 성공하면 true 을 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CSoapArg::GetCode( std::string & strCode )
+{
+	switch( m_eType )
+	{
+	case E_SAT_STRING:
+		strCode = "std::string & str";
+		strCode.append( m_strName );
+		break;
+	case E_SAT_NULL:
+		break;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief 소스 코드 생성에 사용할 변수 이름을 생성한다.
+ * @param strCode 변수 이름을 저장할 변수
+ * @returns 성공하면 true 을 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CSoapArg::GetVariable( std::string & strCode )
+{
+	switch( m_eType )
+	{
+	case E_SAT_STRING:
+		strCode = "str";
+		strCode.append( m_strName );
+		break;
+	case E_SAT_NULL:
+		break;
+	}
+
+	return true;
 }

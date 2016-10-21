@@ -20,34 +20,21 @@
 
 #include "WsdlMessage.h"
 
+bool TestGlobalWeatherSoap( );
+bool MakeGlobalWeatherSoap( );
+
 int main( int argc, char * argv[] )
 {
-	FILE * fd;
-	char szBuf[8192];
-	std::string strXml;
-	CWsdlMessage clsWsdl;
-
-	fd = fopen( "globalweather.xml", "r" );
-	if( fd == NULL )
+	if( argc >= 2 )
 	{
-		printf( "fopen error\n" );
-		return 0;
+		if( !strcmp( argv[1], "weather" ) )
+		{
+			TestGlobalWeatherSoap( );
+		}
 	}
-
-	memset( szBuf, 0, sizeof(szBuf) );
-
-	while( fgets( szBuf, sizeof(szBuf)-1, fd ) )
+	else
 	{
-		strXml.append( szBuf );
-		memset( szBuf, 0, sizeof(szBuf) );
-	}
-
-	fclose( fd );
-
-	if( clsWsdl.Parse( strXml.c_str(), strXml.length() ) == false )
-	{
-		printf( "clsWsdl.Parse error\n" );
-		return 0;
+		MakeGlobalWeatherSoap( );
 	}
 
 	return 0;

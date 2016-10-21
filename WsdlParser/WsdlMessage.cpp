@@ -147,6 +147,16 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 
 /**
  * @ingroup WsdlParser
+ * @brief SOAP 클래스를 리턴한다.
+ * @returns SOAP 클래스를 리턴한다.
+ */
+CSoapClass * CWsdlMessage::GetSoap( )
+{
+	return &m_clsSoap;
+}
+
+/**
+ * @ingroup WsdlParser
  * @brief wsdl:message 리스트에서 입력된 이름과 동일한 항목에 대한 인자 리스트를 가져온다.
  * @param pszName			wsdl:message 이름
  * @param clsArgList	인자 리스트를 저장할 변수

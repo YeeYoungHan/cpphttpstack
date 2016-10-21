@@ -42,7 +42,9 @@ public:
 	CSoapArg();
 	~CSoapArg();
 
-	void SetType( const char * pszType );
+	bool SetType( const char * pszType );
+	bool GetCode( std::string & strCode );
+	bool GetVariable( std::string & strCode );
 
 	/** 메소드 인자 이름 */
 	std::string		m_strName;
