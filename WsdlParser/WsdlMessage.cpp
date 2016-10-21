@@ -114,12 +114,14 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 					if( pclsInput )
 					{
 						pclsInput->SelectAttribute( "message", strMessage );
+						GetMessageArgList( strMessage.c_str(), itMethod->second.m_clsInputList );
 					}
 
 					CXmlElement * pclsOutput = pclsOperation->SelectElement( "wsdl:output" );
 					if( pclsOutput )
 					{
-						pclsInput->SelectAttribute( "message", strMessage );
+						pclsOutput->SelectAttribute( "message", strMessage );
+						GetMessageArgList( strMessage.c_str(), itMethod->second.m_clsOutputList );
 					}
 				}
 
@@ -134,4 +136,94 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 	}
 
 	return true;
+}
+
+bool CWsdlMessage::GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList )
+{
+	std::string strName, strElement;
+	bool bRes = false;
+
+	if( !strncmp( pszName, "tns:", 4 ) )
+	{
+		pszName += 4;
+	}
+
+	for( int iMessage = 0; ; ++iMessage )
+	{
+		CXmlElement * pclsMessage = m_clsRoot.SelectElement( "wsdl:message", iMessage );
+		if( pclsMessage == NULL ) break;
+
+		pclsMessage->SelectAttribute( "name", strName );
+		if( !strcmp( strName.c_str(), pszName ) )
+		{
+			CXmlElement * pclsPart = pclsMessage->SelectElement( "wsdl:part" );
+			if( pclsPart )
+			{
+				pclsPart->SelectAttribute( "element", strElement );
+				if( strElement.empty() == false )
+				{
+					GetTypeArgList( strElement.c_str(), clsArgList );
+					bRes = true;
+				}
+			}
+
+			break;
+		}
+	}
+
+	return bRes;
+}
+
+bool CWsdlMessage::GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList )
+{
+	std::string strName, strType;
+	bool bRes = false;
+
+	if( !strncmp( pszName, "tns:", 4 ) )
+	{
+		pszName += 4;
+	}
+
+	CXmlElement * pclsType = m_clsRoot.SelectElement( "wsdl:types" );
+	if( pclsType == NULL ) return false;
+
+	CXmlElement * pclsSchema = pclsType->SelectElement( "s:schema" );
+	if( pclsSchema == NULL ) return false;
+
+	for( int iElement = 0; ; ++iElement )
+	{
+		CXmlElement * pclsElement = pclsSchema->SelectElement( "s:element", iElement );
+		if( pclsElement == NULL ) break;
+
+		pclsElement->SelectAttribute( "name", strName );
+		if( !strcmp( strName.c_str(), pszName ) )
+		{
+			CXmlElement * pclsComplexType = pclsElement->SelectElement( "s:complexType" );
+			if( pclsComplexType == NULL ) break;
+
+			CXmlElement * pclsSequence = pclsComplexType->SelectElement( "s:sequence" );
+			if( pclsSequence == NULL ) break;
+
+			for( int i = 0; ; ++i )
+			{
+				CXmlElement * pclsArg = pclsSequence->SelectElement( "s:element", i );
+				if( pclsArg == NULL ) break;
+
+				CSoapArg clsArg;
+
+				pclsArg->SelectAttribute( "name", clsArg.m_strName );
+				pclsArg->SelectAttribute( "type", strType );
+
+				clsArg.SetType( strType.c_str() );
+
+				clsArgList.push_back( clsArg );
+
+				bRes = true;
+			}
+
+			break;
+		}
+	}
+
+	return bRes;
 }

@@ -19,7 +19,7 @@
 #ifndef _SOAP_METHOD_H_
 #define _SOAP_METHOD_H_
 
-#include <string>
+#include "SoapArg.h"
 #include <map>
 
 class CSoapMethod
@@ -30,6 +30,9 @@ public:
 
 	std::string m_strName;
 	std::string m_strSoapAction;
+
+	SOAP_ARG_LIST m_clsInputList;
+	SOAP_ARG_LIST m_clsOutputList;
 };
 
 typedef std::map< std::string, CSoapMethod > SOAP_METHOD_MAP;

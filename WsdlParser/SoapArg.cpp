@@ -16,26 +16,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _WSDL_MESSAGE_H_
-#define _WSDL_MESSAGE_H_
+#include "SoapArg.h"
 
-#include "XmlElement.h"
-#include "SoapClass.h"
-
-class CWsdlMessage
+CSoapArg::CSoapArg() : m_eType(E_SAT_NULL)
 {
-public:
-	CWsdlMessage();
-	~CWsdlMessage();
+}
 
-	bool Parse( const char * pszText, int iTextLen );
+CSoapArg::~CSoapArg()
+{
+}
 
-private:
-	CXmlElement m_clsRoot;
-	CSoapClass	m_clsSoap;
+void CSoapArg::SetType( const char * pszType )
+{
+	if( !strncmp( pszType, "s:", 2 ) )
+	{
+		pszType += 2;
+	}
 
-	bool GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
-	bool GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
-};
-
-#endif
+	if( !strcmp( pszType, "string" ) )
+	{
+		m_eType = E_SAT_STRING;
+	}
+}

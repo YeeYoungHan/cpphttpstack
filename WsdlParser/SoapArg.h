@@ -16,26 +16,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _WSDL_MESSAGE_H_
-#define _WSDL_MESSAGE_H_
+#ifndef _SOAP_ARG_H_
+#define _SOAP_ARG_H_
 
-#include "XmlElement.h"
-#include "SoapClass.h"
+#include <string>
+#include <list>
 
-class CWsdlMessage
+enum ESoapArgType
+{
+	E_SAT_NULL = 0,
+	E_SAT_STRING
+};
+
+class CSoapArg
 {
 public:
-	CWsdlMessage();
-	~CWsdlMessage();
+	CSoapArg();
+	~CSoapArg();
 
-	bool Parse( const char * pszText, int iTextLen );
+	void SetType( const char * pszType );
 
-private:
-	CXmlElement m_clsRoot;
-	CSoapClass	m_clsSoap;
-
-	bool GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
-	bool GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
+	std::string		m_strName;
+	ESoapArgType	m_eType;
 };
+
+typedef std::list< CSoapArg > SOAP_ARG_LIST;
 
 #endif
