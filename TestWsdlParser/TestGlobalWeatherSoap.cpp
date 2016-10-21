@@ -34,6 +34,8 @@ bool TestGlobalWeatherSoap( )
 	return true;
 }
 
+// http://www.webservicex.net/ws/WSDetails.aspx?CATID=12&WSID=56
+
 bool MakeGlobalWeatherSoap( )
 {
 	FILE * fd;
