@@ -528,6 +528,32 @@ CXmlElement * CXmlElement::SelectElement( const char * pszName, const int iIndex
 
 /**
  * @ingroup XmlParser
+ * @brief 하위 Element 를 검색한다.
+ * @param iIndex 하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 하위 Element 객체의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CXmlElement * CXmlElement::SelectElement( const int iIndex )
+{
+	XML_ELEMENT_LIST::iterator	itEL;
+	int iCount = 0;
+
+	if( iIndex < 0 ) return NULL;
+
+	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+	{
+		if( iCount == iIndex )
+		{
+			return &(*itEL);
+		}
+
+		++iCount;
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup XmlParser
  * @brief 하위 Element 를 검색하여서 Element 리스트에 저장한다.
  * @param pszName		하위 Element 이름
  * @param clsList		하위 Element 를 저장할 변수
