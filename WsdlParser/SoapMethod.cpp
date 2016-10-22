@@ -143,7 +143,7 @@ bool CSoapMethod::GetCode( const char * pszClassName, CSoapClass * pclsSoap, std
 	strCode.append( "\t}\n" );
 	strCode.append( "\n" );
 
-	strCode.append( "\tif( clsXml.Parse( strRecvBody.c_str(), strRecvBody.length() ) == -1 )\n" );
+	strCode.append( "\tif( clsXml.Parse( strRecvBody ) == -1 )\n" );
 	strCode.append( "\t{\n" );
 	strCode.append( "\t\tCLog::Print( LOG_ERROR, \"%s Parse error\", __FUNCTION__ );\n" );
 	strCode.append( "\t\treturn false;\n" );

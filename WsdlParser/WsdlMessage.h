@@ -29,6 +29,8 @@ public:
 	~CWsdlMessage();
 
 	bool Parse( const char * pszText, int iTextLen );
+	bool Parse( std::string & strText );
+
 	CSoapClass * GetSoap( );
 
 private:

@@ -147,6 +147,17 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 
 /**
  * @ingroup WsdlParser
+ * @brief WSDL 문자열을 파싱하여서 SOAP 클래스 및 메소드를 저장한다.
+ * @param strText WSDL 문자열
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CWsdlMessage::Parse( std::string & strText )
+{
+	return Parse( strText.c_str(), strText.length() );
+}
+
+/**
+ * @ingroup WsdlParser
  * @brief SOAP 클래스를 리턴한다.
  * @returns SOAP 클래스를 리턴한다.
  */

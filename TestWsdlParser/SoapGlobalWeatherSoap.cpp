@@ -38,7 +38,7 @@ bool CSoapGlobalWeatherSoap::GetCitiesByCountry( std::string & strCountryName, s
 		return false;
 	}
 
-	if( clsXml.Parse( strRecvBody.c_str(), strRecvBody.length() ) == -1 )
+	if( clsXml.Parse( strRecvBody ) == -1 )
 	{
 		CLog::Print( LOG_ERROR, "%s Parse error", __FUNCTION__ );
 		return false;
@@ -108,7 +108,7 @@ bool CSoapGlobalWeatherSoap::GetWeather( std::string & strCityName, std::string 
 		return false;
 	}
 
-	if( clsXml.Parse( strRecvBody.c_str(), strRecvBody.length() ) == -1 )
+	if( clsXml.Parse( strRecvBody ) == -1 )
 	{
 		CLog::Print( LOG_ERROR, "%s Parse error", __FUNCTION__ );
 		return false;
