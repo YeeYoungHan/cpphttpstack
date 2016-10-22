@@ -38,29 +38,9 @@ bool TestGlobalWeatherSoap( )
 
 bool MakeGlobalWeatherSoap( )
 {
-	FILE * fd;
-	char szBuf[8192];
-	std::string strXml;
 	CWsdlMessage clsWsdl;
 
-	fd = fopen( "globalweather.xml", "r" );
-	if( fd == NULL )
-	{
-		printf( "fopen error\n" );
-		return false;
-	}
-
-	memset( szBuf, 0, sizeof(szBuf) );
-
-	while( fgets( szBuf, sizeof(szBuf)-1, fd ) )
-	{
-		strXml.append( szBuf );
-		memset( szBuf, 0, sizeof(szBuf) );
-	}
-
-	fclose( fd );
-
-	if( clsWsdl.Parse( strXml.c_str(), strXml.length() ) == false )
+	if( clsWsdl.ParseFile( "globalweather.xml" ) == false )
 	{
 		printf( "clsWsdl.Parse error\n" );
 		return 0;

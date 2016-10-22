@@ -35,12 +35,59 @@ CWsdlMessage::~CWsdlMessage()
  */
 bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 {
-	std::string strName;
-
 	if( m_clsRoot.Parse( pszText, iTextLen ) == -1 )
 	{
 		return false;
 	}
+
+	return ParseXml( );
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief WSDL 문자열을 파싱하여서 SOAP 클래스 및 메소드를 저장한다.
+ * @param strText WSDL 문자열
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CWsdlMessage::Parse( std::string & strText )
+{
+	return Parse( strText.c_str(), strText.length() );
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief WSDL 파일을 읽어서 SOAP 클래스 및 메소드를 저장한다.
+ * @param pszFileName WSDL 파일 이름
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CWsdlMessage::ParseFile( const char * pszFileName )
+{
+	if( m_clsRoot.ParseFile( pszFileName ) == false )
+	{
+		return false;
+	}
+
+	return ParseXml( );
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief SOAP 클래스를 리턴한다.
+ * @returns SOAP 클래스를 리턴한다.
+ */
+CSoapClass * CWsdlMessage::GetSoap( )
+{
+	return &m_clsSoap;
+}
+
+/**
+ * @ingroup WsdlParser
+ * @brief XML 객체에 저장된 WSDL 문서를 파싱하여서 SOAP 객체에 저장한다.
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CWsdlMessage::ParseXml( )
+{
+	std::string strName;
 
 	if( !strcmp( m_clsRoot.GetName(), "wsdl:definitions" ) )
 	{
@@ -143,27 +190,6 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
 	}
 
 	return true;
-}
-
-/**
- * @ingroup WsdlParser
- * @brief WSDL 문자열을 파싱하여서 SOAP 클래스 및 메소드를 저장한다.
- * @param strText WSDL 문자열
- * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
- */
-bool CWsdlMessage::Parse( std::string & strText )
-{
-	return Parse( strText.c_str(), strText.length() );
-}
-
-/**
- * @ingroup WsdlParser
- * @brief SOAP 클래스를 리턴한다.
- * @returns SOAP 클래스를 리턴한다.
- */
-CSoapClass * CWsdlMessage::GetSoap( )
-{
-	return &m_clsSoap;
 }
 
 /**

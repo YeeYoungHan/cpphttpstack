@@ -31,12 +31,15 @@ public:
 	bool Parse( const char * pszText, int iTextLen );
 	bool Parse( std::string & strText );
 
+	bool ParseFile( const char * pszFileName );
+
 	CSoapClass * GetSoap( );
 
 private:
 	CXmlElement m_clsRoot;
 	CSoapClass	m_clsSoap;
 
+	bool ParseXml( );
 	bool GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
 	bool GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
 };
