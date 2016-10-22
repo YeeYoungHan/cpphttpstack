@@ -7,11 +7,12 @@
 include ../Makefile.mk
 
 INC=-I../WsdlParser -I../HttpStack -I../TcpStack \
-	-I../HttpParser -I../SipPlatform
+	-I../HttpParser -I../XmlParser -I../SipPlatform
 LIB=-L../WsdlParser -lwsdlparser \
 	-L../HttpStack -lhttpstack \
 	-L../TcpStack -ltcpstack \
 	-L../HttpParser -lhttpparser \
+	-L../XmlParser -lxmlparser \
 	-L../SipPlatform -lsipplatform \
 	-lssl -lpthread
 
