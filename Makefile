@@ -9,6 +9,7 @@ all:
 	cd HttpParser && make
 	cd TcpStack && make
 	cd HttpStack && make
+	cd XmlParser && make
 	cd WsdlParser && make
 	cd TestHttpClient && make
 	cd TestHttpParser && make
@@ -20,6 +21,7 @@ clean:
 	cd HttpParser && make clean
 	cd TcpStack && make clean
 	cd HttpStack && make clean
+	cd XmlParser && make clean
 	cd WsdlParser && make clean
 	cd TestHttpClient && make clean
 	cd TestHttpParser && make clean
