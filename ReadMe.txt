@@ -98,3 +98,32 @@ C++ HTTP stack 라이브러리
 9. 초간단 HTTP 서버 개발 방법
 
  초간단 HTTP 서버 개발 소스 코드 예제는 TestHttpStack 프로젝트에 있습니다. TestHttpStack 프로젝트 소스 코드를 참고하시면 CHttpStack 을 이용하여서 어떻게 HTTP 서버를 개발할 수 있을지 확인하실 수 있습니다.
+
+10. WSDL 문서로 SOAP 통신용 클래스 생성 방법
+
+ WSDL 파일을 읽어서 SOAP 통신용 클래스 생성하는 소스 코드 예제는 다음과 같습니다.
+ - 테스트용 샘플 소스 코드는 TestWsdlParser 프로젝트를 확인해 보세요.
+
+ CWsdlMessage clsWsdl;
+
+ if( clsWsdl.ParseFile( "globalweather.xml" ) == false )
+ {
+  printf( "clsWsdl.Parse error\n" );
+ }
+ else
+ {
+  clsWsdl.GetSoap()->MakeSource( NULL );
+ }
+
+11. 생성한 SOAP 통신용 클래스로 SOAP 통신하는 방법
+
+ 위에서 WSDL 문서로 생성한 SOAP 클래스로 SOAP 통신하여서 응답을 수신하는 소스 코드는 다음과 같습니다.
+
+ CSoapGlobalWeatherSoap clsSoap;
+ std::string strInput, strOutput;
+
+ strInput = "korea";
+
+ if( clsSoap.GetCitiesByCountry( strInput, strOutput ) == false ) return false;
+
+ printf( "[%s]\n", strOutput.c_str() );
