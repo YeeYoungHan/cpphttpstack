@@ -20,6 +20,10 @@
 #include "TimeUtility.h"
 #include "FileUtility.h"
 
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
 extern bool LogFileCompare( const std::string & strFirst, const std::string & strSecond );
 
 CFileLog::CFileLog() : m_sttFd(NULL), m_iLevel(LOG_ERROR), m_iMaxLogSize(DEFAULT_LOG_FILE_SIZE), m_iLogSize(0)
