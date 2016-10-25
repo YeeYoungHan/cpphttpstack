@@ -19,10 +19,7 @@
 #include "FileLog.h"
 #include "TimeUtility.h"
 #include "FileUtility.h"
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
+#include <stdarg.h>
 
 extern bool LogFileCompare( const std::string & strFirst, const std::string & strSecond );
 
