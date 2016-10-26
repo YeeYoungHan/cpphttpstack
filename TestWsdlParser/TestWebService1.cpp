@@ -17,32 +17,28 @@
  */
 
 #include "SipPlatformDefine.h"
-#include "SoapGlobalWeatherSoap.h"
+#include "SoapService1Soap.h"
 #include "WsdlMessage.h"
 
-// 오픈 SOAP 서비스 테스트
+// C# 으로 생성한 WebService 테스트
 
-bool TestGlobalWeatherSoap( )
+bool TestWebService1Soap( )
 {
-	CSoapGlobalWeatherSoap clsSoap;
-	std::string strInput, strOutput;
+	CSoapService1Soap clsSoap;
+	std::string strOutput;
 
-	strInput = "korea";
-
-	if( clsSoap.GetCitiesByCountry( strInput, strOutput ) == false ) return false;
+	if( clsSoap.HelloWorld( strOutput ) == false ) return false;
 
 	printf( "[%s]\n", strOutput.c_str() );
 
 	return true;
 }
 
-// http://www.webservicex.net/ws/WSDetails.aspx?CATID=12&WSID=56
-
-bool MakeGlobalWeatherSoap( )
+bool MakeWebService1Soap( )
 {
 	CWsdlMessage clsWsdl;
 
-	if( clsWsdl.ParseFile( "globalweather.xml" ) == false )
+	if( clsWsdl.ParseFile( "WebService1.xml" ) == false )
 	{
 		printf( "clsWsdl.Parse error\n" );
 		return 0;

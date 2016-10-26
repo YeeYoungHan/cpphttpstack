@@ -183,7 +183,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SoapService1Soap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SoapService1Soap.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestGlobalWeatherSoap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestWebService1.cpp"
 				>
 			</File>
 			<File

@@ -21,6 +21,9 @@
 bool TestGlobalWeatherSoap( );
 bool MakeGlobalWeatherSoap( );
 
+bool TestWebService1Soap( );
+bool MakeWebService1Soap( );
+
 int main( int argc, char * argv[] )
 {
 	if( argc >= 2 )
@@ -29,10 +32,15 @@ int main( int argc, char * argv[] )
 		{
 			TestGlobalWeatherSoap( );
 		}
+		else if( !strcmp( argv[1], "webservice1" ) )
+		{
+			TestWebService1Soap( );
+		}
 	}
 	else
 	{
 		MakeGlobalWeatherSoap( );
+		MakeWebService1Soap( );
 	}
 
 	return 0;
