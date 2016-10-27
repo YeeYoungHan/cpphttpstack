@@ -23,7 +23,8 @@ LIB=-L../WsdlParser -lwsdlparser \
 all: TestWsdlParser.exe
 
 SRV_OBJ=TestWsdlParser.o \
-	TestGlobalWeatherSoap.o SoapGlobalWeatherSoap.o
+	TestGlobalWeatherSoap.o SoapGlobalWeatherSoap.o \
+	TestWebService1.o SoapService1Soap.o
 
 TestWsdlParser.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)
