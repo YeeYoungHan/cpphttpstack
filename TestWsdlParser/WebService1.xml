@@ -12,6 +12,35 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="PutString">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PutStringResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PutStringResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PutStringInt">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="value" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PutStringIntResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PutStringIntResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="HelloWorldSoapIn">
@@ -20,10 +49,30 @@
   <wsdl:message name="HelloWorldSoapOut">
     <wsdl:part name="parameters" element="tns:HelloWorldResponse" />
   </wsdl:message>
+  <wsdl:message name="PutStringSoapIn">
+    <wsdl:part name="parameters" element="tns:PutString" />
+  </wsdl:message>
+  <wsdl:message name="PutStringSoapOut">
+    <wsdl:part name="parameters" element="tns:PutStringResponse" />
+  </wsdl:message>
+  <wsdl:message name="PutStringIntSoapIn">
+    <wsdl:part name="parameters" element="tns:PutStringInt" />
+  </wsdl:message>
+  <wsdl:message name="PutStringIntSoapOut">
+    <wsdl:part name="parameters" element="tns:PutStringIntResponse" />
+  </wsdl:message>
   <wsdl:portType name="Service1Soap">
     <wsdl:operation name="HelloWorld">
       <wsdl:input message="tns:HelloWorldSoapIn" />
       <wsdl:output message="tns:HelloWorldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PutString">
+      <wsdl:input message="tns:PutStringSoapIn" />
+      <wsdl:output message="tns:PutStringSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PutStringInt">
+      <wsdl:input message="tns:PutStringIntSoapIn" />
+      <wsdl:output message="tns:PutStringIntSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="Service1Soap" type="tns:Service1Soap">
@@ -37,11 +86,47 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="PutString">
+      <soap:operation soapAction="http://tempuri.org/PutString" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PutStringInt">
+      <soap:operation soapAction="http://tempuri.org/PutStringInt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="Service1Soap12" type="tns:Service1Soap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="HelloWorld">
       <soap12:operation soapAction="http://tempuri.org/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PutString">
+      <soap12:operation soapAction="http://tempuri.org/PutString" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PutStringInt">
+      <soap12:operation soapAction="http://tempuri.org/PutStringInt" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

@@ -29,7 +29,8 @@
 enum ESoapArgType
 {
 	E_SAT_NULL = 0,
-	E_SAT_STRING
+	E_SAT_STRING,
+	E_SAT_INT
 };
 
 /**
@@ -43,8 +44,8 @@ public:
 	~CSoapArg();
 
 	bool SetType( const char * pszType );
-	bool GetCode( std::string & strCode );
-	bool GetVariable( std::string & strCode );
+	bool GetCode( std::string & strCode, bool bInput );
+	bool GetVariable( std::string & strCode, bool bInput );
 
 	/** 메소드 인자 이름 */
 	std::string		m_strName;

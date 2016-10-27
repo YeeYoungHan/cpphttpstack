@@ -22,5 +22,17 @@ namespace WebService1
         {
             return "Hello World";
         }
+
+        [WebMethod]
+        public string PutString(string name)
+        {
+            return "Hello " + name;
+        }
+
+        [WebMethod]
+        public string PutStringInt(string name, int value)
+        {
+            return "Hello " + name + "(" + value + ")";
+        }
     }
 }

@@ -12,7 +12,7 @@ CSoapGlobalWeatherSoap::~CSoapGlobalWeatherSoap()
 {
 }
 
-bool CSoapGlobalWeatherSoap::GetCitiesByCountry( std::string & strCountryName, std::string & strGetCitiesByCountryResult )
+bool CSoapGlobalWeatherSoap::GetCitiesByCountry( std::string & strCountryName, std::string & strGetCitiesByCountryResultOut )
 {
 	std::string strSendBody, strRecvBody;
 	CHttpClient clsClient;
@@ -74,14 +74,14 @@ bool CSoapGlobalWeatherSoap::GetCitiesByCountry( std::string & strCountryName, s
 
 		if( iArg == 0 )
 		{
-			strGetCitiesByCountryResult = pclsArg->GetData();
+			strGetCitiesByCountryResultOut = pclsArg->GetData();
 		}
 	}
 
 	return true;
 }
 
-bool CSoapGlobalWeatherSoap::GetWeather( std::string & strCityName, std::string & strCountryName, std::string & strGetWeatherResult )
+bool CSoapGlobalWeatherSoap::GetWeather( std::string & strCityName, std::string & strCountryName, std::string & strGetWeatherResultOut )
 {
 	std::string strSendBody, strRecvBody;
 	CHttpClient clsClient;
@@ -144,7 +144,7 @@ bool CSoapGlobalWeatherSoap::GetWeather( std::string & strCityName, std::string 
 
 		if( iArg == 0 )
 		{
-			strGetWeatherResult = pclsArg->GetData();
+			strGetWeatherResultOut = pclsArg->GetData();
 		}
 	}
 

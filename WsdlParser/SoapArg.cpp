@@ -46,6 +46,10 @@ bool CSoapArg::SetType( const char * pszType )
 	{
 		m_eType = E_SAT_STRING;
 	}
+	else if( !strcmp( pszType, "int" ) )
+	{
+		m_eType = E_SAT_INT;
+	}
 	else
 	{
 		CLog::Print( LOG_ERROR, "%s type(%s) is not defined", __FUNCTION__, pszType );
@@ -59,18 +63,27 @@ bool CSoapArg::SetType( const char * pszType )
  * @ingroup WsdlParser
  * @brief 소스 코드의 함수 인자 생성에 사용할 문자열을 생성한다.
  * @param strCode 변수 이름을 저장할 변수
+ * @param bInput	입력 변수인가?
  * @returns 성공하면 true 을 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CSoapArg::GetCode( std::string & strCode )
+bool CSoapArg::GetCode( std::string & strCode, bool bInput )
 {
+	std::string strVar;
+
+	if( GetVariable( strVar, bInput ) == false ) return false;
+
 	switch( m_eType )
 	{
 	case E_SAT_STRING:
-		strCode = "std::string & str";
-		strCode.append( m_strName );
+		strCode = "std::string & ";
+		strCode.append( strVar );
+		break;
+	case E_SAT_INT:
+		strCode = "int & ";
+		strCode.append( strVar );
 		break;
 	case E_SAT_NULL:
-		break;
+		return false;
 	}
 
 	return true;
@@ -80,18 +93,34 @@ bool CSoapArg::GetCode( std::string & strCode )
  * @ingroup WsdlParser
  * @brief 소스 코드 생성에 사용할 변수 이름을 생성한다.
  * @param strCode 변수 이름을 저장할 변수
+ * @param bInput	입력 변수인가?
  * @returns 성공하면 true 을 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CSoapArg::GetVariable( std::string & strCode )
+bool CSoapArg::GetVariable( std::string & strCode, bool bInput )
 {
 	switch( m_eType )
 	{
 	case E_SAT_STRING:
-		strCode = "str";
+		if( strncmp( m_strName.c_str(), "str", 3 ) )
+		{
+			strCode = "str";
+		}
+		strCode.append( m_strName );
+		break;
+	case E_SAT_INT:
+		if( strncmp( m_strName.c_str(), "i", 1 ) )
+		{
+			strCode = "i";
+		}
 		strCode.append( m_strName );
 		break;
 	case E_SAT_NULL:
-		break;
+		return false;
+	}
+
+	if( bInput == false )
+	{
+		strCode.append( "Out" );
 	}
 
 	return true;

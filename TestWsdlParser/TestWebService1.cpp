@@ -25,9 +25,21 @@
 bool TestWebService1Soap( )
 {
 	CSoapService1Soap clsSoap;
-	std::string strOutput;
+	std::string strName, strOutput;
+	int iValue;
 
 	if( clsSoap.HelloWorld( strOutput ) == false ) return false;
+
+	printf( "[%s]\n", strOutput.c_str() );
+
+	strName = "Su";
+	iValue = 102;
+
+	if( clsSoap.PutString( strName, strOutput ) == false ) return false;
+
+	printf( "[%s]\n", strOutput.c_str() );
+
+	if( clsSoap.PutStringInt( strName, iValue, strOutput ) == false ) return false;
 
 	printf( "[%s]\n", strOutput.c_str() );
 

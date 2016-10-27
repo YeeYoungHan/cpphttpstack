@@ -53,7 +53,7 @@ bool CSoapMethod::GetPrototypeCode( const char * pszClassName, std::string & str
 
 	for( itAL = m_clsInputList.begin(); itAL != m_clsInputList.end(); ++itAL )
 	{
-		if( itAL->GetCode( strArg ) == false ) return false;
+		if( itAL->GetCode( strArg, true ) == false ) return false;
 
 		if( iArgCount > 0 ) strCode.append( ", " );
 		strCode.append( strArg );
@@ -62,7 +62,7 @@ bool CSoapMethod::GetPrototypeCode( const char * pszClassName, std::string & str
 
 	for( itAL = m_clsOutputList.begin(); itAL != m_clsOutputList.end(); ++itAL )
 	{
-		if( itAL->GetCode( strArg ) == false ) return false;
+		if( itAL->GetCode( strArg, false ) == false ) return false;
 
 		if( iArgCount > 0 ) strCode.append( ", " );
 		strCode.append( strArg );
@@ -122,7 +122,7 @@ bool CSoapMethod::GetCode( const char * pszClassName, CSoapClass * pclsSoap, std
 		strCode.append( itAL->m_strName );
 		strCode.append( "\", " );
 		
-		itAL->GetVariable( strVar );
+		itAL->GetVariable( strVar, true );
 		strCode.append( strVar );
 		strCode.append( " );\n" );
 	}
@@ -188,7 +188,7 @@ bool CSoapMethod::GetCode( const char * pszClassName, CSoapClass * pclsSoap, std
 
 	for( itAL = m_clsOutputList.begin(); itAL != m_clsOutputList.end(); ++iArg, ++itAL )
 	{
-		itAL->GetVariable( strVar );
+		itAL->GetVariable( strVar, false );
 		
 		if( iArg == 0 )
 		{

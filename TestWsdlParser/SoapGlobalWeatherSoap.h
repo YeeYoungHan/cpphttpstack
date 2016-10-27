@@ -9,8 +9,8 @@ public:
 	CSoapGlobalWeatherSoap();
 	~CSoapGlobalWeatherSoap();
 
-	bool GetCitiesByCountry( std::string & strCountryName, std::string & strGetCitiesByCountryResult );
-	bool GetWeather( std::string & strCityName, std::string & strCountryName, std::string & strGetWeatherResult );
+	bool GetCitiesByCountry( std::string & strCountryName, std::string & strGetCitiesByCountryResultOut );
+	bool GetWeather( std::string & strCityName, std::string & strCountryName, std::string & strGetWeatherResultOut );
 };
 
 #endif
