@@ -308,10 +308,9 @@ void CTcpSessionList::DeleteAll( )
 void CTcpSessionList::DeleteTimeout( int iTimeout, int iNoPacketTimeout
 	, void (*BeforeDelete)( CTcpSessionList * pclsSessionList, int iIndex, void * pclsArg ), void * pclsArg )
 {
-	time_t	iTime, iNoPacketTime, iCurrentTime;
+	time_t	iTime, iNoPacketTime;
 
 	time( &iTime );
-	iCurrentTime = iTime;
 	iNoPacketTime = iTime - iNoPacketTimeout;
 	iTime -= iTimeout;
 
