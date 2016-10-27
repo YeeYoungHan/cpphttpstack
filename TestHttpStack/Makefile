@@ -11,7 +11,7 @@ LIB=-L../HttpStack -lhttpstack \
 	-L../TcpStack -ltcpstack \
 	-L../HttpParser -lhttpparser \
 	-L../SipPlatform -lsipplatform \
-	-lssl -lpthread
+	-lssl -lcrypto -lpthread
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp
