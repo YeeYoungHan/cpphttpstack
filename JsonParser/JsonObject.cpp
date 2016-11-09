@@ -74,10 +74,6 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 					return -1;
 				}
 			}
-			else if( pszText[i] == ',' )
-			{
-				cType = 0;
-			}
 
 			if( pclsType )
 			{
@@ -90,9 +86,8 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 				}
 
 				m_clsMap.insert( JSON_OBJECT_MAP::value_type( strName, pclsType ) );
-
-				// 종료 문자 다음에 , 문자가 바로 존재할 경우 ++i 때문에 이를 발견하지 못 하므로 -1 하였다.
-				i += iParseLen - 1;
+				cType = 0;
+				i += iParseLen;
 			}
 		}
 		else if( pszText[i] == '"' )
@@ -116,9 +111,17 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 				++cType;
 			}
 		}
+		else if( pszText[i] == '}' )
+		{
+			if( cType == 0 )
+			{
+				iPos = i + 1;
+				break;
+			}
+		}
 	}
 
-	return 0;
+	return iPos;
 }
 
 int CJsonObject::ToString( std::string & strText )

@@ -44,6 +44,10 @@ bool TestJsonObject( )
 {
 	if( TestJsonObject( "{ \"name\" : \"value\" }", "{ \"name\" : \"value\" }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\" : \"value\", \"name1\" : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\"  : \"value\"  , \"name1\"  : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : \"value\" , \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }", "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }" ) == false ) return false;
 
 	return true;
 }
