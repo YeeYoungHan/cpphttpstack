@@ -37,7 +37,7 @@ CJsonString::~CJsonString()
 int CJsonString::Parse( const char * pszText, int iTextLen )
 {
 	uint8_t cType = 0;
-	int iPos;
+	int iPos = 0;
 
 	m_strValue.clear();
 
