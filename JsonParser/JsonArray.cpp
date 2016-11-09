@@ -42,6 +42,8 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 	uint8_t	cType = 0;
 	std::string	strName;
 
+	Clear();
+
 	for( int i = 0; i < iTextLen; ++i )
 	{
 		if( pszText[i] == '[' )

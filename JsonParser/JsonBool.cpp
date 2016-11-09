@@ -16,36 +16,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_OBJECT_H_
-#define _JSON_OBJECT_H_
-
-#include "JsonString.h"
-#include "JsonNumber.h"
-#include "JsonInt.h"
-#include "JsonArray.h"
 #include "JsonBool.h"
-#include <map>
 
-typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
-
-/**
- * @ingroup JsonParser
- * @brief JSON object 를 저장하는 클래스
- */
-class CJsonObject : public CJsonType
+CJsonBool::CJsonBool() : m_bValue(false)
 {
-public:
-	CJsonObject();
-	virtual ~CJsonObject();
+	m_cType = JSON_TYPE_BOOL;
+}
 
-	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText );
+CJsonBool::~CJsonBool()
+{
+}
 
-	void Clear();
-	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
-	static void JsonToString( CJsonType * pclsType, std::string & strText );
+int CJsonBool::Parse( const char * pszText, int iTextLen )
+{
+	if( !strncmp( pszText, "true", 4 ) )
+	{
+		m_bValue = true;
+		return 4;
+	}
+	else if( !strncmp( pszText, "false", 5 ) )
+	{
+		m_bValue = false;
+		return 5;
+	}
 
-	JSON_OBJECT_MAP m_clsMap;
-};
+	return -1;
+}
 
-#endif
+int CJsonBool::ToString( std::string & strText )
+{
+	if( m_bValue )
+	{
+		strText.append( "true" );
+		return 4;
+	}
+
+	strText.append( "false" );
+	return 5;
+}

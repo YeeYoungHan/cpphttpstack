@@ -29,6 +29,8 @@ CJsonNumber::~CJsonNumber()
 
 int CJsonNumber::Parse( const char * pszText, int iTextLen )
 {
+	m_strValue.clear();
+
 	for( int i = 0; i < iTextLen; ++i )
 	{
 		if( isspace( pszText[i] ) || pszText[i] == ',' || pszText[i] == '}' || pszText[i] == ']' )

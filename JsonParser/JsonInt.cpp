@@ -18,7 +18,7 @@
 
 #include "JsonInt.h"
 
-CJsonInt::CJsonInt()
+CJsonInt::CJsonInt() : m_iValue(0)
 {
 	m_cType = JSON_TYPE_INT;
 }
@@ -29,6 +29,8 @@ CJsonInt::~CJsonInt()
 
 int CJsonInt::Parse( const char * pszText, int iTextLen )
 {
+	m_iValue = 0;
+
 	for( int i = 0; i < iTextLen; ++i )
 	{
 		if( isdigit( pszText[i] ) == 0 )

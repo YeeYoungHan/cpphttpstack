@@ -155,6 +155,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\JsonBool.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JsonInt.cpp"
 				>
 			</File>
@@ -182,6 +186,10 @@
 			>
 			<File
 				RelativePath=".\JsonArray.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonBool.h"
 				>
 			</File>
 			<File

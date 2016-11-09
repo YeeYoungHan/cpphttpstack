@@ -42,6 +42,8 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 	uint8_t	cType = 0;
 	std::string	strName;
 
+	Clear();
+
 	for( int i = 0; i < iTextLen; ++i )
 	{
 		if( pszText[i] == '{' )
@@ -228,6 +230,19 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 			}
 		}
 	}
+	else if( pszText[iPos] == 't' || pszText[iPos] == 'f' )
+	{
+		pclsType = new CJsonBool();
+		if( pclsType == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			return NULL;
+		}
+	}
+	else if( pszText[iPos] == 'n' )
+	{
+
+	}
 
 	return pclsType;
 }
@@ -256,6 +271,9 @@ void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
 		break;
 	case JSON_TYPE_ARRAY:
 		((CJsonArray *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_BOOL:
+		((CJsonBool *)pclsType)->ToString( strText );
 		break;
 	}
 }

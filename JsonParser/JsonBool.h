@@ -16,36 +16,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_OBJECT_H_
-#define _JSON_OBJECT_H_
+#ifndef _JSON_BOOL_H_
+#define _JSON_BOOL_H_
 
-#include "JsonString.h"
-#include "JsonNumber.h"
-#include "JsonInt.h"
-#include "JsonArray.h"
-#include "JsonBool.h"
-#include <map>
+#include "JsonType.h"
 
-typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
-
-/**
- * @ingroup JsonParser
- * @brief JSON object 를 저장하는 클래스
- */
-class CJsonObject : public CJsonType
+class CJsonBool : public CJsonType
 {
 public:
-	CJsonObject();
-	virtual ~CJsonObject();
+	CJsonBool();
+	~CJsonBool();
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
 
-	void Clear();
-	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
-	static void JsonToString( CJsonType * pclsType, std::string & strText );
-
-	JSON_OBJECT_MAP m_clsMap;
+	bool m_bValue;
 };
 
 #endif

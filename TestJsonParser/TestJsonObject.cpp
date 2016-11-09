@@ -56,5 +56,11 @@ bool TestJsonObject( )
 
 	if( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\" ] }", "{ \"name\" : [ \"value\", \"value2\" ] }" ) == false ) return false;
 
+	if( TestJsonObject( "{ \"name\" : true }", "{ \"name\" : true }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : false }", "{ \"name\" : false }" ) == false ) return false;
+	if( TestJsonObject( "{\"name\":true}", "{ \"name\" : true }" ) == false ) return false;
+	if( TestJsonObject( "{\"name\":false}", "{ \"name\" : false }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\", true, false ] }", "{ \"name\" : [ \"value\", \"value2\", true, false ] }" ) == false ) return false;
+
 	return true;
 }
