@@ -27,6 +27,13 @@ CJsonString::~CJsonString()
 {
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 문자열을 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON 문자열
+ * @param iTextLen	JSON 문자열 길이
+ * @returns JSON 문자열을 파싱에 성공하면 파싱한 문자열 길이를 리턴하고 그렇지 않으면 -1 을 리턴한다.
+ */
 int CJsonString::Parse( const char * pszText, int iTextLen )
 {
 	uint8_t cType = 0;
@@ -54,11 +61,17 @@ int CJsonString::Parse( const char * pszText, int iTextLen )
 	return -1;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON 문자열로 저장한다.
+ * @param strText JSON 문자열 저장 변수
+ * @returns JSON 문자열 길이를 리턴한다.
+ */
 int CJsonString::ToString( std::string & strText )
 {
 	strText.append( "\"" );
 	strText.append( m_strValue );
 	strText.append( "\"" );
 
-	return 0;
+	return m_strValue.length() + 2;
 }

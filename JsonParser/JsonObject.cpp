@@ -29,6 +29,13 @@ CJsonObject::~CJsonObject()
 	Clear();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON object 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON object 문자열
+ * @param iTextLen	JSON object 문자열 길이
+ * @returns JSON object 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int CJsonObject::Parse( const char * pszText, int iTextLen )
 {
 	int iPos = -1, iParseLen;
@@ -124,6 +131,12 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 	return iPos;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON object 문자열로 변환한다.
+ * @param strText JSON object 문자열 저장 변수
+ * @returns JSON object 문자열 길이를 리턴한다.
+ */
 int CJsonObject::ToString( std::string & strText )
 {
 	JSON_OBJECT_MAP::iterator itMap;
@@ -157,6 +170,10 @@ int CJsonObject::ToString( std::string & strText )
 	return strText.length();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 초기화시킨다.
+ */
 void CJsonObject::Clear()
 {
 	JSON_OBJECT_MAP::iterator itMap;
