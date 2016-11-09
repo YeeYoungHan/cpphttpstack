@@ -102,26 +102,28 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 int CJsonArray::ToString( std::string & strText )
 {
 	JSON_LIST::iterator itJL;
+	std::string strBuf;
 
-	strText.append( "[" );
+	strBuf.append( "[" );
 
 	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
 	{
 		if( itJL == m_clsList.begin() )
 		{
-			strText.append( " " );
+			strBuf.append( " " );
 		}
 		else
 		{
-			strText.append( ", " );
+			strBuf.append( ", " );
 		}
 
-		CJsonObject::JsonToString( *itJL, strText );
+		CJsonObject::JsonToString( *itJL, strBuf );
 	}
 
-	strText.append( " ]" );
+	strBuf.append( " ]" );
+	strText.append( strBuf );
 
-	return strText.length();
+	return strBuf.length();
 }
 
 /**

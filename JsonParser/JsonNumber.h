@@ -21,6 +21,10 @@
 
 #include "JsonType.h"
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 숫자를 저장하는 클래스
+ */
 class CJsonNumber : public CJsonType
 {
 public:

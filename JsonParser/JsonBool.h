@@ -21,6 +21,10 @@
 
 #include "JsonType.h"
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON boolean 을 저장하는 클래스
+ */
 class CJsonBool : public CJsonType
 {
 public:

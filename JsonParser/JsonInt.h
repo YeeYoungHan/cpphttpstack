@@ -22,6 +22,10 @@
 #include "SipPlatformDefine.h"
 #include "JsonType.h"
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 정수를 저장하는 클래스
+ */
 class CJsonInt : public CJsonType
 {
 public:

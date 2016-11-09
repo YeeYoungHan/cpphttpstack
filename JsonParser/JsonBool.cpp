@@ -27,6 +27,13 @@ CJsonBool::~CJsonBool()
 {
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON boolean 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON boolean 문자열
+ * @param iTextLen	JSON boolean 문자열 길이
+ * @returns JSON boolean 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int CJsonBool::Parse( const char * pszText, int iTextLen )
 {
 	if( !strncmp( pszText, "true", 4 ) )
@@ -43,6 +50,12 @@ int CJsonBool::Parse( const char * pszText, int iTextLen )
 	return -1;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON boolean 문자열로 변환한다.
+ * @param strText JSON 문자열 저장 변수
+ * @returns JSON boolean 문자열 길이를 리턴한다.
+ */
 int CJsonBool::ToString( std::string & strText )
 {
 	if( m_bValue )

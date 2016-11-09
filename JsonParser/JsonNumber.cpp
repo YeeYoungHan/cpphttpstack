@@ -27,6 +27,13 @@ CJsonNumber::~CJsonNumber()
 {
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 숫자 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON 숫자 문자열
+ * @param iTextLen	JSON 숫자 문자열 길이
+ * @returns JSON 숫자 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int CJsonNumber::Parse( const char * pszText, int iTextLen )
 {
 	m_strValue.clear();
@@ -43,6 +50,12 @@ int CJsonNumber::Parse( const char * pszText, int iTextLen )
 	return -1;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON 숫자 문자열로 변환한다.
+ * @param strText JSON 문자열 저장 변수
+ * @returns JSON 숫자 문자열 길이를 리턴한다.
+ */
 int CJsonNumber::ToString( std::string & strText )
 {
 	strText.append( m_strValue );

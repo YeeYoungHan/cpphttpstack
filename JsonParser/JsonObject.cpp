@@ -123,26 +123,28 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 int CJsonObject::ToString( std::string & strText )
 {
 	JSON_OBJECT_MAP::iterator itMap;
+	std::string strBuf;
 
-	strText.append( "{" );
+	strBuf.append( "{" );
 
 	for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
 	{
 		if( itMap != m_clsMap.begin() )
 		{
-			strText.append( "," );
+			strBuf.append( "," );
 		}
 
-		strText.append( " \"" );
-		strText.append( itMap->first );
-		strText.append( "\" : " );
+		strBuf.append( " \"" );
+		strBuf.append( itMap->first );
+		strBuf.append( "\" : " );
 
-		JsonToString( itMap->second, strText );
+		JsonToString( itMap->second, strBuf );
 	}
 
-	strText.append( " }" );
+	strBuf.append( " }" );
+	strText.append( strBuf );
 
-	return strText.length();
+	return strBuf.length();
 }
 
 /**

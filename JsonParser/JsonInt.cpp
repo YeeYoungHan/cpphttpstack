@@ -27,6 +27,13 @@ CJsonInt::~CJsonInt()
 {
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 정수 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON 정수 문자열
+ * @param iTextLen	JSON 정수 문자열 길이
+ * @returns JSON 정수 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int CJsonInt::Parse( const char * pszText, int iTextLen )
 {
 	m_iValue = 0;
@@ -47,6 +54,12 @@ int CJsonInt::Parse( const char * pszText, int iTextLen )
 	return -1;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON 정수 문자열로 변환한다.
+ * @param strText JSON 문자열 저장 변수
+ * @returns JSON 정수 문자열 길이를 리턴한다.
+ */
 int CJsonInt::ToString( std::string & strText )
 {
 	char szText[22];
