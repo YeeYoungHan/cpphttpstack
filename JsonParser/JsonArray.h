@@ -46,7 +46,7 @@ public:
 
 	bool SelectData( int iIndex, std::string & strValue );
 	bool SelectData( int iIndex, int64_t & iValue );
-	bool SelectData( int iIndex, bool bValue );
+	bool SelectData( int iIndex, bool & bValue );
 	bool SelectData( int iIndex, CJsonObject ** ppclsObject );
 	bool SelectData( int iIndex, CJsonArray ** ppclsArray );
 	bool SelectData( int iIndex, CJsonType ** ppclsType );

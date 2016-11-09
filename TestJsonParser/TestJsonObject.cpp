@@ -66,8 +66,8 @@ bool TestJsonObject( )
 	Check( TestJsonObject( "{ \"name\" : null }", "{ \"name\" : null }" ) );
 	Check( TestJsonObject( "{\"name\":null}", "{ \"name\" : null }" ) );
 
-	CJsonObject clsObject;
-	std::string strValue;
+	CJsonObject clsObject, clsNewObject;
+	std::string strValue, strText;
 	int64_t iValue = 0;
 	bool bValue = false;
 	CJsonArray * pclsArray = NULL;
@@ -91,6 +91,31 @@ bool TestJsonObject( )
 	Check( clsObject.SelectData( "clsName", &pclsObject ) );
 	Check( pclsObject->SelectData( "childName", strValue ) );
 	Check( !strcmp( strValue.c_str(), "childValue" ) );
+
+	clsObject.Clear();
+	Check( clsObject.InsertData( "name", "value" ) )
+	clsObject.ToString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"name\" : \"value\" }" ) );
+
+	clsObject.Clear();
+	strText.clear();
+	Check( clsObject.InsertData( "name", true ) )
+	clsObject.ToString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"name\" : true }" ) );
+
+	clsObject.Clear();
+	strText.clear();
+	Check( clsObject.InsertData( "name", 1234 ) )
+	clsObject.ToString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"name\" : 1234 }" ) );
+
+	clsObject.Clear();
+	strText.clear();
+	clsNewObject.Clear();
+	Check( clsNewObject.InsertData( "name", "value" ) );
+	Check( clsObject.InsertData( "a1", &clsNewObject ) );
+	clsObject.ToString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"a1\" : { \"name\" : \"value\" } }" ) );
 
 	return true;
 }

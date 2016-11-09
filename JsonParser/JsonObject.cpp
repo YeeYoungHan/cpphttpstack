@@ -16,8 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "SipPlatformDefine.h"
 #include "JsonObject.h"
 #include "Log.h"
+#include "MemoryDebug.h"
 
 CJsonObject::CJsonObject()
 {
@@ -242,7 +244,7 @@ bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
  * @param bValue	프로퍼티 값
  * @returns 검색에 성공하고 해당 값이 boolean 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CJsonObject::SelectData( const char * pszName, bool bValue )
+bool CJsonObject::SelectData( const char * pszName, bool & bValue )
 {
 	CJsonType * pclsType;
 
@@ -323,6 +325,148 @@ bool CJsonObject::SelectData( const char * pszName, CJsonType ** ppclsType )
 	}
 
 	*ppclsType = itMap->second;
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 문자열 프로퍼티를 추가한다.
+ * @param pszName		프로퍼티 이름
+ * @param pszValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName, const char * pszValue )
+{
+	if( Exist( pszName ) )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	CJsonString * pclsString = new CJsonString();
+	if( pclsString == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsString->m_strValue = pszValue;
+	m_clsMap.insert( JSON_OBJECT_MAP::value_type( pszName, pclsString ) );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 정수 프로퍼티를 추가한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName, int32_t iValue )
+{
+	return InsertData( pszName, (int64_t)iValue );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 정수 프로퍼티를 추가한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName, int64_t iValue )
+{
+	if( Exist( pszName ) )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	CJsonInt * pclsInt = new CJsonInt();
+	if( pclsInt == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsInt->m_iValue = iValue;
+	m_clsMap.insert( JSON_OBJECT_MAP::value_type( pszName, pclsInt ) );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 boolean 프로퍼티를 추가한다.
+ * @param pszName 프로퍼티 이름
+ * @param bValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName, bool bValue )
+{
+	if( Exist( pszName ) )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	CJsonBool * pclsBool = new CJsonBool();
+	if( pclsBool == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsBool->m_bValue = bValue;
+	m_clsMap.insert( JSON_OBJECT_MAP::value_type( pszName, pclsBool ) );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 프로퍼티를 추가한다.
+ * @param pszName		프로퍼티 이름
+ * @param pclsType	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName, CJsonType * pclsType )
+{
+	if( Exist( pszName ) )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	CJsonType * pclsNew = pclsType->Copy();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s Copy error", __FUNCTION__ );
+		return false;
+	}
+
+	m_clsMap.insert( JSON_OBJECT_MAP::value_type( pszName, pclsNew ) );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름이 존재하는지 검색한다.
+ * @param pszName		프로퍼티 이름
+ * @returns 프로퍼티 이름이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::Exist( const char * pszName )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap == m_clsMap.end() )
+	{
+		return false;
+	}
 
 	return true;
 }

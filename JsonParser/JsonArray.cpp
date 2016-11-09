@@ -16,8 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "SipPlatformDefine.h"
 #include "JsonObject.h"
 #include "Log.h"
+#include "MemoryDebug.h"
 
 CJsonArray::CJsonArray()
 {
@@ -222,7 +224,7 @@ bool CJsonArray::SelectData( int iIndex, int64_t & iValue )
  * @param bValue Element 값
  * @returns 검색에 성공하고 해당 값이 boolean 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CJsonArray::SelectData( int iIndex, bool bValue )
+bool CJsonArray::SelectData( int iIndex, bool & bValue )
 {
 	CJsonType * pclsType;
 

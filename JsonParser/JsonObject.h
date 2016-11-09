@@ -47,12 +47,18 @@ public:
 
 	bool SelectData( const char * pszName, std::string & strValue );
 	bool SelectData( const char * pszName, int64_t & iValue );
-	bool SelectData( const char * pszName, bool bValue );
+	bool SelectData( const char * pszName, bool & bValue );
 	bool SelectData( const char * pszName, CJsonObject ** ppclsObject );
 	bool SelectData( const char * pszName, CJsonArray ** ppclsArray );
 	bool SelectData( const char * pszName, CJsonType ** ppclsType );
 
+	bool InsertData( const char * pszName, const char * pszValue );
+	bool InsertData( const char * pszName, int32_t iValue );
+	bool InsertData( const char * pszName, int64_t iValue );
+	bool InsertData( const char * pszName, bool bValue );
 	bool InsertData( const char * pszName, CJsonType * pclsType );
+
+	bool Exist( const char * pszName );
 
 	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
 	static void JsonToString( CJsonType * pclsType, std::string & strText );
