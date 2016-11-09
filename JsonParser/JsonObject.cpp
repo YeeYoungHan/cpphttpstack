@@ -159,6 +159,14 @@ void CJsonObject::Clear()
 	m_clsMap.clear();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 문자열에 대한 CJsonType 을 생성한다.
+ * @param pszText		JSON 문자열
+ * @param iTextLen	JSON 문자열 길이
+ * @param iPos			JSON 문자열 파싱 위치
+ * @returns 성공하면 CJsonType 객체의 포인터를 리턴하고 실패하면 NULL 을 리턴한다.
+ */
 CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iPos )
 {
 	CJsonType * pclsType = NULL;
@@ -224,6 +232,12 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 	return pclsType;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief CJsonType 을 문자열에 저장한다.
+ * @param pclsType	CJsonType 객체
+ * @param strText		JSON 문자열 저장 변수
+ */
 void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
 {
 	switch( pclsType->m_cType )

@@ -27,6 +27,10 @@
 
 typedef std::list< CJsonType * > JSON_LIST;
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열을 저장하는 클래스
+ */
 class CJsonArray : public CJsonType
 {
 public:

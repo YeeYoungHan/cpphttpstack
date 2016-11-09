@@ -29,6 +29,13 @@ CJsonArray::~CJsonArray()
 	Clear();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON 배열 문자열
+ * @param iTextLen	JSON 배열 문자열 길이
+ * @returns JSON 배열 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int CJsonArray::Parse( const char * pszText, int iTextLen )
 {
 	int iPos = -1, iParseLen;
@@ -84,6 +91,12 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 	return iPos;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON 배열 문자열로 변환한다.
+ * @param strText JSON 배열 문자열 저장 변수
+ * @returns JSON 배열 문자열 길이를 리턴한다.
+ */
 int CJsonArray::ToString( std::string & strText )
 {
 	JSON_LIST::iterator itJL;
@@ -109,6 +122,10 @@ int CJsonArray::ToString( std::string & strText )
 	return strText.length();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 초기화시킨다.
+ */
 void CJsonArray::Clear()
 {
 	JSON_LIST::iterator itJL;
