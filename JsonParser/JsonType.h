@@ -44,6 +44,8 @@ public:
 	virtual int Parse( const char * pszText, int iTextLen ) = 0;
 	virtual int ToString( std::string & strText ) = 0;
 
+	const char * GetTypeString();
+
 	uint8_t		m_cType;
 };
 

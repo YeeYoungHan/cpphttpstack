@@ -163,6 +163,102 @@ void CJsonObject::Clear()
 	m_clsMap.clear();
 }
 
+bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_STRING )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not string (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	strValue = ((CJsonString *)pclsType)->m_strValue;
+
+	return true;
+}
+
+bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_INT )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	iValue = ((CJsonInt *)pclsType)->m_iValue;
+
+	return true;
+}
+
+bool CJsonObject::SelectData( const char * pszName, bool bValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_BOOL )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not bool (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	bValue = ((CJsonBool *)pclsType)->m_bValue;
+
+	return true;
+}
+
+bool CJsonObject::SelectData( const char * pszName, CJsonObject ** ppclsObject )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_OBJECT )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not object (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	*ppclsObject = (CJsonObject *)pclsType;
+
+	return true;
+}
+
+bool CJsonObject::SelectData( const char * pszName, CJsonArray ** ppclsArray )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_ARRAY )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not array (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	*ppclsArray = (CJsonArray *)pclsType;
+
+	return true;
+}
+
+bool CJsonObject::SelectData( const char * pszName, CJsonType ** ppclsType )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap == m_clsMap.end() )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is not found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	*ppclsType = itMap->second;
+
+	return true;
+}
+
 /**
  * @ingroup JsonParser
  * @brief JSON 문자열에 대한 CJsonType 을 생성한다.

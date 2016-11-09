@@ -16,29 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "JsonType.h"
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-CJsonType::CJsonType()
-{
-}
+#define Check(x)	if( !(x) ){ printf( "%s %d error\n", __FILE__, __LINE__ ); return false; }
 
-CJsonType::~CJsonType()
-{
-}
-
-const char * CJsonType::GetTypeString()
-{
-	switch( m_cType )
-	{
-	case JSON_TYPE_STRING: return "string";
-	case JSON_TYPE_NUMBER: return "number";
-	case JSON_TYPE_INT   : return "int";
-	case JSON_TYPE_DOUBLE: return "double";
-	case JSON_TYPE_OBJECT: return "object";
-	case JSON_TYPE_ARRAY : return "array";
-	case JSON_TYPE_BOOL  : return "bool";
-	case JSON_TYPE_NULL  : return "null";
-	}
-
-	return "";
-}
+#endif

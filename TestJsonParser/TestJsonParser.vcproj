@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Main.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestJsonObject.cpp"
 				>
 			</File>

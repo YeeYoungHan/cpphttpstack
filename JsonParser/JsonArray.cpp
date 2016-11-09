@@ -141,3 +141,108 @@ void CJsonArray::Clear()
 
 	m_clsList.clear();
 }
+
+bool CJsonArray::SelectData( int iIndex, std::string & strValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( iIndex, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_STRING )
+	{
+		CLog::Print( LOG_ERROR, "%s type(%d) is not string (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		return false;
+	}
+
+	strValue = ((CJsonString *)pclsType)->m_strValue;
+
+	return true;
+}
+
+bool CJsonArray::SelectData( int iIndex, int64_t & iValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( iIndex, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_INT )
+	{
+		CLog::Print( LOG_ERROR, "%s type(%d) is not int (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		return false;
+	}
+
+	iValue = ((CJsonInt *)pclsType)->m_iValue;
+
+	return true;
+}
+
+bool CJsonArray::SelectData( int iIndex, bool bValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( iIndex, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_BOOL )
+	{
+		CLog::Print( LOG_ERROR, "%s type(%d) is not bool (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		return false;
+	}
+
+	bValue = ((CJsonBool *)pclsType)->m_bValue;
+
+	return true;
+}
+
+bool CJsonArray::SelectData( int iIndex, CJsonObject ** ppclsObject )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( iIndex, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_OBJECT )
+	{
+		CLog::Print( LOG_ERROR, "%s type(%d) is not object (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		return false;
+	}
+
+	*ppclsObject = (CJsonObject *)pclsType;
+
+	return true;
+}
+
+bool CJsonArray::SelectData( int iIndex, CJsonArray ** ppclsArray )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( iIndex, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_ARRAY )
+	{
+		CLog::Print( LOG_ERROR, "%s type(%d) is not array (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		return false;
+	}
+
+	*ppclsArray = (CJsonArray *)pclsType;
+
+	return true;
+}
+
+bool CJsonArray::SelectData( int iIndex, CJsonType ** ppclsType )
+{
+	if( iIndex >= (int)m_clsList.size() ) 
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) >= m_clsList.size(%d)", __FUNCTION__, iIndex, m_clsList.size() );
+		return false;
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			*ppclsType = *itJL;
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
+}

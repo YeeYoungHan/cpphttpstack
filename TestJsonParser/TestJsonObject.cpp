@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "Main.h"
 #include "JsonObject.h"
 
 static bool TestJsonObject( const char * pszInput, const char * pszOutput )
@@ -42,28 +43,54 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 
 bool TestJsonObject( )
 {
-	if( TestJsonObject( "{ \"name\" : \"value\" }", "{ \"name\" : \"value\" }" ) == false ) return false;
-	if( TestJsonObject( "{\"name\":\"value\"}", "{ \"name\" : \"value\" }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : \"value\", \"name1\" : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\"  : \"value\"  , \"name1\"  : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : \"value\" , \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }", "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }" ) == false ) return false;
+	Check( TestJsonObject( "{ \"name\" : \"value\" }", "{ \"name\" : \"value\" }" ) );
+	Check( TestJsonObject( "{\"name\":\"value\"}", "{ \"name\" : \"value\" }" ) );
+	Check( TestJsonObject( "{ \"name\" : \"value\", \"name1\" : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) );
+	Check( TestJsonObject( "{ \"name\"  : \"value\"  , \"name1\"  : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) );
+	Check( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) );
+	Check( TestJsonObject( "{ \"name\" : \"value\" , \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) );
+	Check( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }", "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }" ) );
 
-	if( TestJsonObject( "{ \"name\" : 1234 }", "{ \"name\" : 1234 }" ) == false ) return false;
-	if( TestJsonObject( "{\"name\":1234}", "{ \"name\" : 1234 }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : 12e31 }", "{ \"name\" : 12e31 }" ) == false ) return false;
+	Check( TestJsonObject( "{ \"name\" : 1234 }", "{ \"name\" : 1234 }" ) );
+	Check( TestJsonObject( "{\"name\":1234}", "{ \"name\" : 1234 }" ) );
+	Check( TestJsonObject( "{ \"name\" : 12e31 }", "{ \"name\" : 12e31 }" ) );
 
-	if( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\" ] }", "{ \"name\" : [ \"value\", \"value2\" ] }" ) == false ) return false;
+	Check( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\" ] }", "{ \"name\" : [ \"value\", \"value2\" ] }" ) );
 
-	if( TestJsonObject( "{ \"name\" : true }", "{ \"name\" : true }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : false }", "{ \"name\" : false }" ) == false ) return false;
-	if( TestJsonObject( "{\"name\":true}", "{ \"name\" : true }" ) == false ) return false;
-	if( TestJsonObject( "{\"name\":false}", "{ \"name\" : false }" ) == false ) return false;
-	if( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\", true, false ] }", "{ \"name\" : [ \"value\", \"value2\", true, false ] }" ) == false ) return false;
+	Check( TestJsonObject( "{ \"name\" : true }", "{ \"name\" : true }" ) );
+	Check( TestJsonObject( "{ \"name\" : false }", "{ \"name\" : false }" ) );
+	Check( TestJsonObject( "{\"name\":true}", "{ \"name\" : true }" ) );
+	Check( TestJsonObject( "{\"name\":false}", "{ \"name\" : false }" ) );
+	Check( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\", true, false ] }", "{ \"name\" : [ \"value\", \"value2\", true, false ] }" ) );
 
-	if( TestJsonObject( "{ \"name\" : null }", "{ \"name\" : null }" ) == false ) return false;
-	if( TestJsonObject( "{\"name\":null}", "{ \"name\" : null }" ) == false ) return false;
+	Check( TestJsonObject( "{ \"name\" : null }", "{ \"name\" : null }" ) );
+	Check( TestJsonObject( "{\"name\":null}", "{ \"name\" : null }" ) );
+
+	CJsonObject clsObject;
+	std::string strValue;
+	int64_t iValue = 0;
+	bool bValue = false;
+	CJsonArray * pclsArray = NULL;
+	CJsonObject * pclsObject = NULL;
+	const char * pszText = "{ \"strName\" : \"strValue\", \"iName\" : 1234, \"bName\" : true, \"arrName\" : [ 1, 2, 3 ], \"clsName\" : { \"childName\" : \"childValue\" } }";
+
+	Check( clsObject.Parse( pszText, strlen(pszText) ) );
+	Check( clsObject.SelectData( "strName", strValue ) );
+	Check( !strcmp( strValue.c_str(), "strValue" ) );
+	Check( clsObject.SelectData( "iName", iValue ) );
+	Check( iValue == 1234 );
+	Check( clsObject.SelectData( "bName", bValue ) );
+	Check( bValue == true );
+	Check( clsObject.SelectData( "arrName", &pclsArray ) );
+	Check( pclsArray->SelectData( 0, iValue ) );
+	Check( iValue == 1 );
+	Check( pclsArray->SelectData( 1, iValue ) );
+	Check( iValue == 2 );
+	Check( pclsArray->SelectData( 2, iValue ) );
+	Check( iValue == 3 );
+	Check( clsObject.SelectData( "clsName", &pclsObject ) );
+	Check( pclsObject->SelectData( "childName", strValue ) );
+	Check( !strcmp( strValue.c_str(), "childValue" ) );
 
 	return true;
 }

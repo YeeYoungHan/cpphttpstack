@@ -22,10 +22,12 @@
 #include "JsonString.h"
 #include "JsonNumber.h"
 #include "JsonInt.h"
+#include "JsonObject.h"
 
 #include <list>
 
 typedef std::list< CJsonType * > JSON_LIST;
+class CJsonObject;
 
 /**
  * @ingroup JsonParser
@@ -40,6 +42,13 @@ public:
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
 	void Clear();
+
+	bool SelectData( int iIndex, std::string & strValue );
+	bool SelectData( int iIndex, int64_t & iValue );
+	bool SelectData( int iIndex, bool bValue );
+	bool SelectData( int iIndex, CJsonObject ** ppclsObject );
+	bool SelectData( int iIndex, CJsonArray ** ppclsArray );
+	bool SelectData( int iIndex, CJsonType ** ppclsType );
 
 	JSON_LIST m_clsList;
 };
