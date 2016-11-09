@@ -29,6 +29,9 @@ C++ HTTP stack 라이브러리
  * HttpStack
    - HTTP 클라이언트/서버 라이브러리
 
+ * JsonParser
+   - JSON 문자열 파싱 및 생성 라이브러리
+
  * SipPlatform
    - C++ SIP stack 에서 사용되는 OS 독립적인 유틸리티 라이브러리
    - https://github.com/YeeYoungHan/cppsipstack
