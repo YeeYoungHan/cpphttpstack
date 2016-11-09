@@ -243,7 +243,12 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 	}
 	else if( pszText[iPos] == 'n' )
 	{
-
+		pclsType = new CJsonNull();
+		if( pclsType == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			return NULL;
+		}
 	}
 
 	return pclsType;
@@ -276,6 +281,9 @@ void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
 		break;
 	case JSON_TYPE_BOOL:
 		((CJsonBool *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_NULL:
+		((CJsonNull *)pclsType)->ToString( strText );
 		break;
 	}
 }

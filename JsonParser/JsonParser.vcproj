@@ -163,6 +163,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\JsonNull.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JsonNumber.cpp"
 				>
 			</File>
@@ -194,6 +198,10 @@
 			</File>
 			<File
 				RelativePath=".\JsonInt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonNull.h"
 				>
 			</File>
 			<File

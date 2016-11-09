@@ -16,37 +16,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_OBJECT_H_
-#define _JSON_OBJECT_H_
-
-#include "JsonString.h"
-#include "JsonNumber.h"
-#include "JsonInt.h"
-#include "JsonArray.h"
-#include "JsonBool.h"
 #include "JsonNull.h"
-#include <map>
 
-typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
+CJsonNull::CJsonNull()
+{
+	m_cType = JSON_TYPE_NULL;
+}
+
+CJsonNull::~CJsonNull()
+{
+}
 
 /**
  * @ingroup JsonParser
- * @brief JSON object 를 저장하는 클래스
+ * @brief JSON null 문자열 파싱하여서 자료구조에 저장한다.
+ * @param pszText		JSON null 문자열
+ * @param iTextLen	JSON null 문자열 길이
+ * @returns JSON null 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
  */
-class CJsonObject : public CJsonType
+int CJsonNull::Parse( const char * pszText, int iTextLen )
 {
-public:
-	CJsonObject();
-	virtual ~CJsonObject();
+	if( !strncmp( pszText, "null", 4 ) )
+	{
+		return 4;
+	}
 
-	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText );
+	return -1;
+}
 
-	void Clear();
-	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
-	static void JsonToString( CJsonType * pclsType, std::string & strText );
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON null 문자열로 변환한다.
+ * @param strText JSON 문자열 저장 변수
+ * @returns JSON boolean 문자열 길이를 리턴한다.
+ */
+int CJsonNull::ToString( std::string & strText )
+{
+	strText.append( "null" );
 
-	JSON_OBJECT_MAP m_clsMap;
-};
-
-#endif
+	return 4;
+}

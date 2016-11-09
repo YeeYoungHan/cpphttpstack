@@ -29,7 +29,7 @@ class CJsonBool : public CJsonType
 {
 public:
 	CJsonBool();
-	~CJsonBool();
+	virtual ~CJsonBool();
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
