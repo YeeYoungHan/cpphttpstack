@@ -11,10 +11,12 @@ all:
 	cd HttpStack && make
 	cd XmlParser && make
 	cd WsdlParser && make
+	cd JsonParser && make
 	cd TestHttpClient && make
 	cd TestHttpParser && make
 	cd TestHttpStack && make
 	cd TestWsdlParser && make
+	cd TestJsonParser && make
 
 clean:
 	cd SipPlatform && make clean
@@ -23,10 +25,12 @@ clean:
 	cd HttpStack && make clean
 	cd XmlParser && make clean
 	cd WsdlParser && make clean
+	cd JsonParser && make clean
 	cd TestHttpClient && make clean
 	cd TestHttpParser && make clean
 	cd TestHttpStack && make clean
 	cd TestWsdlParser && make clean
+	cd TestJsonParser && make clean
 
 install:
 
