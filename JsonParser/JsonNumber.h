@@ -33,6 +33,8 @@ public:
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
+	virtual CJsonType * Copy( );
+
 	bool IsDouble( );
 
 	std::string m_strValue;

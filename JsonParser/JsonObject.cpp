@@ -149,6 +149,32 @@ int CJsonObject::ToString( std::string & strText )
 
 /**
  * @ingroup JsonParser
+ * @brief 자신을 복제한 객체를 생성한다.
+ * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CJsonType * CJsonObject::Copy( )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	CJsonObject * pclsObject = new CJsonObject();
+	if( pclsObject == NULL ) return NULL;
+
+	for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
+	{
+		CJsonType * pclsType = itMap->second->Copy();
+		if( pclsType == NULL )
+		{
+			delete pclsObject;
+			return NULL;
+		}
+
+		pclsObject->m_clsMap.insert( JSON_OBJECT_MAP::value_type( itMap->first, pclsType ) );
+	}
+
+	return pclsObject;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자료구조를 초기화시킨다.
  */
 void CJsonObject::Clear()

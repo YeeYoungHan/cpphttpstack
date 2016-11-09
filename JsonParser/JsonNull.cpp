@@ -56,3 +56,16 @@ int CJsonNull::ToString( std::string & strText )
 
 	return 4;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief 자신을 복제한 객체를 생성한다.
+ * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CJsonType * CJsonNull::Copy( )
+{
+	CJsonNull * pclsNull = new CJsonNull();
+	if( pclsNull == NULL ) return NULL;
+
+	return pclsNull;
+}

@@ -63,6 +63,26 @@ int CJsonNumber::ToString( std::string & strText )
 	return m_strValue.length();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 자신을 복제한 객체를 생성한다.
+ * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CJsonType * CJsonNumber::Copy( )
+{
+	CJsonNumber * pclsNum = new CJsonNumber();
+	if( pclsNum == NULL ) return NULL;
+
+	pclsNum->m_strValue = m_strValue;
+
+	return pclsNum;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief double 인지 검사한다.
+ * @returns double 이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonNumber::IsDouble( )
 {
 	const char * pszValue = m_strValue.c_str();

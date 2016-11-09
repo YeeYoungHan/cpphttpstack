@@ -67,3 +67,18 @@ int CJsonBool::ToString( std::string & strText )
 	strText.append( "false" );
 	return 5;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief 자신을 복제한 객체를 생성한다.
+ * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CJsonType * CJsonBool::Copy( )
+{
+	CJsonBool * pclsBool = new CJsonBool();
+	if( pclsBool == NULL ) return NULL;
+
+	pclsBool->m_bValue = m_bValue;
+
+	return pclsBool;
+}

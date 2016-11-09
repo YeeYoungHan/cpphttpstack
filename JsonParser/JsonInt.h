@@ -34,6 +34,7 @@ public:
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
+	virtual CJsonType * Copy( );
 
 	int64_t	m_iValue;
 };

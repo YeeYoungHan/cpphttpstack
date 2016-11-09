@@ -41,6 +41,8 @@ public:
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
+	virtual CJsonType * Copy( );
+
 	void Clear();
 
 	bool SelectData( const char * pszName, std::string & strValue );
@@ -49,6 +51,8 @@ public:
 	bool SelectData( const char * pszName, CJsonObject ** ppclsObject );
 	bool SelectData( const char * pszName, CJsonArray ** ppclsArray );
 	bool SelectData( const char * pszName, CJsonType ** ppclsType );
+
+	bool InsertData( const char * pszName, CJsonType * pclsType );
 
 	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
 	static void JsonToString( CJsonType * pclsType, std::string & strText );

@@ -70,3 +70,18 @@ int CJsonInt::ToString( std::string & strText )
 
 	return iLen;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief 자신을 복제한 객체를 생성한다.
+ * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CJsonType * CJsonInt::Copy( )
+{
+	CJsonInt * pclsInt = new CJsonInt();
+	if( pclsInt == NULL ) return NULL;
+
+	pclsInt->m_iValue = m_iValue;
+
+	return pclsInt;
+}
