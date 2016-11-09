@@ -16,30 +16,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_OBJECT_H_
-#define _JSON_OBJECT_H_
+#include <stdio.h>
 
-#include "JsonString.h"
-#include <map>
+bool TestJsonObject( );
 
-typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
-
-/**
- * @ingroup JsonParser
- * @brief JSON object 를 저장하는 클래스
- */
-class CJsonObject : public CJsonType
+int main( int argc, char * argv[] )
 {
-public:
-	CJsonObject();
-	virtual ~CJsonObject();
+	bool bRes = false;
 
-	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText );
+	if( TestJsonObject() == false ) goto FUNC_END;
 
-	void Clear();
+	bRes = true;
 
-	JSON_OBJECT_MAP m_clsMap;
-};
+FUNC_END:
 
-#endif
+	if( bRes == false )
+	{
+		printf( "ERROR!!!\n" );
+	}
+	else
+	{
+		printf( "ALL PASS!!!\n" );
+	}
+
+	return 0;
+}

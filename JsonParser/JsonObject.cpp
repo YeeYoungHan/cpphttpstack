@@ -26,6 +26,7 @@ CJsonObject::CJsonObject()
 
 CJsonObject::~CJsonObject()
 {
+	Clear();
 }
 
 int CJsonObject::Parse( const char * pszText, int iTextLen )
@@ -53,49 +54,45 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 	{
 		if( cType == 3 )
 		{
+			CJsonType * pclsType = NULL;
+
 			if( pszText[i] == '"' )
 			{
-				CJsonString * pclsString = new CJsonString();
-				if( pclsString == NULL )
+				pclsType = new CJsonString();
+				if( pclsType == NULL )
 				{
 					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 					return -1;
 				}
-
-				iParseLen = pclsString->Parse( pszText + i, iTextLen - i );
-				if( iParseLen == -1 )
-				{
-					CLog::Print( LOG_ERROR, "%s json string parse error", __FUNCTION__ );
-					delete pclsString;
-					return -1;
-				}
-
-				m_clsMap.insert( JSON_OBJECT_MAP::value_type( strName, pclsString ) );
-				i += iParseLen;
 			}
 			else if( pszText[i] == '{' )
 			{
-				CJsonObject * pclsObject = new CJsonObject();
-				if( pclsObject == NULL )
+				pclsType = new CJsonObject();
+				if( pclsType == NULL )
 				{
 					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 					return -1;
 				}
-
-				iParseLen = pclsObject->Parse( pszText + i, iTextLen - i );
-				if( iParseLen == -1 )
-				{
-					CLog::Print( LOG_ERROR, "%s json object parse error", __FUNCTION__ );
-					delete pclsObject;
-					return -1;
-				}
-
-				m_clsMap.insert( JSON_OBJECT_MAP::value_type( strName, pclsObject ) );
-				i += iParseLen;
 			}
 			else if( pszText[i] == ',' )
 			{
 				cType = 0;
+			}
+
+			if( pclsType )
+			{
+				iParseLen = pclsType->Parse( pszText + i, iTextLen - i );
+				if( iParseLen == -1 )
+				{
+					CLog::Print( LOG_ERROR, "%s json string parse error", __FUNCTION__ );
+					delete pclsType;
+					return -1;
+				}
+
+				m_clsMap.insert( JSON_OBJECT_MAP::value_type( strName, pclsType ) );
+
+				// 종료 문자 다음에 , 문자가 바로 존재할 경우 ++i 때문에 이를 발견하지 못 하므로 -1 하였다.
+				i += iParseLen - 1;
 			}
 		}
 		else if( pszText[i] == '"' )
@@ -152,7 +149,7 @@ int CJsonObject::ToString( std::string & strText )
 		}
 	}
 
-	strText.append( "}" );
+	strText.append( " }" );
 
 	return strText.length();
 }

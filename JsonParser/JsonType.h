@@ -30,6 +30,10 @@
 #define JSON_TYPE_BOOL		0x06
 #define JSON_TYPE_NULL		0x07
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 변수 추상 클래스
+ */
 class CJsonType
 {
 public:
