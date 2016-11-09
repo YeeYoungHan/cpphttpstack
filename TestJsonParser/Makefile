@@ -18,7 +18,7 @@ LIB=-L../JsonParser -ljsonparser \
 all: TestJsonParser.exe
 
 SRV_OBJ=Main.o \
-	TestJsonObject.o
+	TestJsonObject.o TestJsonArray.o
 
 TestJsonParser.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)

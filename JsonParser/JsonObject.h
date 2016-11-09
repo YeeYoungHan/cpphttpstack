@@ -29,6 +29,8 @@
 
 typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
 
+class CJsonArray;
+
 /**
  * @ingroup JsonParser
  * @brief JSON object 를 저장하는 클래스

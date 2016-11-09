@@ -51,6 +51,12 @@ public:
 	bool SelectData( int iIndex, CJsonArray ** ppclsArray );
 	bool SelectData( int iIndex, CJsonType ** ppclsType );
 
+	bool InsertData( const char * pszValue );
+	bool InsertData( int32_t iValue );
+	bool InsertData( int64_t iValue );
+	bool InsertData( bool bValue );
+	bool InsertData( CJsonType * pclsType );
+
 	JSON_LIST m_clsList;
 };
 

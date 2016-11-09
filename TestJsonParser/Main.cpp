@@ -18,8 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include <stdio.h>
-
-bool TestJsonObject( );
+#include "Main.h"
 
 int main( int argc, char * argv[] )
 {
@@ -29,6 +28,7 @@ int main( int argc, char * argv[] )
 
 	bool bRes = false;
 
+	if( TestJsonArray() == false ) goto FUNC_END;
 	if( TestJsonObject() == false ) goto FUNC_END;
 
 	bRes = true;

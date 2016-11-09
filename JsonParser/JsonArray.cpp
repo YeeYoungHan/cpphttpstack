@@ -317,3 +317,97 @@ bool CJsonArray::SelectData( int iIndex, CJsonType ** ppclsType )
 
 	return false;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 문자열 Element 값을 추가한다.
+ * @param pszValue Element 값
+ * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( const char * pszValue )
+{
+	CJsonString * pclsNew = new CJsonString();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsNew->m_strValue = pszValue;
+	m_clsList.push_back( pclsNew );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 정수 Element 값을 추가한다.
+ * @param iValue Element 값
+ * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int32_t iValue )
+{
+	return InsertData( (int64_t)iValue );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 정수 Element 값을 추가한다.
+ * @param iValue Element 값
+ * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int64_t iValue )
+{
+	CJsonInt * pclsNew = new CJsonInt();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsNew->m_iValue = iValue;
+	m_clsList.push_back( pclsNew );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 boolean Element 값을 추가한다.
+ * @param bValue Element 값
+ * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( bool bValue )
+{
+	CJsonBool * pclsNew = new CJsonBool();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	pclsNew->m_bValue = bValue;
+	m_clsList.push_back( pclsNew );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 Element 값을 추가한다.
+ * @param pclsType Element 값
+ * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( CJsonType * pclsType )
+{
+	CJsonType * pclsNew = pclsType->Copy();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	m_clsList.push_back( pclsNew );
+
+	return true;
+}
