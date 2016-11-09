@@ -16,22 +16,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_NUMBER_H_
-#define _JSON_NUMBER_H_
+#ifndef _JSON_ARRAY_H_
+#define _JSON_ARRAY_H_
 
-#include "JsonType.h"
+#include "JsonString.h"
+#include "JsonNumber.h"
+#include "JsonInt.h"
 
-class CJsonNumber : public CJsonType
+#include <list>
+
+typedef std::list< CJsonType * > JSON_LIST;
+
+class CJsonArray : public CJsonType
 {
 public:
-	CJsonNumber();
-	virtual ~CJsonNumber();
+	CJsonArray();
+	virtual ~CJsonArray();
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
-	bool IsDouble( );
+	void Clear();
 
-	std::string m_strValue;
+	JSON_LIST m_clsList;
 };
 
 #endif

@@ -52,6 +52,9 @@ bool TestJsonObject( )
 
 	if( TestJsonObject( "{ \"name\" : 1234 }", "{ \"name\" : 1234 }" ) == false ) return false;
 	if( TestJsonObject( "{\"name\":1234}", "{ \"name\" : 1234 }" ) == false ) return false;
+	if( TestJsonObject( "{ \"name\" : 12e31 }", "{ \"name\" : 12e31 }" ) == false ) return false;
+
+	if( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\" ] }", "{ \"name\" : [ \"value\", \"value2\" ] }" ) == false ) return false;
 
 	return true;
 }

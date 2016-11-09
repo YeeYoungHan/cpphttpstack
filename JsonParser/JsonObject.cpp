@@ -17,7 +17,6 @@
  */
 
 #include "JsonObject.h"
-#include "JsonNumber.h"
 #include "Log.h"
 
 CJsonObject::CJsonObject()
@@ -62,67 +61,14 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 	{
 		if( cType == 3 )
 		{
-			CJsonType * pclsType = NULL;
-
-			if( pszText[i] == '"' )
-			{
-				pclsType = new CJsonString();
-				if( pclsType == NULL )
-				{
-					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-					return -1;
-				}
-			}
-			else if( pszText[i] == '{' )
-			{
-				pclsType = new CJsonObject();
-				if( pclsType == NULL )
-				{
-					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-					return -1;
-				}
-			}
-			else if( pszText[i] == '[' )
-			{
-
-			}
-			else if( isdigit(pszText[i]) )
-			{
-				CJsonNumber clsNumber;
-
-				iParseLen = clsNumber.Parse( pszText + i, iTextLen - i );
-				if( iParseLen == -1 )
-				{
-					CLog::Print( LOG_ERROR, "%s json number parse error", __FUNCTION__ );
-					return -1;
-				}
-
-				if( clsNumber.IsDouble() )
-				{
-					pclsType = new CJsonNumber();
-					if( pclsType == NULL )
-					{
-						CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-						return -1;
-					}
-				}
-				else
-				{
-					pclsType = new CJsonInt();
-					if( pclsType == NULL )
-					{
-						CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-						return -1;
-					}
-				}
-			}
+			CJsonType * pclsType = GetJsonType( pszText, iTextLen, i );
 
 			if( pclsType )
 			{
 				iParseLen = pclsType->Parse( pszText + i, iTextLen - i );
 				if( iParseLen == -1 )
 				{
-					CLog::Print( LOG_ERROR, "%s json string parse error", __FUNCTION__ );
+					CLog::Print( LOG_ERROR, "%s json parse error", __FUNCTION__ );
 					delete pclsType;
 					return -1;
 				}
@@ -189,21 +135,7 @@ int CJsonObject::ToString( std::string & strText )
 		strText.append( itMap->first );
 		strText.append( "\" : " );
 
-		switch( itMap->second->m_cType )
-		{
-		case JSON_TYPE_STRING:
-			((CJsonString *)itMap->second)->ToString( strText );
-			break;
-		case JSON_TYPE_NUMBER:
-			((CJsonNumber *)itMap->second)->ToString( strText );
-			break;
-		case JSON_TYPE_INT:
-			((CJsonInt *)itMap->second)->ToString( strText );
-			break;
-		case JSON_TYPE_OBJECT:
-			((CJsonObject *)itMap->second)->ToString( strText );
-			break;
-		}
+		JsonToString( itMap->second, strText );
 	}
 
 	strText.append( " }" );
@@ -225,4 +157,91 @@ void CJsonObject::Clear()
 	}
 
 	m_clsMap.clear();
+}
+
+CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iPos )
+{
+	CJsonType * pclsType = NULL;
+
+	if( pszText[iPos] == '"' )
+	{
+		pclsType = new CJsonString();
+		if( pclsType == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			return NULL;
+		}
+	}
+	else if( pszText[iPos] == '{' )
+	{
+		pclsType = new CJsonObject();
+		if( pclsType == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			return NULL;
+		}
+	}
+	else if( pszText[iPos] == '[' )
+	{
+		pclsType = new CJsonArray();
+		if( pclsType == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			return NULL;
+		}
+	}
+	else if( isdigit(pszText[iPos]) )
+	{
+		CJsonNumber clsNumber;
+
+		int iParseLen = clsNumber.Parse( pszText + iPos, iTextLen - iPos );
+		if( iParseLen == -1 )
+		{
+			CLog::Print( LOG_ERROR, "%s json number parse error", __FUNCTION__ );
+			return NULL;
+		}
+
+		if( clsNumber.IsDouble() )
+		{
+			pclsType = new CJsonNumber();
+			if( pclsType == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return NULL;
+			}
+		}
+		else
+		{
+			pclsType = new CJsonInt();
+			if( pclsType == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return NULL;
+			}
+		}
+	}
+
+	return pclsType;
+}
+
+void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
+{
+	switch( pclsType->m_cType )
+	{
+	case JSON_TYPE_STRING:
+		((CJsonString *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_NUMBER:
+		((CJsonNumber *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_INT:
+		((CJsonInt *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_OBJECT:
+		((CJsonObject *)pclsType)->ToString( strText );
+		break;
+	case JSON_TYPE_ARRAY:
+		((CJsonArray *)pclsType)->ToString( strText );
+		break;
+	}
 }

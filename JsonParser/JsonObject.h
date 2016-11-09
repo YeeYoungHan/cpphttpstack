@@ -20,7 +20,9 @@
 #define _JSON_OBJECT_H_
 
 #include "JsonString.h"
+#include "JsonNumber.h"
 #include "JsonInt.h"
+#include "JsonArray.h"
 #include <map>
 
 typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;
@@ -39,6 +41,8 @@ public:
 	virtual int ToString( std::string & strText );
 
 	void Clear();
+	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
+	static void JsonToString( CJsonType * pclsType, std::string & strText );
 
 	JSON_OBJECT_MAP m_clsMap;
 };
