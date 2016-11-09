@@ -130,3 +130,7 @@ C++ HTTP stack 라이브러리
  if( clsSoap.GetCitiesByCountry( strInput, strOutput ) == false ) return false;
 
  printf( "[%s]\n", strOutput.c_str() );
+
+12. JSON 문자열 파싱 및 생성하는 방법
+
+ TestJsonParser 폴더의 소스 코드를 참고하세요.
