@@ -142,6 +142,13 @@ void CJsonArray::Clear()
 	m_clsList.clear();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 문자열 값을 검색한다.
+ * @param iIndex		Element 인덱스
+ * @param strValue	Element 값
+ * @returns 검색에 성공하고 해당 값이 문자열 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, std::string & strValue )
 {
 	CJsonType * pclsType;
@@ -158,6 +165,13 @@ bool CJsonArray::SelectData( int iIndex, std::string & strValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 정수 값을 검색한다.
+ * @param iIndex Element 인덱스
+ * @param iValue Element 값
+ * @returns 검색에 성공하고 해당 값이 정수 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, int64_t & iValue )
 {
 	CJsonType * pclsType;
@@ -174,6 +188,13 @@ bool CJsonArray::SelectData( int iIndex, int64_t & iValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 boolean 값을 검색한다.
+ * @param iIndex Element 인덱스
+ * @param bValue Element 값
+ * @returns 검색에 성공하고 해당 값이 boolean 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, bool bValue )
 {
 	CJsonType * pclsType;
@@ -190,6 +211,13 @@ bool CJsonArray::SelectData( int iIndex, bool bValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 object 값을 검색한다.
+ * @param iIndex			Element 인덱스
+ * @param ppclsObject Element 값
+ * @returns 검색에 성공하고 해당 값이 object 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, CJsonObject ** ppclsObject )
 {
 	CJsonType * pclsType;
@@ -206,6 +234,13 @@ bool CJsonArray::SelectData( int iIndex, CJsonObject ** ppclsObject )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 배열 값을 검색한다.
+ * @param iIndex			Element 인덱스
+ * @param ppclsArray	Element 값
+ * @returns 검색에 성공하고 해당 값이 배열 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, CJsonArray ** ppclsArray )
 {
 	CJsonType * pclsType;
@@ -222,6 +257,13 @@ bool CJsonArray::SelectData( int iIndex, CJsonArray ** ppclsArray )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 값을 검색한다.
+ * @param iIndex		Element 인덱스
+ * @param ppclsType Element 값
+ * @returns 검색에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonArray::SelectData( int iIndex, CJsonType ** ppclsType )
 {
 	if( iIndex >= (int)m_clsList.size() ) 

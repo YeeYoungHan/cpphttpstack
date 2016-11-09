@@ -163,6 +163,13 @@ void CJsonObject::Clear()
 	m_clsMap.clear();
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 문자열 값을 검색한다.
+ * @param pszName		프로퍼티 이름
+ * @param strValue	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 문자열 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
 {
 	CJsonType * pclsType;
@@ -179,6 +186,13 @@ bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 정수 값을 검색한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 정수 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
 {
 	CJsonType * pclsType;
@@ -195,6 +209,13 @@ bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 boolean 값을 검색한다.
+ * @param pszName 프로퍼티 이름
+ * @param bValue	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 boolean 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, bool bValue )
 {
 	CJsonType * pclsType;
@@ -211,6 +232,13 @@ bool CJsonObject::SelectData( const char * pszName, bool bValue )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 object 값을 검색한다.
+ * @param pszName			프로퍼티 이름
+ * @param ppclsObject 프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 object 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, CJsonObject ** ppclsObject )
 {
 	CJsonType * pclsType;
@@ -227,6 +255,13 @@ bool CJsonObject::SelectData( const char * pszName, CJsonObject ** ppclsObject )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 배열 값을 검색한다.
+ * @param pszName			프로퍼티 이름
+ * @param ppclsArray	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 배열 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, CJsonArray ** ppclsArray )
 {
 	CJsonType * pclsType;
@@ -243,6 +278,13 @@ bool CJsonObject::SelectData( const char * pszName, CJsonArray ** ppclsArray )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 값을 검색한다.
+ * @param pszName		프로퍼티 이름
+ * @param ppclsType 프로퍼티 값
+ * @returns 검색에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, CJsonType ** ppclsType )
 {
 	JSON_OBJECT_MAP::iterator itMap;
