@@ -17,6 +17,7 @@
  */
 
 #include "JsonInt.h"
+#include <stdlib.h>
 
 CJsonInt::CJsonInt() : m_iValue(0)
 {
