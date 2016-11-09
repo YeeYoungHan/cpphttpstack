@@ -16,35 +16,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_TYPE_H_
-#define _JSON_TYPE_H_
+#include "JsonNumber.h"
 
-#include "SipPlatformDefine.h"
-#include <string>
-
-#define JSON_TYPE_STRING	0x01
-#define JSON_TYPE_NUMBER	0x02
-#define JSON_TYPE_INT			0x12
-#define JSON_TYPE_DOUBLE	0x22
-#define JSON_TYPE_OBJECT	0x03
-#define JSON_TYPE_ARRAY		0x04
-#define JSON_TYPE_BOOL		0x05
-#define JSON_TYPE_NULL		0x00
-
-/**
- * @ingroup JsonParser
- * @brief JSON 변수 추상 클래스
- */
-class CJsonType
+CJsonNumber::CJsonNumber()
 {
-public:
-	CJsonType();
-	virtual ~CJsonType();
+	m_cType = JSON_TYPE_NUMBER;
+}
 
-	virtual int Parse( const char * pszText, int iTextLen ) = 0;
-	virtual int ToString( std::string & strText ) = 0;
+CJsonNumber::~CJsonNumber()
+{
+}
 
-	uint8_t		m_cType;
-};
+int CJsonNumber::Parse( const char * pszText, int iTextLen )
+{
+	for( int i = 0; i < iTextLen; ++i )
+	{
+		if( isspace( pszText[i] ) || pszText[i] == ',' || pszText[i] == '}' || pszText[i] == ']' )
+		{
+			m_strValue.append( pszText, i );
+			return i;
+		}
+	}
 
-#endif
+	return -1;
+}
+
+int CJsonNumber::ToString( std::string & strText )
+{
+	strText.append( m_strValue );
+
+	return m_strValue.length();
+}
+
+bool CJsonNumber::IsDouble( )
+{
+	const char * pszValue = m_strValue.c_str();
+	int iLen = m_strValue.length();
+
+	for( int i = 0; i < iLen; ++i )
+	{
+		if( pszValue[i] == 'e' ) return true;
+	}
+
+	return false;
+}

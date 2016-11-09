@@ -17,6 +17,7 @@
  */
 
 #include "JsonObject.h"
+#include "JsonNumber.h"
 #include "Log.h"
 
 CJsonObject::CJsonObject()
@@ -79,6 +80,40 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 				{
 					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 					return -1;
+				}
+			}
+			else if( pszText[i] == '[' )
+			{
+
+			}
+			else if( isdigit(pszText[i]) )
+			{
+				CJsonNumber clsNumber;
+
+				iParseLen = clsNumber.Parse( pszText + i, iTextLen - i );
+				if( iParseLen == -1 )
+				{
+					CLog::Print( LOG_ERROR, "%s json number parse error", __FUNCTION__ );
+					return -1;
+				}
+
+				if( clsNumber.IsDouble() )
+				{
+					pclsType = new CJsonNumber();
+					if( pclsType == NULL )
+					{
+						CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+						return -1;
+					}
+				}
+				else
+				{
+					pclsType = new CJsonInt();
+					if( pclsType == NULL )
+					{
+						CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+						return -1;
+					}
 				}
 			}
 
@@ -158,6 +193,12 @@ int CJsonObject::ToString( std::string & strText )
 		{
 		case JSON_TYPE_STRING:
 			((CJsonString *)itMap->second)->ToString( strText );
+			break;
+		case JSON_TYPE_NUMBER:
+			((CJsonNumber *)itMap->second)->ToString( strText );
+			break;
+		case JSON_TYPE_INT:
+			((CJsonInt *)itMap->second)->ToString( strText );
 			break;
 		case JSON_TYPE_OBJECT:
 			((CJsonObject *)itMap->second)->ToString( strText );

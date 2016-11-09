@@ -16,35 +16,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_TYPE_H_
-#define _JSON_TYPE_H_
+#include "JsonInt.h"
 
-#include "SipPlatformDefine.h"
-#include <string>
-
-#define JSON_TYPE_STRING	0x01
-#define JSON_TYPE_NUMBER	0x02
-#define JSON_TYPE_INT			0x12
-#define JSON_TYPE_DOUBLE	0x22
-#define JSON_TYPE_OBJECT	0x03
-#define JSON_TYPE_ARRAY		0x04
-#define JSON_TYPE_BOOL		0x05
-#define JSON_TYPE_NULL		0x00
-
-/**
- * @ingroup JsonParser
- * @brief JSON 변수 추상 클래스
- */
-class CJsonType
+CJsonInt::CJsonInt()
 {
-public:
-	CJsonType();
-	virtual ~CJsonType();
+	m_cType = JSON_TYPE_INT;
+}
 
-	virtual int Parse( const char * pszText, int iTextLen ) = 0;
-	virtual int ToString( std::string & strText ) = 0;
+CJsonInt::~CJsonInt()
+{
+}
 
-	uint8_t		m_cType;
-};
+int CJsonInt::Parse( const char * pszText, int iTextLen )
+{
+	for( int i = 0; i < iTextLen; ++i )
+	{
+		if( isdigit( pszText[i] ) == 0 )
+		{
+			std::string strInt;
 
-#endif
+			strInt.append( pszText, i );
+			m_iValue = atoll( strInt.c_str() );
+
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int CJsonInt::ToString( std::string & strText )
+{
+	char szText[22];
+
+	int iLen = snprintf( szText, sizeof(szText), LONG_LONG_FORMAT, m_iValue );
+	strText.append( szText );
+
+	return iLen;
+}

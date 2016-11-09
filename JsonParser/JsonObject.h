@@ -20,6 +20,7 @@
 #define _JSON_OBJECT_H_
 
 #include "JsonString.h"
+#include "JsonInt.h"
 #include <map>
 
 typedef std::map< std::string, CJsonType * > JSON_OBJECT_MAP;

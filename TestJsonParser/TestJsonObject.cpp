@@ -43,11 +43,15 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 bool TestJsonObject( )
 {
 	if( TestJsonObject( "{ \"name\" : \"value\" }", "{ \"name\" : \"value\" }" ) == false ) return false;
+	if( TestJsonObject( "{\"name\":\"value\"}", "{ \"name\" : \"value\" }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\" : \"value\", \"name1\" : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\"  : \"value\"  , \"name1\"  : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\" : \"value\" , \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) == false ) return false;
 	if( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }", "{ \"name\" : \"value\", \"object\" : { \"object1\" : { \"name1\" : \"value1\" } } }" ) == false ) return false;
+
+	if( TestJsonObject( "{ \"name\" : 1234 }", "{ \"name\" : 1234 }" ) == false ) return false;
+	if( TestJsonObject( "{\"name\":1234}", "{ \"name\" : 1234 }" ) == false ) return false;
 
 	return true;
 }

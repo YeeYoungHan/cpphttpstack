@@ -16,35 +16,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _JSON_TYPE_H_
-#define _JSON_TYPE_H_
+#ifndef _JSON_INT_H_
+#define _JSON_INT_H_
 
 #include "SipPlatformDefine.h"
-#include <string>
+#include "JsonType.h"
 
-#define JSON_TYPE_STRING	0x01
-#define JSON_TYPE_NUMBER	0x02
-#define JSON_TYPE_INT			0x12
-#define JSON_TYPE_DOUBLE	0x22
-#define JSON_TYPE_OBJECT	0x03
-#define JSON_TYPE_ARRAY		0x04
-#define JSON_TYPE_BOOL		0x05
-#define JSON_TYPE_NULL		0x00
-
-/**
- * @ingroup JsonParser
- * @brief JSON 변수 추상 클래스
- */
-class CJsonType
+class CJsonInt : public CJsonType
 {
 public:
-	CJsonType();
-	virtual ~CJsonType();
+	CJsonInt();
+	virtual ~CJsonInt();
 
-	virtual int Parse( const char * pszText, int iTextLen ) = 0;
-	virtual int ToString( std::string & strText ) = 0;
+	virtual int Parse( const char * pszText, int iTextLen );
+	virtual int ToString( std::string & strText );
 
-	uint8_t		m_cType;
+	int64_t	m_iValue;
 };
 
 #endif
