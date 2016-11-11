@@ -98,23 +98,20 @@ bool TestJsonObject( )
 	Check( !strcmp( strText.c_str(), "{ \"name\" : \"value\" }" ) );
 
 	clsObject.Clear();
-	strText.clear();
 	Check( clsObject.InsertData( "name", true ) )
-	clsObject.ToString( strText );
+	clsObject.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "{ \"name\" : true }" ) );
 
 	clsObject.Clear();
-	strText.clear();
 	Check( clsObject.InsertData( "name", 1234 ) )
-	clsObject.ToString( strText );
+	clsObject.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "{ \"name\" : 1234 }" ) );
 
 	clsObject.Clear();
-	strText.clear();
 	clsNewObject.Clear();
 	Check( clsNewObject.InsertData( "name", "value" ) );
 	Check( clsObject.InsertData( "a1", &clsNewObject ) );
-	clsObject.ToString( strText );
+	clsObject.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "{ \"a1\" : { \"name\" : \"value\" } }" ) );
 
 	return true;

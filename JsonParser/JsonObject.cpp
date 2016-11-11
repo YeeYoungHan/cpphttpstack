@@ -177,6 +177,30 @@ CJsonType * CJsonObject::Copy( )
 
 /**
  * @ingroup JsonParser
+ * @brief JSON object 문자열 파싱하여서 자료구조에 저장한다.
+ * @param strText JSON object 문자열
+ * @returns JSON object 문자열 파싱에 성공하면 파싱한 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
+int CJsonObject::Parse( std::string & strText )
+{
+	return Parse( strText.c_str(), strText.length() );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief 자료구조를 JSON object 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
+ * @param strText JSON object 문자열 저장 변수
+ * @returns JSON object 문자열 길이를 리턴한다.
+ */
+int CJsonObject::MakeString( std::string & strText )
+{
+	strText.clear();
+
+	return ToString( strText );
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자료구조를 초기화시킨다.
  */
 void CJsonObject::Clear()

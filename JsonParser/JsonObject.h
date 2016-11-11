@@ -45,6 +45,8 @@ public:
 	virtual int ToString( std::string & strText );
 	virtual CJsonType * Copy( );
 
+	int Parse( std::string & strText );
+	int MakeString( std::string & strText );
 	void Clear();
 
 	bool SelectData( const char * pszName, std::string & strValue );
