@@ -32,9 +32,11 @@ void LeftTrimString( std::string & strText );
 void RightTrimString( std::string & strText );
 void TrimString( std::string & strText );
 void SplitString( const char * pszText, STRING_LIST & clsList, char cSep );
-bool IsPrintString( const char * pszText, int iTextLen );
 
 uint32_t GetUInt32( const char * pszText );
 uint64_t GetUInt64( const char * pszText );
+
+bool HexToString( const char * pszInput, std::string & strOutput );
+bool IsPrintString( const char * pszText, int iTextLen );
 
 #endif

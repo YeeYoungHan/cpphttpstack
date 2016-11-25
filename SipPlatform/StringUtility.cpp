@@ -209,23 +209,6 @@ void SplitString( const char * pszText, STRING_LIST & clsList, char cSep )
 
 /**
  * @ingroup SipPlatform
- * @brief 문자열이 출력 가능한지 검사한다.
- * @param pszText		문자열
- * @param iTextLen	문자열 길이
- * @returns 문자열이 출력 가능하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
- */
-bool IsPrintString( const char * pszText, int iTextLen )
-{
-	for( int i = 0; i < iTextLen; ++i )
-	{
-		if( isprint( pszText[i] ) == 0 ) return false;
-	}
-
-	return true;
-}
-
-/**
- * @ingroup SipPlatform
  * @brief 문자열을 unsigned int 로 변환한다.
  * @param pszText 문자열
  * @returns unsigned int 를 리턴한다.
@@ -252,4 +235,55 @@ uint64_t GetUInt64( const char * pszText )
 #else
 	return strtoull( pszText, NULL, 10 );
 #endif
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief HEX 만 저장된 문자열을 숫자로 변환한 문자열을 생성한다.
+ * @param pszInput	HEX 만 저장된 문자열
+ * @param strOutput 숫자로 변환된 문자열 저장용 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool HexToString( const char * pszInput, std::string & strOutput )
+{
+	int iLen = (int)strlen( pszInput );
+	int iValue;
+
+	strOutput.clear();
+
+	if( iLen >= 2 )
+	{
+		if( pszInput[0] == '0' && pszInput[1] == 'x' )
+		{
+			pszInput += 2;
+			iLen -= 2;
+		}
+	}
+
+	if( iLen == 0 || iLen % 2 == 1 ) return false;
+
+	for( int i = 0; i < iLen; i += 2 )
+	{
+		sscanf( pszInput + i, "%02x", &iValue );
+		strOutput.push_back( (char)iValue );
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief 문자열이 출력 가능한지 검사한다.
+ * @param pszText		문자열
+ * @param iTextLen	문자열 길이
+ * @returns 문자열이 출력 가능하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool IsPrintString( const char * pszText, int iTextLen )
+{
+	for( int i = 0; i < iTextLen; ++i )
+	{
+		if( isprint( pszText[i] ) == 0 ) return false;
+	}
+
+	return true;
 }
