@@ -245,6 +245,29 @@ bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
  * @param iValue	프로퍼티 값
  * @returns 검색에 성공하고 해당 값이 정수 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
+bool CJsonObject::SelectData( const char * pszName, int32_t & iValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType != JSON_TYPE_INT )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		return false;
+	}
+
+	iValue = (int32_t)(((CJsonInt *)pclsType)->m_iValue);
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 정수 값을 검색한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 정수 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
 {
 	CJsonType * pclsType;
