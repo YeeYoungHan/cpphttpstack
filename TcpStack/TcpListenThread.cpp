@@ -51,7 +51,7 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 
 				if( pclsStack->m_clsSetup.m_iMaxSocketPerThread == 1 && pclsStack->m_clsSetup.m_iThreadMaxCount == 0 )
 				{
-
+					pclsStack->m_clsThreadList.DeleteNoUseThread();
 				}
 			}
 			continue;

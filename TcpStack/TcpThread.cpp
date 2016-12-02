@@ -53,7 +53,7 @@ THREAD_API TcpThread( LPVOID lpParameter )
 	int		n, iIndex;
 	char	szPacket[TCP_INIT_BUF_SIZE];
 	time_t	iTime, iDeleteTime;
-	bool bAccept;
+	bool bAccept, bDeleteThreadInfo = false;
 
 	CLog::Print( LOG_INFO, "TcpThread started (index=%d)", pclsThreadInfo->m_iIndex );
 
@@ -72,7 +72,9 @@ THREAD_API TcpThread( LPVOID lpParameter )
 			{
 				if( clsTcpComm.m_hSocket == INVALID_SOCKET )
 				{
-					
+					// 종료 신호 수신
+					bDeleteThreadInfo = true;
+					break;
 				}
 				else
 				{
@@ -174,6 +176,12 @@ LOOP_END:
 	pclsThreadInfo->m_bStop = false;
 
 	CLog::Print( LOG_INFO, "TcpThread terminated (index=%d)", pclsThreadInfo->m_iIndex );
+
+	if( bDeleteThreadInfo )
+	{
+		pclsThreadInfo->Close();
+		delete pclsThreadInfo;
+	}
 
 	return 0;
 }

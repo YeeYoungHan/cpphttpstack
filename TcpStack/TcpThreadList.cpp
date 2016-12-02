@@ -99,40 +99,12 @@ bool CTcpThreadList::Create( CTcpStack * pclsStack )
 void CTcpThreadList::Destroy()
 {
 	THREAD_LIST::iterator	itTL;
+	CTcpComm		clsTcpComm;
+
+	SendCommandAll( (char *)&clsTcpComm, sizeof(clsTcpComm) );
 
 	m_clsMutex.acquire();
-	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
-	{
-		(*itTL)->m_bStop = true;
-	}
-	m_clsMutex.release();
-
-	for( int i = 0; i < 100; ++i )
-	{
-		MiliSleep( 20 );
-
-		bool bAllStop = true;
-
-		m_clsMutex.acquire();
-		for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
-		{
-			if( (*itTL)->m_bStop )
-			{
-				bAllStop = false;
-				break;
-			}
-		}
-		m_clsMutex.release();
-
-		if( bAllStop ) break;
-	}
-
-	m_clsMutex.acquire();
-	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
-	{
-		(*itTL)->Close();
-		delete (*itTL);
-	}
+	m_clsList.clear();
 	m_clsMutex.release();
 }
 
@@ -179,6 +151,33 @@ bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen )
 		if( AddThread() )
 		{
 			bRes = _SendCommand( m_clsList[m_clsList.size()-1]->m_hSend, pszData, iDataLen );
+		}
+	}
+	m_clsMutex.release();
+
+	return bRes;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 지정된 쓰레드 번호의 쓰레드로 명령을 전송한다.
+ * @param pszData				명령
+ * @param iDataLen			pszData 길이
+ * @param iThreadIndex	쓰레드 인덱스
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, int iThreadIndex )
+{
+	bool	bRes = false;
+	THREAD_LIST::iterator	itTL;
+
+	m_clsMutex.acquire();
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+	{
+		if( (*itTL)->m_iIndex == iThreadIndex )
+		{
+			bRes = _SendCommand( (*itTL)->m_hSend, pszData, iDataLen );
+			break;
 		}
 	}
 	m_clsMutex.release();
@@ -268,21 +267,95 @@ bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
 
 typedef std::list< int > THREAD_INDEX_LIST;
 
-bool CTcpThreadList::DeleteNoUseThread()
+/**
+ * @ingroup TcpStack
+ * @brief TCP 클라이언트와 연결되지 않은 쓰레드를 삭제한다.
+ */
+void CTcpThreadList::DeleteNoUseThread()
 {
 	THREAD_LIST::iterator	itTL;
+	THREAD_INDEX_LIST clsDeleteList;
+	THREAD_INDEX_LIST::iterator itTIL;
+	int iUseCount = 0;
 
 	m_clsMutex.acquire();
 	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
 		if( (*itTL)->m_clsSessionList.m_iPoolFdCount == 1 )
 		{
-			
+			clsDeleteList.push_back( (*itTL)->m_iIndex );
+		}
+		else
+		{
+			++iUseCount;
 		}
 	}
 	m_clsMutex.release();
 
-	return true;
+	if( clsDeleteList.size() > 0 )
+	{
+		// 초기 실행 쓰레드 개수만큼은 유지되어야 한다.
+		if( m_pclsStack->m_clsSetup.m_iThreadInitCount > iUseCount )
+		{
+			int iDeleteCount = m_pclsStack->m_clsSetup.m_iThreadInitCount - iUseCount;
+
+			if( iDeleteCount >= (int)clsDeleteList.size() )
+			{
+				clsDeleteList.clear();
+			}
+			else
+			{
+				THREAD_INDEX_LIST::iterator itNext;
+
+				for( itTIL = clsDeleteList.begin(); itTIL != clsDeleteList.end(); )
+				{
+					itNext = itTIL;
+					++itNext;
+					clsDeleteList.erase( itTIL );
+					itTIL = itNext;
+
+					--iDeleteCount;
+					if( iDeleteCount == 0 ) break;
+				}
+			}
+		}
+
+		for( itTIL = clsDeleteList.begin(); itTIL != clsDeleteList.end(); ++itTIL )
+		{
+			DeleteThread( *itTIL );
+		}
+	}
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 쓰레드 정보를 삭제한다.
+ * @param iThreadIndex 쓰레드 인덱스
+ * @returns 성공하면 true 를 리턴하고 성공하면 false 를 리턴한다.
+ */
+bool CTcpThreadList::DeleteThread( int iThreadIndex )
+{
+	THREAD_LIST::iterator	itTL;
+	CTcpComm		clsTcpComm;
+	bool bRes = false;
+
+	SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm), iThreadIndex );
+
+	m_clsMutex.acquire();
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+	{
+		if( (*itTL)->m_iIndex == iThreadIndex )
+		{
+			// 쓰레드에서 자료구조를 사용하므로 쓰레드 종료할 때에 삭제한다.
+			// delete *itTL;
+			m_clsList.erase( itTL );
+			bRes = true;
+			break;
+		}
+	}
+	m_clsMutex.release();
+
+	return bRes;
 }
 
 /**

@@ -102,13 +102,15 @@ public:
 	void Destroy();
 
 	bool SendCommand( const char * pszData, int iDataLen );
+	bool SendCommand( const char * pszData, int iDataLen, int iThreadIndex );
 	void SendCommandAll( const char * pszData, int iDataLen );
 	static int RecvCommand( Socket hSocket, char * pszData, int iDataSize );
 
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen );
 
-	bool DeleteNoUseThread();
+	void DeleteNoUseThread();
+	bool DeleteThread( int iThreadIndex );
 
 	void GetString( CMonitorString & strBuf );
 
