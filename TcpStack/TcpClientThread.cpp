@@ -57,6 +57,9 @@ public:
 THREAD_API TcpClientThread( LPVOID lpParameter )
 {
 	CTcpClientArg * pclsArg = (CTcpClientArg *)lpParameter;
+
+	CLog::Print( LOG_INFO, "TcpClientThread started (%s:%d)", pclsArg->m_strIp.c_str(), pclsArg->m_iPort );
+
 	Socket hConn = TcpConnect( pclsArg->m_strIp.c_str(), pclsArg->m_iPort, pclsArg->m_pclsStack->m_clsSetup.m_iTcpConnectTimeout );
 	if( hConn == INVALID_SOCKET )
 	{
@@ -95,6 +98,8 @@ THREAD_API TcpClientThread( LPVOID lpParameter )
 			}
 		}
 	}
+
+	CLog::Print( LOG_INFO, "TcpClientThread terminated (%s:%d)", pclsArg->m_strIp.c_str(), pclsArg->m_iPort );
 
 	delete pclsArg;
 	

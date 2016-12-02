@@ -34,6 +34,8 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 	pollfd sttPoll[1];
 	int		n;
 
+	CLog::Print( LOG_INFO, "TcpListenThread started(port=%d)", pclsStack->m_clsSetup.m_iListenPort );
+
 	TcpSetPollIn( sttPoll[0], pclsStack->m_hTcpListenFd );
 
 	while( pclsStack->m_bStop == false )
@@ -52,7 +54,11 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
 			}
 		}
+
+		// QQQ: 초기 실행 쓰레드 개수보다 많은 경우, thread 에 pipe socket 만 존재하면 해당 쓰레드를 종료한다.
 	}
+
+	CLog::Print( LOG_INFO, "TcpListenThread terminated(port=%d)", pclsStack->m_clsSetup.m_iListenPort );
 
 	return 0;
 }
