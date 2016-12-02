@@ -117,7 +117,7 @@ public:
 private:
 	THREAD_LIST	m_clsList;
 	int					m_iMaxSocketPerThread;
-	int					m_iThreadIndex;
+	uint32_t		m_iThreadIndex;
 	CSipMutex		m_clsMutex;
 	CTcpStack * m_pclsStack;
 

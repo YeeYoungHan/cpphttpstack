@@ -536,7 +536,7 @@ bool CTcpThreadList::SelectThreadIndex( uint32_t iThreadIndex )
 
 	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		if( (*itTL)->m_iIndex == m_iThreadIndex )
+		if( (*itTL)->m_iIndex == iThreadIndex )
 		{
 			return true;
 		}
