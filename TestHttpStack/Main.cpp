@@ -73,5 +73,9 @@ int main( int argc, char * argv[] )
 	// 모든 쓰레드가 종료될 때까지 대기한다.
 	sleep(2);
 
+#ifdef WIN32
+	CLog::Release();
+#endif
+
 	return 0;
 }
