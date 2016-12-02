@@ -61,6 +61,7 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 			if( pclsStack->m_clsThreadList.SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm) ) == false )
 			{
 				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
+				closesocket( clsTcpComm.m_hSocket );
 			}
 		}
 	}

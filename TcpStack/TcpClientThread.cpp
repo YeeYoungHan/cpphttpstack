@@ -95,6 +95,7 @@ THREAD_API TcpClientThread( LPVOID lpParameter )
 			{
 				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
 				pclsArg->m_pclsStack->m_clsClientMap.Delete( pclsArg->m_strIp.c_str(), pclsArg->m_iPort );
+				closesocket( hConn );
 			}
 		}
 	}
