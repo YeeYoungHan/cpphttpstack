@@ -446,6 +446,7 @@ bool CTcpThreadList::AddThread()
 	bool bRes = StartThread( "TcpThread", TcpThread, pclsTcpThreadInfo );
 	if( bRes == false )
 	{
+		DeleteThread( pclsTcpThreadInfo->m_iIndex );
 		delete pclsTcpThreadInfo;
 	}
 
