@@ -44,7 +44,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	std::string strPath = m_strDocumentRoot;
 	std::string strExt;
 
-	CLog::Print( LOG_DEBUG, "req uri[%s]\n", pclsRequest->m_strReqUri.c_str() );
+	CLog::Print( LOG_DEBUG, "req uri[%s]", pclsRequest->m_strReqUri.c_str() );
 
 	// 보안상 .. 을 포함한 URL 을 무시한다.
 	if( strstr( pclsRequest->m_strReqUri.c_str(), ".." ) )

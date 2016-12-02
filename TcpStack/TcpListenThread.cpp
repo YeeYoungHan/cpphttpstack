@@ -32,7 +32,7 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 	CTcpStack * pclsStack = (CTcpStack *)lpParameter;
 	CTcpComm clsTcpComm;
 	pollfd sttPoll[1];
-	int		n;
+	int		n, iSleepSecond = 0;
 
 	CLog::Print( LOG_INFO, "TcpListenThread started(port=%d)", pclsStack->m_clsSetup.m_iListenPort );
 
@@ -43,8 +43,21 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 		n = poll( sttPoll, 1, 1000 );
 		if( n <= 0 )
 		{
+			++iSleepSecond;
+
+			if( iSleepSecond == 60 )
+			{
+				iSleepSecond = 0;
+
+				if( pclsStack->m_clsSetup.m_iMaxSocketPerThread == 1 && pclsStack->m_clsSetup.m_iThreadMaxCount == 0 )
+				{
+
+				}
+			}
 			continue;
 		}
+
+		iSleepSecond = 0;
 
 		clsTcpComm.m_hSocket = TcpAccept( pclsStack->m_hTcpListenFd, clsTcpComm.m_szIp, sizeof(clsTcpComm.m_szIp), &clsTcpComm.m_iPort );
 		if( clsTcpComm.m_hSocket != INVALID_SOCKET )
@@ -54,8 +67,6 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
 			}
 		}
-
-		// QQQ: 초기 실행 쓰레드 개수보다 많은 경우, thread 에 pipe socket 만 존재하면 해당 쓰레드를 종료한다.
 	}
 
 	CLog::Print( LOG_INFO, "TcpListenThread terminated(port=%d)", pclsStack->m_clsSetup.m_iListenPort );

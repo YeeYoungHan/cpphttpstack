@@ -107,18 +107,21 @@ public:
 
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen );
-	bool Select( int iThreadIndex, CTcpThreadInfo ** ppclsThreadInfo );
 
 	void GetString( CMonitorString & strBuf );
 
 private:
 	THREAD_LIST	m_clsList;
 	int					m_iMaxSocketPerThread;
+	int					m_iThreadIndex;
 	CSipMutex		m_clsMutex;
 	CTcpStack * m_pclsStack;
 
 	bool AddThread();
 	bool _SendCommand( Socket hSocket, const char * pszData, int iDataLen );
+	int GetCount();
+	int GetThreadIndex();
+	bool SelectThreadIndex( int iThreadIndex );
 };
 
 #endif

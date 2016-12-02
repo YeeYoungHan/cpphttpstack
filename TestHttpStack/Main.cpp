@@ -18,6 +18,7 @@
 
 #include "SimpleHttpServer.h"
 #include "Directory.h"
+#include "Log.h"
 #include "MemoryDebug.h"
 
 int main( int argc, char * argv[] )
@@ -36,13 +37,20 @@ int main( int argc, char * argv[] )
 	CHttpStack clsStack;
 	CTcpStackSetup clsSetup;
 
+#ifdef WIN32
+	CLog::SetDirectory( "c:\\temp\\http" );
+	CLog::SetLevel( LOG_INFO | LOG_DEBUG );
+#endif
+
 	// HTTP 수신 포트 번호를 설정한다.
 	clsSetup.m_iListenPort = 8080;
+	clsSetup.m_iMaxSocketPerThread = 1;
+	clsSetup.m_iThreadMaxCount = 0;
 
 	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
 	clsServer.m_strDocumentRoot = argv[1];
 
-	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) != 0 )
+	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) == false )
 	{
 		printf( "[%s] is not directory\n", clsServer.m_strDocumentRoot.c_str() );
 		return 0;

@@ -54,7 +54,7 @@ void CTcpThreadInfo::Close()
 	}
 }
 
-CTcpThreadList::CTcpThreadList() : m_pclsStack(NULL)
+CTcpThreadList::CTcpThreadList() : m_iMaxSocketPerThread(0), m_iThreadIndex(0), m_pclsStack(NULL)
 {
 }
 
@@ -70,6 +70,12 @@ CTcpThreadList::~CTcpThreadList()
  */
 bool CTcpThreadList::Create( CTcpStack * pclsStack )
 {
+	if( pclsStack->m_clsSetup.m_iMaxSocketPerThread <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s m_iMaxSocketPerThread(%d) is invalid", __FUNCTION__, pclsStack->m_clsSetup.m_iMaxSocketPerThread );
+		return false;
+	}
+
 	// pipe 연산을 수행해야 하므로 1개 추가한다.
 	m_iMaxSocketPerThread = pclsStack->m_clsSetup.m_iMaxSocketPerThread + 1;
 	m_pclsStack = pclsStack;
@@ -78,6 +84,7 @@ bool CTcpThreadList::Create( CTcpStack * pclsStack )
 	{
 		if( AddThread() == false )
 		{
+			Destroy();
 			return false;
 		}
 	}
@@ -93,10 +100,12 @@ void CTcpThreadList::Destroy()
 {
 	THREAD_LIST::iterator	it;
 
+	m_clsMutex.acquire();
 	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
 	{
 		(*it)->m_bStop = true;
 	}
+	m_clsMutex.release();
 
 	for( int i = 0; i < 100; ++i )
 	{
@@ -104,6 +113,7 @@ void CTcpThreadList::Destroy()
 
 		bool bAllStop = true;
 
+		m_clsMutex.acquire();
 		for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
 		{
 			if( (*it)->m_bStop )
@@ -112,15 +122,18 @@ void CTcpThreadList::Destroy()
 				break;
 			}
 		}
+		m_clsMutex.release();
 
 		if( bAllStop ) break;
 	}
 
+	m_clsMutex.acquire();
 	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
 	{
 		(*it)->Close();
 		delete (*it);
 	}
+	m_clsMutex.release();
 }
 
 /**
@@ -142,54 +155,52 @@ bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, int iThrea
 		return false;
 	}
 
-	if( iThreadIndex >= (int)m_clsList.size() )
-	{
-		return false;
-	}
-
 	m_clsMutex.acquire();
-	if( iThreadIndex == -1 )
+	if( iThreadIndex < (int)m_clsList.size() )
 	{
-		THREAD_LIST::iterator	it;
-		int iMinCount = 2000000000;
-
-		// 소켓을 최소 사용하는 쓰레드를 검색한다.
-		for( it = m_clsList.begin(), iThreadIndex = 0; it != m_clsList.end(); ++it, ++iThreadIndex )
+		if( iThreadIndex == -1 )
 		{
-			if( iMinCount > (*it)->m_clsSessionList.m_iPoolFdCount )
-			{
-				iMinCount = (*it)->m_clsSessionList.m_iPoolFdCount;
-				if( iMinCount == 0 ) break;
-			}
-		}
+			THREAD_LIST::iterator	it;
+			int iMinCount = 2000000000;
 
-		if( iMinCount < m_iMaxSocketPerThread )
-		{
+			// 소켓을 최소 사용하는 쓰레드를 검색한다.
 			for( it = m_clsList.begin(), iThreadIndex = 0; it != m_clsList.end(); ++it, ++iThreadIndex )
 			{
-				if( iMinCount == (*it)->m_clsSessionList.m_iPoolFdCount )
+				if( iMinCount > (*it)->m_clsSessionList.m_iPoolFdCount )
 				{
-					bRes = _SendCommand( (*it)->m_hSend, pszData, iDataLen );
+					iMinCount = (*it)->m_clsSessionList.m_iPoolFdCount;
+					if( iMinCount == 0 ) break;
+				}
+			}
+
+			if( iMinCount < m_iMaxSocketPerThread )
+			{
+				for( it = m_clsList.begin(), iThreadIndex = 0; it != m_clsList.end(); ++it, ++iThreadIndex )
+				{
+					if( iMinCount == (*it)->m_clsSessionList.m_iPoolFdCount )
+					{
+						bRes = _SendCommand( (*it)->m_hSend, pszData, iDataLen );
+						if( piThreadIndex ) *piThreadIndex = iThreadIndex;
+						bFound = true;
+						break;
+					}
+				}
+			}
+
+			if( bFound == false )
+			{
+				if( AddThread() )
+				{
+					bRes = _SendCommand( m_clsList[m_clsList.size()-1]->m_hSend, pszData, iDataLen );
 					if( piThreadIndex ) *piThreadIndex = iThreadIndex;
-					bFound = true;
-					break;
 				}
 			}
 		}
-
-		if( bFound == false )
+		else
 		{
-			if( AddThread() )
-			{
-				bRes = _SendCommand( m_clsList[m_clsList.size()-1]->m_hSend, pszData, iDataLen );
-				if( piThreadIndex ) *piThreadIndex = iThreadIndex;
-			}
+			bRes = _SendCommand( m_clsList[iThreadIndex]->m_hSend, pszData, iDataLen );
+			if( piThreadIndex ) *piThreadIndex = iThreadIndex;
 		}
-	}
-	else
-	{
-		bRes = _SendCommand( m_clsList[iThreadIndex]->m_hSend, pszData, iDataLen );
-		if( piThreadIndex ) *piThreadIndex = iThreadIndex;
 	}
 	m_clsMutex.release();
 
@@ -246,7 +257,13 @@ int CTcpThreadList::RecvCommand( Socket hSocket, char * pszData, int iDataSize )
  */
 bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
 {
-	return m_clsList[iThreadIndex]->m_clsSessionList.Send( iSessionIndex, pszPacket, iPacketLen );
+	bool bRes;
+
+	m_clsMutex.acquire();
+	bRes = m_clsList[iThreadIndex]->m_clsSessionList.Send( iSessionIndex, pszPacket, iPacketLen );
+	m_clsMutex.release();
+
+	return bRes;
 }
 
 /**
@@ -260,24 +277,12 @@ bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
 {
 	int iCount = m_clsList.size();
 
+	m_clsMutex.acquire();
 	for( int i = 0; i < iCount; ++i )
 	{
 		m_clsList[i]->m_clsSessionList.SendAll( pszPacket, iPacketLen );
 	}
-
-	return true;
-}
-
-/**
- * @ingroup TcpStack
- * @brief TCP 쓰레드 번호에 대한 정보를 가져온다.
- * @param iThreadIndex		TCP 쓰레드 번호
- * @param ppclsThreadInfo TCP 쓰레드 정보
- * @returns true 를 리턴한다.
- */
-bool CTcpThreadList::Select( int iThreadIndex, CTcpThreadInfo ** ppclsThreadInfo )
-{
-	*ppclsThreadInfo = m_clsList[iThreadIndex];
+	m_clsMutex.release();
 
 	return true;
 }
@@ -293,10 +298,12 @@ void CTcpThreadList::GetString( CMonitorString & strBuf )
 
 	strBuf.Clear();
 
+	m_clsMutex.acquire();
 	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
 	{
 		strBuf.AddRow( (*it)->m_clsSessionList.m_iPoolFdCount );
 	}
+	m_clsMutex.release();
 }
 
 /**
@@ -308,9 +315,11 @@ bool CTcpThreadList::AddThread()
 {
 	if( m_pclsStack->m_clsSetup.m_iThreadMaxCount != 0 )
 	{
-		if( (int)m_clsList.size() >= m_pclsStack->m_clsSetup.m_iThreadMaxCount )
+		int iListCount = GetCount();
+
+		if( iListCount >= m_pclsStack->m_clsSetup.m_iThreadMaxCount )
 		{
-			CLog::Print( LOG_ERROR, "%s thread count(%d) >= max thread count(%d)", __FUNCTION__, (int)m_clsList.size(), m_pclsStack->m_clsSetup.m_iThreadMaxCount );
+			CLog::Print( LOG_ERROR, "%s thread count(%d) >= max thread count(%d)", __FUNCTION__, iListCount, m_pclsStack->m_clsSetup.m_iThreadMaxCount );
 			return false;
 		}
 	}
@@ -323,7 +332,7 @@ bool CTcpThreadList::AddThread()
 		return false;
 	}
 
-	pclsTcpThreadInfo->m_iIndex = m_clsList.size();
+	pclsTcpThreadInfo->m_iIndex = GetThreadIndex();
 
 	if( pclsTcpThreadInfo->m_clsSessionList.Init( pclsTcpThreadInfo->m_iIndex, m_iMaxSocketPerThread ) == false )
 	{
@@ -344,7 +353,9 @@ bool CTcpThreadList::AddThread()
 	pclsTcpThreadInfo->m_clsSessionList.Insert( pclsTcpThreadInfo->m_hRecv );
 	pclsTcpThreadInfo->m_pclsStack = m_pclsStack;
 
+	m_clsMutex.acquire();
 	m_clsList.push_back( pclsTcpThreadInfo );
+	m_clsMutex.release();
 
 	bool bRes = StartThread( "TcpThread", TcpThread, pclsTcpThreadInfo );
 	if( bRes == false )
@@ -378,4 +389,72 @@ bool CTcpThreadList::_SendCommand( Socket hSocket, const char * pszData, int iDa
 	}
 
 	return true;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 쓰레드 개수를 리턴한다.
+ * @returns 쓰레드 개수를 리턴한다.
+ */
+int CTcpThreadList::GetCount()
+{
+	int iCount = 0;
+
+	m_clsMutex.acquire();
+	iCount = m_clsList.size();
+	m_clsMutex.release();
+
+	return iCount;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 새로 사용할 쓰레드 번호를 가져온다.
+ * @returns 새로 사용할 쓰레드 번호를 리턴한다.
+ */
+int CTcpThreadList::GetThreadIndex()
+{
+	int iThreadIndex = 0;
+
+	m_clsMutex.acquire();
+	++m_iThreadIndex;
+	if( m_iThreadIndex > 2000000000 )
+	{
+		m_iThreadIndex = 1;
+	}
+
+	while( SelectThreadIndex( m_iThreadIndex ) )
+	{
+		++m_iThreadIndex;
+		if( m_iThreadIndex > 2000000000 )
+		{
+			m_iThreadIndex = 1;
+		}
+	}
+
+	iThreadIndex = m_iThreadIndex;
+	m_clsMutex.release();
+
+	return m_iThreadIndex;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 쓰레드 번호가 사용중인지 검사한다.
+ * @param iThreadIndex 쓰레드 번호
+ * @returns 쓰레드 번호가 사용중이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpThreadList::SelectThreadIndex( int iThreadIndex )
+{
+	THREAD_LIST::iterator itTL;
+
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+	{
+		if( (*itTL)->m_iIndex == m_iThreadIndex )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
