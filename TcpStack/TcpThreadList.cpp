@@ -353,6 +353,21 @@ bool CTcpThreadList::DeleteThread( int iThreadIndex )
 			break;
 		}
 	}
+
+	if( bRes )
+	{
+		uint32_t iMaxIndex = 0;
+
+		for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+		{
+			if( (*itTL)->m_iIndex > iMaxIndex )
+			{
+				iMaxIndex = (*itTL)->m_iIndex;
+			}
+		}
+
+		m_iThreadIndex = iMaxIndex;
+	}
 	m_clsMutex.release();
 
 	return bRes;
