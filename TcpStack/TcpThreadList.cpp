@@ -25,7 +25,7 @@
 
 THREAD_API TcpThread( LPVOID lpParameter );
 
-CTcpThreadInfo::CTcpThreadInfo() : m_iIndex(0), m_hSend(INVALID_SOCKET), m_hRecv(INVALID_SOCKET), m_bStop(false)
+CTcpThreadInfo::CTcpThreadInfo() : m_iIndex(0), m_hSend(INVALID_SOCKET), m_hRecv(INVALID_SOCKET)
 {
 
 }

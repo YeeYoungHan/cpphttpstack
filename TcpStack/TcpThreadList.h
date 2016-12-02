@@ -80,7 +80,6 @@ public:
 	uint32_t	m_iIndex;				// 쓰레드 인덱스
 	Socket		m_hSend;				// 송신 pipe
 	Socket		m_hRecv;				// 수신 pipe
-	bool			m_bStop;				// 쓰레드 중지 이벤트
 
 	CTcpSessionList	m_clsSessionList;
 	CTcpStack	* m_pclsStack;
