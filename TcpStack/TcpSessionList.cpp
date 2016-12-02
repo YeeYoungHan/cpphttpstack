@@ -107,7 +107,7 @@ void CTcpSessionInfo::Log( const char * pszPacket, int iPacketLen, bool bSend )
 
 	if( iPacketLen >= 10 && IsPrintString( pszPacket, 10 ) )
 	{
-		CLog::Print( LOG_NETWORK, "%s(%s:%d) [%s] (%d)", pszFunction, m_strIp.c_str(), m_iPort, pszPacket, iPacketLen );
+		CLog::Print( LOG_NETWORK, "%s(%s:%d) [%.*s] (%d)", pszFunction, m_strIp.c_str(), m_iPort, iPacketLen, pszPacket, iPacketLen );
 	}
 	else
 	{
