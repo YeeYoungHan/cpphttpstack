@@ -98,12 +98,12 @@ bool CTcpThreadList::Create( CTcpStack * pclsStack )
  */
 void CTcpThreadList::Destroy()
 {
-	THREAD_LIST::iterator	it;
+	THREAD_LIST::iterator	itTL;
 
 	m_clsMutex.acquire();
-	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		(*it)->m_bStop = true;
+		(*itTL)->m_bStop = true;
 	}
 	m_clsMutex.release();
 
@@ -114,9 +114,9 @@ void CTcpThreadList::Destroy()
 		bool bAllStop = true;
 
 		m_clsMutex.acquire();
-		for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
+		for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 		{
-			if( (*it)->m_bStop )
+			if( (*itTL)->m_bStop )
 			{
 				bAllStop = false;
 				break;
@@ -128,10 +128,10 @@ void CTcpThreadList::Destroy()
 	}
 
 	m_clsMutex.acquire();
-	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		(*it)->Close();
-		delete (*it);
+		(*itTL)->Close();
+		delete (*itTL);
 	}
 	m_clsMutex.release();
 }
@@ -141,65 +141,44 @@ void CTcpThreadList::Destroy()
  * @brief 쓰레드에 명령을 전송한다.
  * @param pszData				명령
  * @param iDataLen			pszData 길이
- * @param iThreadIndex	명령을 전송할 쓰레드 인덱스
- *											-1 을 입력하면 최대 소켓 개수를 넘지 않은 쓰레드에 명령이 전송된다.
- * @param piThreadIndex	실제 전송된 쓰레드 인덱스를 저장하는 변수
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, int iThreadIndex, int * piThreadIndex )
+bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen )
 {
 	bool	bRes = false, bFound = false;
-
-	if( iThreadIndex < -1 )
-	{
-		return false;
-	}
+	THREAD_LIST::iterator	itTL;
+	int iMinCount = 2000000000;
 
 	m_clsMutex.acquire();
-	if( iThreadIndex < (int)m_clsList.size() )
+
+	// 소켓을 최소 사용하는 쓰레드를 검색한다.
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		if( iThreadIndex == -1 )
+		if( iMinCount > (*itTL)->m_clsSessionList.m_iPoolFdCount )
 		{
-			THREAD_LIST::iterator	it;
-			int iMinCount = 2000000000;
+			iMinCount = (*itTL)->m_clsSessionList.m_iPoolFdCount;
+			if( iMinCount == 0 ) break;
+		}
+	}
 
-			// 소켓을 최소 사용하는 쓰레드를 검색한다.
-			for( it = m_clsList.begin(), iThreadIndex = 0; it != m_clsList.end(); ++it, ++iThreadIndex )
+	if( iMinCount < m_iMaxSocketPerThread )
+	{
+		for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+		{
+			if( iMinCount == (*itTL)->m_clsSessionList.m_iPoolFdCount )
 			{
-				if( iMinCount > (*it)->m_clsSessionList.m_iPoolFdCount )
-				{
-					iMinCount = (*it)->m_clsSessionList.m_iPoolFdCount;
-					if( iMinCount == 0 ) break;
-				}
-			}
-
-			if( iMinCount < m_iMaxSocketPerThread )
-			{
-				for( it = m_clsList.begin(), iThreadIndex = 0; it != m_clsList.end(); ++it, ++iThreadIndex )
-				{
-					if( iMinCount == (*it)->m_clsSessionList.m_iPoolFdCount )
-					{
-						bRes = _SendCommand( (*it)->m_hSend, pszData, iDataLen );
-						if( piThreadIndex ) *piThreadIndex = iThreadIndex;
-						bFound = true;
-						break;
-					}
-				}
-			}
-
-			if( bFound == false )
-			{
-				if( AddThread() )
-				{
-					bRes = _SendCommand( m_clsList[m_clsList.size()-1]->m_hSend, pszData, iDataLen );
-					if( piThreadIndex ) *piThreadIndex = iThreadIndex;
-				}
+				bRes = _SendCommand( (*itTL)->m_hSend, pszData, iDataLen );
+				bFound = true;
+				break;
 			}
 		}
-		else
+	}
+
+	if( bFound == false )
+	{
+		if( AddThread() )
 		{
-			bRes = _SendCommand( m_clsList[iThreadIndex]->m_hSend, pszData, iDataLen );
-			if( piThreadIndex ) *piThreadIndex = iThreadIndex;
+			bRes = _SendCommand( m_clsList[m_clsList.size()-1]->m_hSend, pszData, iDataLen );
 		}
 	}
 	m_clsMutex.release();
@@ -215,12 +194,12 @@ bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, int iThrea
  */
 void CTcpThreadList::SendCommandAll( const char * pszData, int iDataLen )
 {
-	THREAD_LIST::iterator	it;
+	THREAD_LIST::iterator	itTL;
 
 	m_clsMutex.acquire();
-	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		_SendCommand( (*it)->m_hSend, pszData, iDataLen );
+		_SendCommand( (*itTL)->m_hSend, pszData, iDataLen );
 	}
 	m_clsMutex.release();
 }
@@ -275,12 +254,31 @@ bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * psz
  */
 bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
 {
-	int iCount = m_clsList.size();
+	THREAD_LIST::iterator	itTL;
 
 	m_clsMutex.acquire();
-	for( int i = 0; i < iCount; ++i )
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		m_clsList[i]->m_clsSessionList.SendAll( pszPacket, iPacketLen );
+		(*itTL)->m_clsSessionList.SendAll( pszPacket, iPacketLen );
+	}
+	m_clsMutex.release();
+
+	return true;
+}
+
+typedef std::list< int > THREAD_INDEX_LIST;
+
+bool CTcpThreadList::DeleteNoUseThread()
+{
+	THREAD_LIST::iterator	itTL;
+
+	m_clsMutex.acquire();
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
+	{
+		if( (*itTL)->m_clsSessionList.m_iPoolFdCount == 1 )
+		{
+			
+		}
 	}
 	m_clsMutex.release();
 
@@ -294,14 +292,14 @@ bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
  */
 void CTcpThreadList::GetString( CMonitorString & strBuf )
 {
-	THREAD_LIST::iterator	it;
+	THREAD_LIST::iterator	itTL;
 
 	strBuf.Clear();
 
 	m_clsMutex.acquire();
-	for( it = m_clsList.begin(); it != m_clsList.end(); ++it )
+	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		strBuf.AddRow( (*it)->m_clsSessionList.m_iPoolFdCount );
+		strBuf.AddRow( (*itTL)->m_clsSessionList.m_iPoolFdCount );
 	}
 	m_clsMutex.release();
 }

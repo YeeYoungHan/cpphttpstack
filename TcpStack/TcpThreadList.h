@@ -101,12 +101,14 @@ public:
 	bool Create( CTcpStack * pclsStack );
 	void Destroy();
 
-	bool SendCommand( const char * pszData, int iDataLen, int iThreadIndex = -1, int * piThreadIndex = NULL );
+	bool SendCommand( const char * pszData, int iDataLen );
 	void SendCommandAll( const char * pszData, int iDataLen );
 	static int RecvCommand( Socket hSocket, char * pszData, int iDataSize );
 
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen );
+
+	bool DeleteNoUseThread();
 
 	void GetString( CMonitorString & strBuf );
 
