@@ -334,9 +334,34 @@ void CTcpSessionList::DeleteTimeout( int iTimeout, int iNoPacketTimeout
 	}
 }
 
+/**
+ * @ingroup TcpStack
+ * @brief 특정 세션에 패킷을 전송한다.
+ * @param iIndex			세션 인덱스
+ * @param pszPacket		패킷
+ * @param iPacketLen	패킷 길이
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CTcpSessionList::Send( int iIndex, const char * pszPacket, int iPacketLen )
 {
 	return m_pclsSession[iIndex].Send( pszPacket, iPacketLen );
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 모든 세션에 패킷을 전송한다.
+ * @param pszPacket		패킷
+ * @param iPacketLen	패킷 길이
+ * @returns true 를 리턴한다.
+ */
+bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen )
+{
+	for( int i = 0; i < m_iPollFdMax; ++i )
+	{
+		m_pclsSession[i].Send( pszPacket, iPacketLen );
+	}
+
+	return true;
 }
 
 void CTcpSessionList::Insert( int iIndex, CTcpComm & clsTcpComm )

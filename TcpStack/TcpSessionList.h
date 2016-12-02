@@ -89,6 +89,7 @@ public:
 		, void (*BeforeDelete)( CTcpSessionList * pclsSessionList, int iIndex, void * pclsArg ), void * pclsArg );
 
 	bool Send( int iIndex, const char * pszPacket, int iPacketLen );
+	bool SendAll( const char * pszPacket, int iPacketLen );
 
 	struct pollfd * m_psttPollFd;
 	CTcpSessionInfo * m_pclsSession;

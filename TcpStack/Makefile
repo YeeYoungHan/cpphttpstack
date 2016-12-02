@@ -6,7 +6,7 @@
 
 include ../Makefile.mk
 
-INC=-I../SipPlatform
+INC=-I../XmlParser -I../SipPlatform
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp
@@ -16,7 +16,8 @@ all: libtcpstack.a
 
 LIB_OBJ=TcpClientMap.o TcpClientThread.o TcpListenThread.o \
 	TcpSessionList.o TcpStack.o TcpStackSetup.o \
-	TcpThread.o TcpThreadList.o TlsFunction.o
+	TcpThread.o TcpThreadList.o TlsFunction.o \
+	FileLogSetup.o
 
 libtcpstack.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)

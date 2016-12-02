@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpStackSetup.h"
+#include "Log.h"
 #include "MemoryDebug.h"
 
 CTcpStackSetup::CTcpStackSetup() : m_iListenPort(0)
@@ -29,4 +30,32 @@ CTcpStackSetup::CTcpStackSetup() : m_iListenPort(0)
 
 CTcpStackSetup::~CTcpStackSetup()
 {
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief XML element 에서 TCP stack 설정 사항을 가져온다.
+ * @param clsXml XML element
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CTcpStackSetup::Parse( CXmlElement & clsXml )
+{
+	clsXml.SelectElementData( "ListenIp", m_strListenIp );
+	clsXml.SelectElementData( "ListenPort", m_iListenPort );
+	clsXml.SelectElementData( "ThreadInitCount", m_iThreadInitCount );
+	clsXml.SelectElementData( "ThreadMaxCount", m_iThreadMaxCount );
+	clsXml.SelectElementData( "MaxSocketPerThread", m_iMaxSocketPerThread );
+	clsXml.SelectElementData( "TcpRecvTimeout", m_iTcpRecvTimeout );
+	clsXml.SelectElementData( "TcpNoPacketTimeout", m_iTcpNoPacketTimeout );
+	clsXml.SelectElementData( "TcpConnectTimeout", m_iTcpConnectTimeout );
+	clsXml.SelectElementData( "UseTls", m_bUseTls );
+	clsXml.SelectElementTrimData( "CertFile", m_strCertFile );
+
+	if( m_iListenPort > 0 && m_bUseTls && m_strCertFile.empty() )
+	{
+		CLog::Print( LOG_ERROR, "%s CertFile is not defined", __FUNCTION__ );
+		return false;
+	}
+
+	return true;
 }

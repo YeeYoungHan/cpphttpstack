@@ -19,7 +19,7 @@
 #ifndef _TCP_STACK_SETUP_H_
 #define _TCP_STACK_SETUP_H_
 
-#include <string>
+#include "XmlElement.h"
 
 /**
  * @ingroup TcpStack
@@ -31,13 +31,18 @@ public:
 	CTcpStackSetup();
 	~CTcpStackSetup();
 
+	bool Parse( CXmlElement & clsXml );
+
+	/** TCP listen IP 주소 - any 이면 공백으로 입력한다. */
+	std::string m_strListenIp;
+
 	/** TCP listen 포트 번호 - TCP listen 하지 않는 경우에는 설정하지 않으면 된다. */
 	int m_iListenPort;
 
 	/** 최초 실행 Thread 개수 */
 	int m_iThreadInitCount;
 
-	/** 최대 실행 Thread 개수 */
+	/** 최대 실행 Thread 개수 - 0 보다 큰 정수로 설정하면 해당 개수만큼만 쓰레드를 생성한다. 0 이면 시스템이 허락하는 만큼 쓰레드를 생성한다. */
 	int m_iThreadMaxCount;
 
 	/** 하나의 Thread 에서 사용할 수 있는 최대 소켓 개수 */

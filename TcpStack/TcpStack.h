@@ -40,6 +40,7 @@ public:
 
 	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
+	bool SendAll( const char * pszPacket, int iPacketLen );
 
 	CTcpStackSetup m_clsSetup;
 	CTcpThreadList	m_clsThreadList;

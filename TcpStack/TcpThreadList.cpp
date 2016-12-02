@@ -237,7 +237,7 @@ int CTcpThreadList::RecvCommand( Socket hSocket, char * pszData, int iDataSize )
 
 /**
  * @ingroup TcpStack
- * @brief TCP 패킷을 전송한다.
+ * @brief 특정 세션에 TCP 패킷을 전송한다.
  * @param iThreadIndex	TCP 쓰레드 번호
  * @param iSessionIndex TCP 세션 번호
  * @param pszPacket			패킷
@@ -247,6 +247,25 @@ int CTcpThreadList::RecvCommand( Socket hSocket, char * pszData, int iDataSize )
 bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
 {
 	return m_clsList[iThreadIndex]->m_clsSessionList.Send( iSessionIndex, pszPacket, iPacketLen );
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 모든 세션에 TCP 패킷을 전송한다.
+ * @param pszPacket			패킷
+ * @param iPacketLen		패킷 길이
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
+{
+	int iCount = m_clsList.size();
+
+	for( int i = 0; i < iCount; ++i )
+	{
+		m_clsList[i]->m_clsSessionList.SendAll( pszPacket, iPacketLen );
+	}
+
+	return true;
 }
 
 /**
@@ -287,10 +306,13 @@ void CTcpThreadList::GetString( CMonitorString & strBuf )
  */
 bool CTcpThreadList::AddThread()
 {
-	if( (int)m_clsList.size() >= m_pclsStack->m_clsSetup.m_iThreadMaxCount )
+	if( m_pclsStack->m_clsSetup.m_iThreadMaxCount != 0 )
 	{
-		CLog::Print( LOG_ERROR, "%s thread count(%d) >= max thread count(%d)", __FUNCTION__, (int)m_clsList.size(), m_pclsStack->m_clsSetup.m_iThreadMaxCount );
-		return false;
+		if( (int)m_clsList.size() >= m_pclsStack->m_clsSetup.m_iThreadMaxCount )
+		{
+			CLog::Print( LOG_ERROR, "%s thread count(%d) >= max thread count(%d)", __FUNCTION__, (int)m_clsList.size(), m_pclsStack->m_clsSetup.m_iThreadMaxCount );
+			return false;
+		}
 	}
 
 	Socket	arrSocket[2];

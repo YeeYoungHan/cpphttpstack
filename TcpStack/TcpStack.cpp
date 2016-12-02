@@ -58,7 +58,15 @@ bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallB
 			}
 		}
 
-		m_hTcpListenFd = TcpListen( pclsSetup->m_iListenPort, 255 );
+		if( pclsSetup->m_strListenIp.empty() )
+		{
+			m_hTcpListenFd = TcpListen( pclsSetup->m_iListenPort, 255 );
+		}
+		else
+		{
+			m_hTcpListenFd = TcpListen( pclsSetup->m_iListenPort, 255, pclsSetup->m_strListenIp.c_str() );
+		}
+
 		if( m_hTcpListenFd == INVALID_SOCKET )
 		{
 			CLog::Print( LOG_ERROR, "TcpListen(%d) error(%d)", pclsSetup->m_iListenPort, GetError() );
@@ -118,7 +126,7 @@ bool CTcpStack::Stop( )
 
 /**
  * @ingroup TcpStack
- * @brief TCP 패킷을 전송한다.
+ * @brief 특정 세션에 TCP 패킷을 전송한다.
  * @param pszIp				IP 주소
  * @param iPort				포트 번호
  * @param pszPacket		패킷
@@ -132,7 +140,7 @@ bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int
 
 /**
  * @ingroup TcpStack
- * @brief TCP 패킷을 전송한다.
+ * @brief 특정 세션에 TCP 패킷을 전송한다.
  * @param iThreadIndex	TCP 쓰레드 번호
  * @param iSessionIndex TCP 세션 번호
  * @param pszPacket			패킷
@@ -142,4 +150,16 @@ bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int
 bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
 {
 	return m_clsThreadList.Send( iThreadIndex, iSessionIndex, pszPacket, iPacketLen );
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 모든 세션에 TCP 패킷을 전송한다.
+ * @param pszPacket			패킷
+ * @param iPacketLen		패킷 길이
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpStack::SendAll( const char * pszPacket, int iPacketLen )
+{
+	return m_clsThreadList.SendAll( pszPacket, iPacketLen );
 }
