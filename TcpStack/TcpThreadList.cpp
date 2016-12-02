@@ -166,7 +166,7 @@ bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen )
  * @param iThreadIndex	쓰레드 인덱스
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, int iThreadIndex )
+bool CTcpThreadList::SendCommand( const char * pszData, int iDataLen, uint32_t iThreadIndex )
 {
 	bool	bRes = false;
 	THREAD_LIST::iterator	itTL;
@@ -333,7 +333,7 @@ void CTcpThreadList::DeleteNoUseThread()
  * @param iThreadIndex 쓰레드 인덱스
  * @returns 성공하면 true 를 리턴하고 성공하면 false 를 리턴한다.
  */
-bool CTcpThreadList::DeleteThread( int iThreadIndex )
+bool CTcpThreadList::DeleteThread( uint32_t iThreadIndex )
 {
 	THREAD_LIST::iterator	itTL;
 	CTcpComm		clsTcpComm;
@@ -530,7 +530,7 @@ int CTcpThreadList::GetThreadIndex()
  * @param iThreadIndex 쓰레드 번호
  * @returns 쓰레드 번호가 사용중이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpThreadList::SelectThreadIndex( int iThreadIndex )
+bool CTcpThreadList::SelectThreadIndex( uint32_t iThreadIndex )
 {
 	THREAD_LIST::iterator itTL;
 
