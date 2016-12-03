@@ -146,7 +146,13 @@ bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int
 		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
 	}
 
-	return m_clsSessionMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+	if( m_clsSessionMap.Send( pszIp, iPort, pszPacket, iPacketLen ) == false )
+	{
+		// m_clsSessionMap 에 존재하지 않으므로 TCP connect 하고 TcpNoPipeThread 를 생성하는 과정을 실행한다.
+		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+	}
+
+	return true;
 }
 
 /**

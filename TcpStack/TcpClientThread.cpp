@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpStack.h"
+#include "TcpThread.h"
 #include "ServerUtility.h"
 #include "SipTcp.h"
 #include "Log.h"
@@ -86,16 +87,44 @@ THREAD_API TcpClientThread( LPVOID lpParameter )
 
 		if( bAccept )
 		{
-			clsTcpComm.m_hSocket = hConn;
-			snprintf( clsTcpComm.m_szIp, sizeof(clsTcpComm.m_szIp), "%s", pclsArg->m_strIp.c_str() );
-			clsTcpComm.m_iPort = pclsArg->m_iPort;
-			clsTcpComm.m_bClient = true;
-
-			if( pclsArg->m_pclsStack->m_clsThreadList.SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm) ) == false )
+			if( pclsArg->m_pclsStack->m_clsSetup.m_bUseThreadPipe )
 			{
-				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
+				clsTcpComm.m_hSocket = hConn;
+				snprintf( clsTcpComm.m_szIp, sizeof(clsTcpComm.m_szIp), "%s", pclsArg->m_strIp.c_str() );
+				clsTcpComm.m_iPort = pclsArg->m_iPort;
+				clsTcpComm.m_bClient = true;
+
+				if( pclsArg->m_pclsStack->m_clsThreadList.SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm) ) == false )
+				{
+					CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
+					pclsArg->m_pclsStack->m_clsClientMap.Delete( pclsArg->m_strIp.c_str(), pclsArg->m_iPort );
+					closesocket( hConn );
+				}
+			}
+			else
+			{
+				CTcpNoPipeThreadArg * pclsNewArg = new CTcpNoPipeThreadArg();
+				if( pclsNewArg == NULL )
+				{
+					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+					closesocket( hConn );
+				}
+				else
+				{
+					pclsNewArg->m_hSocket = hConn;
+					pclsNewArg->m_strIp = pclsArg->m_strIp;
+					pclsNewArg->m_iPort = pclsArg->m_iPort;
+					pclsNewArg->m_pclsStack = pclsArg->m_pclsStack;
+					pclsNewArg->m_bClient = true;
+
+					if( StartThread( "TcpNoPipeThread", TcpNoPipeThread, pclsNewArg ) == false )
+					{
+						CLog::Print( LOG_ERROR, "%s StartThread error", __FUNCTION__ );
+						closesocket( hConn );
+					}
+				}
+
 				pclsArg->m_pclsStack->m_clsClientMap.Delete( pclsArg->m_strIp.c_str(), pclsArg->m_iPort );
-				closesocket( hConn );
 			}
 		}
 	}

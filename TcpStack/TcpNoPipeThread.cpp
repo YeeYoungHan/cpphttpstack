@@ -46,15 +46,16 @@ THREAD_API TcpNoPipeThread( LPVOID lpParameter )
 	clsSessionInfo.m_strIp = pclsArg->m_strIp;
 	clsSessionInfo.m_iPort = pclsArg->m_iPort;
 	time( &clsSessionInfo.m_iConnectTime );
-	delete pclsArg;
 
-	if( pclsStack->m_clsSetup.m_bUseTls )
+	if( pclsStack->m_clsSetup.m_bUseTls && pclsArg->m_bClient == false )
 	{
 		if( SSLAccept( clsSessionInfo.m_hSocket, &clsSessionInfo.m_psttSsl, false, 0, 10000 ) == false )
 		{
 			bAccept = false;
 		}
 	}
+
+	delete pclsArg;
 
 	if( bAccept )
 	{

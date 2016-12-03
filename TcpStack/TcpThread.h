@@ -27,10 +27,14 @@ class CTcpStack;
 class CTcpNoPipeThreadArg
 {
 public:
+	CTcpNoPipeThreadArg() : m_bClient(false)
+	{}
+
 	std::string	m_strIp;
 	int			m_iPort;
 	Socket	m_hSocket;
 	CTcpStack * m_pclsStack;
+	bool		m_bClient;
 };
 
 bool StartTcpClientThread( const char * pszIp, int iPort, CTcpStack * pclsStack );
