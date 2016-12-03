@@ -18,6 +18,8 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpStack.h"
+#include "TcpThread.h"
+#include "ServerUtility.h"
 #include "Log.h"
 #include "MemoryDebug.h"
 
@@ -72,7 +74,25 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 			}
 			else
 			{
+				CTcpNoPipeThreadArg * pclsArg = new CTcpNoPipeThreadArg();
+				if( pclsArg == NULL )
+				{
+					CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+					closesocket( clsTcpComm.m_hSocket );
+				}
+				else
+				{
+					pclsArg->m_strIp = clsTcpComm.m_szIp;
+					pclsArg->m_iPort = clsTcpComm.m_iPort;
+					pclsArg->m_hSocket = clsTcpComm.m_hSocket;
+					pclsArg->m_pclsStack = pclsStack;
 
+					if( StartThread( "TcpNoPipeThread", TcpNoPipeThread, pclsArg ) == false )
+					{
+						CLog::Print( LOG_ERROR, "%s StartThread error", __FUNCTION__ );
+						closesocket( clsTcpComm.m_hSocket );
+					}
+				}
 			}
 		}
 	}

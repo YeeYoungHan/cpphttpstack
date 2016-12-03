@@ -16,42 +16,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TCP_STACK_H_
-#define _TCP_STACK_H_
+#ifndef _TCP_SESSION_MAP_H_
+#define _TCP_SESSION_MAP_H_
 
-#include "TcpThreadList.h"
-#include "TcpStackSetup.h"
-#include "TcpClientMap.h"
-#include "TcpSessionMap.h"
-#include "TcpStackCallBack.h"
-#include "TcpStackSetup.h"
+#include "TcpSessionList.h"
+#include <map>
+
+typedef std::map< std::string, CTcpSessionInfo * > TCP_SESSION_MAP;
 
 /**
  * @ingroup TcpStack
- * @brief TCP listen / connect 및 수신/전송 클래스
+ * @brief TCP 세션 정보를 저장하는 클래스 - m_bUseThreadPipe 가 false 일 때에 사용되는 클래스
  */
-class CTcpStack
+class CTcpSessionMap
 {
 public:
-	CTcpStack();
-	~CTcpStack();
+	CTcpSessionMap();
+	~CTcpSessionMap();
 
-	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
-	bool Stop( );
+	bool Insert( const char * pszIp, int iPort, CTcpSessionInfo * pclsSessionInfo );
+	bool Delete( const char * pszIp, int iPort );
 
 	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
-	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
-	bool SendAll( const char * pszPacket, int iPacketLen );
+	bool Send( int iThreadIndex, const char * pszPacket, int iPacketLen );
+	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
 
-	CTcpStackSetup m_clsSetup;
-	CTcpThreadList	m_clsThreadList;
-	CTcpClientMap		m_clsClientMap;
-	CTcpSessionMap	m_clsSessionMap;
+private:
+	void GetKey( const char * pszIp, int iPort, std::string & strKey );
+	int GetThreadIndex();
+	bool SelectThreadIndex( uint32_t iThreadIndex );
 
-	ITcpStackCallBack * m_pclsCallBack;
-
-	Socket m_hTcpListenFd;
-	bool m_bStop;
+	TCP_SESSION_MAP m_clsMap;
+	CSipMutex m_clsMutex;
+	int m_iThreadIndex;
 };
 
 #endif

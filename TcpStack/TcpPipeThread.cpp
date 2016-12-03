@@ -55,7 +55,7 @@ THREAD_API TcpPipeThread( LPVOID lpParameter )
 	time_t	iTime, iDeleteTime;
 	bool bAccept, bDeleteThreadInfo = false;
 
-	CLog::Print( LOG_INFO, "TcpThread started (index=%d)", pclsThreadInfo->m_iIndex );
+	CLog::Print( LOG_INFO, "TcpPipeThread started (index=%d)", pclsThreadInfo->m_iIndex );
 
 	time( &iDeleteTime );
 
@@ -174,7 +174,7 @@ LOOP_END:
 
 	pclsSessionList->DeleteAll();
 
-	CLog::Print( LOG_INFO, "TcpThread terminated (index=%d)", pclsThreadInfo->m_iIndex );
+	CLog::Print( LOG_INFO, "TcpPipeThread terminated (index=%d)", pclsThreadInfo->m_iIndex );
 
 	if( bDeleteThreadInfo )
 	{

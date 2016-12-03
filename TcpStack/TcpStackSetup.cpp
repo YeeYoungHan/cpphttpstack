@@ -50,6 +50,7 @@ bool CTcpStackSetup::Parse( CXmlElement & clsXml )
 	clsXml.SelectElementData( "TcpConnectTimeout", m_iTcpConnectTimeout );
 	clsXml.SelectElementData( "UseTls", m_bUseTls );
 	clsXml.SelectElementTrimData( "CertFile", m_strCertFile );
+	clsXml.SelectElementData( "UseThreadPipe", m_bUseThreadPipe );
 
 	if( m_iListenPort > 0 && m_bUseTls && m_strCertFile.empty() )
 	{

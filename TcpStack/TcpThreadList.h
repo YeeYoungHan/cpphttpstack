@@ -31,7 +31,7 @@ class CTcpStack;
 
 /**
  * @ingroup TcpStack
- * @brief TCP 쓰레드에 TCP 세션을 전달할 때에 사용되는 클래스
+ * @brief TCP 쓰레드에 TCP 세션을 전달할 때에 사용되는 클래스 - m_bUseThreadPipe 가 true 일 때에 사용된다.
  */
 class CTcpComm
 {

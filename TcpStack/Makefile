@@ -15,7 +15,8 @@ INC=-I../XmlParser -I../SipPlatform
 all: libtcpstack.a
 
 LIB_OBJ=TcpClientMap.o TcpClientThread.o TcpListenThread.o \
-	TcpSessionList.o TcpStack.o TcpStackSetup.o \
+	TcpSessionList.o TcpSessionMap.o \
+	TcpStack.o TcpStackSetup.o \
 	TcpPipeThread.o TcpNoPipeThread.o TcpThreadList.o TlsFunction.o \
 	FileLogSetup.o
 

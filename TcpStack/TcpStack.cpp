@@ -84,9 +84,13 @@ bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallB
 		SSLClientStart();
 	}
 
-	if( m_clsThreadList.Create( this ) == false )
+	if( m_clsSetup.m_bUseThreadPipe )
 	{
-		return false;
+		if( m_clsThreadList.Create( this ) == false )
+		{
+			Stop();
+			return false;
+		}
 	}
 
 	return true;
@@ -100,6 +104,8 @@ bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallB
 bool CTcpStack::Stop( )
 {
 	m_bStop = true;
+
+	// QQQ: 쓰레드가 종료될 때까지 기다려야 한다.
 
 	if( m_clsSetup.m_bUseTls )
 	{
@@ -135,7 +141,12 @@ bool CTcpStack::Stop( )
  */
 bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen )
 {
-	return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+	if( m_clsSetup.m_bUseThreadPipe )
+	{
+		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+	}
+
+	return m_clsSessionMap.Send( pszIp, iPort, pszPacket, iPacketLen );
 }
 
 /**
@@ -149,7 +160,12 @@ bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int
  */
 bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
 {
-	return m_clsThreadList.Send( iThreadIndex, iSessionIndex, pszPacket, iPacketLen );
+	if( m_clsSetup.m_bUseThreadPipe )
+	{
+		return m_clsThreadList.Send( iThreadIndex, iSessionIndex, pszPacket, iPacketLen );
+	}
+
+	return m_clsSessionMap.Send( iThreadIndex, pszPacket, iPacketLen );
 }
 
 /**
@@ -157,9 +173,15 @@ bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacke
  * @brief 모든 세션에 TCP 패킷을 전송한다.
  * @param pszPacket			패킷
  * @param iPacketLen		패킷 길이
+ * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CTcpStack::SendAll( const char * pszPacket, int iPacketLen )
 {
-	return m_clsThreadList.SendAll( pszPacket, iPacketLen, m_pclsCallBack );
+	if( m_clsSetup.m_bUseThreadPipe )
+	{
+		return m_clsThreadList.SendAll( pszPacket, iPacketLen, m_pclsCallBack );
+	}
+
+	return m_clsSessionMap.SendAll( pszPacket, iPacketLen, m_pclsCallBack );
 }

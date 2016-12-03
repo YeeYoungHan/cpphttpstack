@@ -73,7 +73,7 @@ public:
 
 /**
  * @ingroup TcpStack
- * @brief TCP 쓰레드 별로 관리하는 TCP 세션 정보를 저장하는 클래스
+ * @brief TCP 쓰레드 별로 관리하는 TCP 세션 정보를 저장하는 클래스 - m_bUseThreadPipe 가 true 일 때에 사용된다.
  */
 class CTcpSessionList
 {

@@ -203,6 +203,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TcpSessionMap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpSessionMap.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TcpThreadList.cpp"
 				>
 			</File>

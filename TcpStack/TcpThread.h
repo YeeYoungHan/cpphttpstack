@@ -20,8 +20,18 @@
 #define _TCP_THREAD_H_
 
 #include "SipPlatformDefine.h"
+#include "SipTcp.h"
 
 class CTcpStack;
+
+class CTcpNoPipeThreadArg
+{
+public:
+	std::string	m_strIp;
+	int			m_iPort;
+	Socket	m_hSocket;
+	CTcpStack * m_pclsStack;
+};
 
 bool StartTcpClientThread( const char * pszIp, int iPort, CTcpStack * pclsStack );
 
