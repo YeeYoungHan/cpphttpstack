@@ -46,6 +46,7 @@ int main( int argc, char * argv[] )
 	clsSetup.m_iListenPort = 8080;
 	clsSetup.m_iMaxSocketPerThread = 1;
 	clsSetup.m_iThreadMaxCount = 0;
+	clsSetup.m_bUseThreadPipe = false;
 
 	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
 	clsServer.m_strDocumentRoot = argv[1];

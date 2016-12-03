@@ -76,7 +76,8 @@ bool CTcpSessionMap::Delete( const char * pszIp, int iPort )
 	itTSM = m_clsMap.find( strKey );
 	if( itTSM != m_clsMap.end() )
 	{
-		delete itTSM->second;
+		// // thread 의 스택 변수의 포인터가 second 이기 때문에 delete 하면 안 된다.
+		// delete itTSM->second;
 		m_clsMap.erase( itTSM );
 
 		int iMaxIndex = 0;
