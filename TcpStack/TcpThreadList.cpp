@@ -249,16 +249,17 @@ bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * psz
  * @brief 모든 세션에 TCP 패킷을 전송한다.
  * @param pszPacket			패킷
  * @param iPacketLen		패킷 길이
+ * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen )
+bool CTcpThreadList::SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack )
 {
 	THREAD_LIST::iterator	itTL;
 
 	m_clsMutex.acquire();
 	for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 	{
-		(*itTL)->m_clsSessionList.SendAll( pszPacket, iPacketLen );
+		(*itTL)->m_clsSessionList.SendAll( pszPacket, iPacketLen, pclsCallBack );
 	}
 	m_clsMutex.release();
 

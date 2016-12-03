@@ -54,6 +54,14 @@ public:
 	 * @returns TCP 세션을 유지하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
 	 */
 	virtual bool RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo ) = 0;
+
+	/**
+	 * @ingroup TcpStack
+	 * @brief SendAll 로 전송해도 되는 세션인지 검사한다.
+	 * @param pclsSessionInfo 세션 정보
+	 * @returns SendAll 로 전송해도 되는 세션이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+	 */
+	virtual bool IsSendAll( CTcpSessionInfo * pclsSessionInfo ){ return false; };
 };
 
 #endif

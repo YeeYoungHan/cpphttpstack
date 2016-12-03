@@ -27,6 +27,7 @@
 #define TCP_INIT_BUF_SIZE		16384
 
 class CTcpComm;
+class ITcpStackCallBack;
 
 /**
  * @ingroup TcpStack
@@ -89,7 +90,7 @@ public:
 		, void (*BeforeDelete)( CTcpSessionList * pclsSessionList, int iIndex, void * pclsArg ), void * pclsArg );
 
 	bool Send( int iIndex, const char * pszPacket, int iPacketLen );
-	bool SendAll( const char * pszPacket, int iPacketLen );
+	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
 
 	struct pollfd * m_psttPollFd;
 	CTcpSessionInfo * m_pclsSession;

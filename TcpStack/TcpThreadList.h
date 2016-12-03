@@ -106,7 +106,7 @@ public:
 	static int RecvCommand( Socket hSocket, char * pszData, int iDataSize );
 
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
-	bool SendAll( const char * pszPacket, int iPacketLen );
+	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
 
 	void DeleteNoUseThread();
 	bool DeleteThread( uint32_t iThreadIndex );

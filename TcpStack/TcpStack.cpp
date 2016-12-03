@@ -161,5 +161,5 @@ bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacke
  */
 bool CTcpStack::SendAll( const char * pszPacket, int iPacketLen )
 {
-	return m_clsThreadList.SendAll( pszPacket, iPacketLen );
+	return m_clsThreadList.SendAll( pszPacket, iPacketLen, m_pclsCallBack );
 }

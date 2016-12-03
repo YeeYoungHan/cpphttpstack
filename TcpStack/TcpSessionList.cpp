@@ -21,6 +21,7 @@
 #include "StringUtility.h"
 #include "Log.h"
 #include <time.h>
+#include "TcpStackCallBack.h"
 #include "MemoryDebug.h"
 
 CTcpSessionInfo::CTcpSessionInfo() : m_iPort(0), m_hSocket(INVALID_SOCKET)
@@ -352,13 +353,17 @@ bool CTcpSessionList::Send( int iIndex, const char * pszPacket, int iPacketLen )
  * @brief 모든 세션에 패킷을 전송한다.
  * @param pszPacket		패킷
  * @param iPacketLen	패킷 길이
+ * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
  * @returns true 를 리턴한다.
  */
-bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen )
+bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack )
 {
 	for( int i = 0; i < m_iPollFdMax; ++i )
 	{
-		m_pclsSession[i].Send( pszPacket, iPacketLen );
+		if( pclsCallBack->IsSendAll( m_pclsSession ) )
+		{
+			m_pclsSession[i].Send( pszPacket, iPacketLen );
+		}
 	}
 
 	return true;
