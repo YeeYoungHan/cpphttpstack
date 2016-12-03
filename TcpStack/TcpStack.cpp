@@ -17,11 +17,11 @@
  */
 
 #include "TcpStack.h"
+#include "TcpThread.h"
 #include "ServerUtility.h"
+#include "TimeUtility.h"
 #include "Log.h"
 #include "MemoryDebug.h"
-
-THREAD_API TcpListenThread( LPVOID lpParameter );
 
 CTcpStack::CTcpStack() : m_pclsCallBack(NULL), m_hTcpListenFd(INVALID_SOCKET), m_bStop(false)
 {
@@ -105,7 +105,32 @@ bool CTcpStack::Stop( )
 {
 	m_bStop = true;
 
-	// QQQ: 쓰레드가 종료될 때까지 기다려야 한다.
+	if( m_clsSetup.m_bUseThreadPipe )
+	{
+		m_clsThreadList.Destroy();
+	}
+	else
+	{
+		// TCP 쓰레드가 종료될 때까지 최대 2초 대기한다.
+		for( int i = 0; i < 100; ++i )
+		{
+			if( m_clsSessionMap.GetCount() == 0 ) break;
+			MiliSleep( 20 );
+		}
+	}
+
+	// TCP listen 쓰레드가 종료될 때까지 최대 2초 대기한다.
+	for( int i = 0; i < 100; ++i )
+	{
+		if( IsTcpListenThreadRun() == false )	break;
+		MiliSleep( 20 );
+	}
+
+	if( m_hTcpListenFd != INVALID_SOCKET )
+	{
+		closesocket( m_hTcpListenFd );
+		m_hTcpListenFd = INVALID_SOCKET;
+	}
 
 	if( m_clsSetup.m_bUseTls )
 	{
@@ -117,14 +142,6 @@ bool CTcpStack::Stop( )
 		{
 			SSLClientStop();
 		}
-	}
-
-	m_clsThreadList.Destroy();
-
-	if( m_hTcpListenFd != INVALID_SOCKET )
-	{
-		closesocket( m_hTcpListenFd );
-		m_hTcpListenFd = INVALID_SOCKET;
 	}
 
 	return true;

@@ -100,6 +100,22 @@ bool CTcpSessionMap::Delete( const char * pszIp, int iPort )
 
 /**
  * @ingroup TcpStack
+ * @brief 세션 개수를 리턴한다.
+ * @returns 세션 개수를 리턴한다.
+ */
+int CTcpSessionMap::GetCount( )
+{
+	int iCount;
+
+	m_clsMutex.acquire();
+	iCount = m_clsMap.size();
+	m_clsMutex.release();
+
+	return iCount;
+}
+
+/**
+ * @ingroup TcpStack
  * @brief 특정 세션에 TCP 패킷을 전송한다.
  * @param pszIp				IP 주소
  * @param iPort				포트 번호

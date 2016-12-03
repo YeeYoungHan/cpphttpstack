@@ -23,6 +23,8 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
+static bool gbTcpListenThreadRun = false;
+
 /**
  * @ingroup TcpStack
  * @brief TCP 서버 쓰레드
@@ -37,6 +39,7 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 	int		n, iSleepSecond = 0;
 
 	CLog::Print( LOG_INFO, "TcpListenThread started(port=%d)", pclsStack->m_clsSetup.m_iListenPort );
+	gbTcpListenThreadRun = true;
 
 	TcpSetPollIn( sttPoll[0], pclsStack->m_hTcpListenFd );
 
@@ -98,6 +101,17 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 	}
 
 	CLog::Print( LOG_INFO, "TcpListenThread terminated(port=%d)", pclsStack->m_clsSetup.m_iListenPort );
+	gbTcpListenThreadRun = false;
 
 	return 0;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief TCP listen 쓰레드가 실행중인가?
+ * @returns TCP listen 쓰레드가 실행중이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool IsTcpListenThreadRun()
+{
+	return gbTcpListenThreadRun;
 }

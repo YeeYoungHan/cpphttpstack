@@ -36,6 +36,7 @@ public:
 
 	bool Insert( const char * pszIp, int iPort, CTcpSessionInfo * pclsSessionInfo );
 	bool Delete( const char * pszIp, int iPort );
+	int GetCount( );
 
 	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
 	bool Send( int iThreadIndex, const char * pszPacket, int iPacketLen );
