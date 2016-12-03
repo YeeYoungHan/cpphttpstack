@@ -18,12 +18,11 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpStack.h"
+#include "TcpThread.h"
 #include "ServerUtility.h"
 #include "TimeUtility.h"
 #include "Log.h"
 #include "MemoryDebug.h"
-
-THREAD_API TcpThread( LPVOID lpParameter );
 
 CTcpThreadInfo::CTcpThreadInfo() : m_iIndex(0), m_hSend(INVALID_SOCKET), m_hRecv(INVALID_SOCKET)
 {
@@ -444,7 +443,7 @@ bool CTcpThreadList::AddThread()
 	m_clsList.push_back( pclsTcpThreadInfo );
 	m_clsMutex.release();
 
-	bool bRes = StartThread( "TcpThread", TcpThread, pclsTcpThreadInfo );
+	bool bRes = StartThread( "TcpPipeThread", TcpPipeThread, pclsTcpThreadInfo );
 	if( bRes == false )
 	{
 		DeleteThread( pclsTcpThreadInfo->m_iIndex );

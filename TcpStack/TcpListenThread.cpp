@@ -48,7 +48,11 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 			if( iSleepSecond == 60 )
 			{
 				iSleepSecond = 0;
-				pclsStack->m_clsThreadList.DeleteNoUseThread();
+
+				if( pclsStack->m_clsSetup.m_bUseThreadPipe )
+				{
+					pclsStack->m_clsThreadList.DeleteNoUseThread();
+				}
 			}
 			continue;
 		}
@@ -58,10 +62,17 @@ THREAD_API TcpListenThread( LPVOID lpParameter )
 		clsTcpComm.m_hSocket = TcpAccept( pclsStack->m_hTcpListenFd, clsTcpComm.m_szIp, sizeof(clsTcpComm.m_szIp), &clsTcpComm.m_iPort );
 		if( clsTcpComm.m_hSocket != INVALID_SOCKET )
 		{
-			if( pclsStack->m_clsThreadList.SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm) ) == false )
+			if( pclsStack->m_clsSetup.m_bUseThreadPipe )
 			{
-				CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
-				closesocket( clsTcpComm.m_hSocket );
+				if( pclsStack->m_clsThreadList.SendCommand( (char *)&clsTcpComm, sizeof(clsTcpComm) ) == false )
+				{
+					CLog::Print( LOG_ERROR, "%s m_clsThreadList.SendCommand error", __FUNCTION__ );
+					closesocket( clsTcpComm.m_hSocket );
+				}
+			}
+			else
+			{
+
 			}
 		}
 	}

@@ -44,7 +44,7 @@ static void BeforeDelete( CTcpSessionList * pclsSessionList, int iIndex, void * 
  * @param lpParameter CThreadListEntry 객체의 포인터
  * @returns 0 을 리턴한다.
  */
-THREAD_API TcpThread( LPVOID lpParameter )
+THREAD_API TcpPipeThread( LPVOID lpParameter )
 {
 	CTcpThreadInfo * pclsThreadInfo = (CTcpThreadInfo *)lpParameter;
 	CTcpSessionList * pclsSessionList = &pclsThreadInfo->m_clsSessionList;

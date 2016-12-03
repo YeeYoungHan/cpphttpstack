@@ -16,7 +16,7 @@ all: libtcpstack.a
 
 LIB_OBJ=TcpClientMap.o TcpClientThread.o TcpListenThread.o \
 	TcpSessionList.o TcpStack.o TcpStackSetup.o \
-	TcpThread.o TcpThreadList.o TlsFunction.o \
+	TcpPipeThread.o TcpNoPipeThread.o TcpThreadList.o TlsFunction.o \
 	FileLogSetup.o
 
 libtcpstack.a: $(LIB_OBJ)

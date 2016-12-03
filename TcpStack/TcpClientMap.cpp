@@ -18,11 +18,10 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpStack.h"
+#include "TcpThread.h"
 #include "TcpClientMap.h"
 #include "Log.h"
 #include "MemoryDebug.h"
-
-bool StartTcpClientThread( const char * pszIp, int iPort, CTcpStack * pclsStack );
 
 CTcpClientIndex::CTcpClientIndex() : m_iThreadIndex(-1), m_iSessionIndex(-1)
 {

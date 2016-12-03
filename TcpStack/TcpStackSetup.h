@@ -39,7 +39,7 @@ public:
 	/** TCP listen 포트 번호 - TCP listen 하지 않는 경우에는 설정하지 않으면 된다. */
 	int m_iListenPort;
 
-	/** 최초 실행 Thread 개수 */
+	/** 선 실행 Thread 개수 - 최소 쓰레드 개수 */
 	int m_iThreadInitCount;
 
 	/** 최대 실행 Thread 개수 - 0 보다 큰 정수로 설정하면 해당 개수만큼만 쓰레드를 생성한다. 0 이면 시스템이 허락하는 만큼 쓰레드를 생성한다. */
@@ -62,6 +62,9 @@ public:
 
 	/** TLS 서버를 위한 개인키/인증서 PEM 저장 파일 이름 ( full path ) */
 	std::string m_strCertFile;
+
+	/** 쓰레드와 통신에 pipe 를 사용할 것인가? */
+	bool m_bUseThreadPipe;
 };
 
 #endif
