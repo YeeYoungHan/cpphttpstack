@@ -59,9 +59,9 @@ bool CTcpSessionMap::Insert( const char * pszIp, int iPort, CTcpSessionInfo * pc
 
 /**
  * @ingroup TcpStack
- * @brief 
- * @param pszIp 
- * @param iPort 
+ * @brief TCP 세션 정보를 삭제한다.
+ * @param pszIp		클라이언트 IP 주소
+ * @param iPort		클라이언트 포트 번호
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CTcpSessionMap::Delete( const char * pszIp, int iPort )
