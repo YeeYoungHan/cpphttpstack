@@ -523,7 +523,7 @@ int CTcpThreadList::GetThreadIndex()
 	iThreadIndex = m_iThreadIndex;
 	m_clsMutex.release();
 
-	return m_iThreadIndex;
+	return iThreadIndex;
 }
 
 /**
