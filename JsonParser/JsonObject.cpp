@@ -79,7 +79,7 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 
 				m_clsMap.insert( JSON_OBJECT_MAP::value_type( strName, pclsType ) );
 				cType = 0;
-				i += iParseLen;
+				i += iParseLen - 1;
 			}
 		}
 		else if( pszText[i] == '"' )

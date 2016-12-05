@@ -78,17 +78,18 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 				}
 
 				m_clsList.push_back( pclsType );
-				cType = 0;
-				i += iParseLen;
+				cType = 1;
+				i += iParseLen - 1;
 			}
+		}
+		else if( pszText[i] == ',' )
+		{
+			cType = 0;
 		}
 		else if( pszText[i] == ']' )
 		{
-			if( cType == 0 )
-			{
-				iPos = i + 1;
-				break;
-			}
+			iPos = i + 1;
+			break;
 		}
 	}
 
