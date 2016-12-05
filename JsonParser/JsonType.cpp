@@ -19,7 +19,6 @@
 #include "SipPlatformDefine.h"
 #include "JsonType.h"
 #include "MemoryDebug.h"
-#include "MemoryDebug.h"
 
 CJsonType::CJsonType()
 {
