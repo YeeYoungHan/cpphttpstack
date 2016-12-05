@@ -46,6 +46,7 @@ bool TestJsonObject( )
 	Check( TestJsonObject( "{ \"name\" : \"value\" }", "{ \"name\" : \"value\" }" ) );
 	Check( TestJsonObject( "{\"name\":\"value\"}", "{ \"name\" : \"value\" }" ) );
 	Check( TestJsonObject( "{\"name\":{\"value1\":\"value2\"}}", "{ \"name\" : { \"value1\" : \"value2\" } }" ) );
+	Check( TestJsonObject( "{\"name\":[{\"value1\":\"value2\"},{\"value3\":\"value4\"}]}", "{ \"name\" : [ { \"value1\" : \"value2\" }, { \"value3\" : \"value4\" } ] }" ) );
 	Check( TestJsonObject( "{ \"name\" : \"value\", \"name1\" : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) );
 	Check( TestJsonObject( "{ \"name\"  : \"value\"  , \"name1\"  : \"value1\" }", "{ \"name\" : \"value\", \"name1\" : \"value1\" }" ) );
 	Check( TestJsonObject( "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }", "{ \"name\" : \"value\", \"object\" : { \"name1\" : \"value1\" } }" ) );
