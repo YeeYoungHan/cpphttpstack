@@ -531,7 +531,7 @@ int CTcpThreadList::GetThreadIndex()
  * @param iThreadIndex 쓰레드 번호
  * @returns 쓰레드 번호가 사용중이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpThreadList::SelectThreadIndex( uint32_t iThreadIndex )
+bool CTcpThreadList::SelectThreadIndex( int iThreadIndex )
 {
 	THREAD_LIST::iterator itTL;
 

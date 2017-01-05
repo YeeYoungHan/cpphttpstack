@@ -116,7 +116,7 @@ public:
 private:
 	THREAD_LIST	m_clsList;
 	int					m_iMaxSocketPerThread;
-	uint32_t		m_iThreadIndex;
+	int					m_iThreadIndex;
 	CSipMutex		m_clsMutex;
 	CTcpStack * m_pclsStack;
 
@@ -124,7 +124,7 @@ private:
 	bool _SendCommand( Socket hSocket, const char * pszData, int iDataLen );
 	int GetCount();
 	int GetThreadIndex();
-	bool SelectThreadIndex( uint32_t iThreadIndex );
+	bool SelectThreadIndex( int iThreadIndex );
 };
 
 #endif

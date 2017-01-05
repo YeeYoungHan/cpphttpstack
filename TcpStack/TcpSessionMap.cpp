@@ -240,7 +240,7 @@ int CTcpSessionMap::GetThreadIndex()
  * @param iThreadIndex 쓰레드 번호
  * @returns 쓰레드 번호가 사용중이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpSessionMap::SelectThreadIndex( uint32_t iThreadIndex )
+bool CTcpSessionMap::SelectThreadIndex( int iThreadIndex )
 {
 	TCP_SESSION_MAP::iterator itTSM;
 

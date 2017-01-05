@@ -45,7 +45,7 @@ public:
 private:
 	void GetKey( const char * pszIp, int iPort, std::string & strKey );
 	int GetThreadIndex();
-	bool SelectThreadIndex( uint32_t iThreadIndex );
+	bool SelectThreadIndex( int iThreadIndex );
 
 	TCP_SESSION_MAP m_clsMap;
 	CSipMutex m_clsMutex;
