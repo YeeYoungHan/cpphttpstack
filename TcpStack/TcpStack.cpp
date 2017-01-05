@@ -154,19 +154,20 @@ bool CTcpStack::Stop( )
  * @param iPort				포트 번호
  * @param pszPacket		패킷
  * @param iPacketLen	패킷 길이
+ * @param bConnectIfNoSession	TCP 세션이 존재하지 않으면 새로운 TCP 세션을 연결한 후, 패킷을 전송하는가?
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen )
+bool CTcpStack::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen, bool bConnectIfNoSession )
 {
 	if( m_clsSetup.m_bUseThreadPipe )
 	{
-		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen, bConnectIfNoSession );
 	}
 
 	if( m_clsSessionMap.Send( pszIp, iPort, pszPacket, iPacketLen ) == false )
 	{
 		// m_clsSessionMap 에 존재하지 않으므로 TCP connect 하고 TcpNoPipeThread 를 생성하는 과정을 실행한다.
-		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen );
+		return m_clsClientMap.Send( pszIp, iPort, pszPacket, iPacketLen, bConnectIfNoSession );
 	}
 
 	return true;

@@ -39,7 +39,7 @@ public:
 	bool Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallBack );
 	bool Stop( );
 
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
+	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen, bool bConnectIfNoSession );
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen );
 

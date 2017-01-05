@@ -72,7 +72,7 @@ public:
 
 	bool Create( CTcpStack * pclsStack );
 
-	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
+	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen, bool bConnectIfNoSession );
 	bool Delete( const char * pszIp, int iPort );
 	bool DeleteSendPacketList( const char * pszIp, int iPort, SEND_PACKET_LIST & clsList );
 

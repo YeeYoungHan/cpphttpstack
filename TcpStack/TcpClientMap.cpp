@@ -59,9 +59,10 @@ bool CTcpClientMap::Create( CTcpStack * pclsStack )
  * @param iPort				TCP 서버 포트 번호
  * @param pszPacket		패킷
  * @param iPacketLen	패킷 길이
+ * @param bConnectIfNoSession	TCP 세션이 존재하지 않으면 새로운 TCP 세션을 연결한 후, 패킷을 전송하는가?
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CTcpClientMap::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen )
+bool CTcpClientMap::Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen, bool bConnectIfNoSession )
 {
 	bool bRes = false;
 	std::string strKey;
@@ -92,7 +93,7 @@ bool CTcpClientMap::Send( const char * pszIp, int iPort, const char * pszPacket,
 			bRes = true;
 		}
 	}
-	else
+	else if( bConnectIfNoSession )
 	{
 		std::string * pstrPacket = new std::string();
 		if( pstrPacket )
