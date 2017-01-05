@@ -101,7 +101,7 @@ public:
 	void Destroy();
 
 	bool SendCommand( const char * pszData, int iDataLen );
-	bool SendCommand( const char * pszData, int iDataLen, uint32_t iThreadIndex );
+	bool SendCommand( const char * pszData, int iDataLen, int iThreadIndex );
 	void SendCommandAll( const char * pszData, int iDataLen );
 	static int RecvCommand( Socket hSocket, char * pszData, int iDataSize );
 
@@ -109,7 +109,7 @@ public:
 	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
 
 	void DeleteNoUseThread();
-	bool DeleteThread( uint32_t iThreadIndex );
+	bool DeleteThread( int iThreadIndex );
 
 	void GetString( CMonitorString & strBuf );
 
