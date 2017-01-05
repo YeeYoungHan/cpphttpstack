@@ -356,7 +356,7 @@ bool CTcpThreadList::DeleteThread( uint32_t iThreadIndex )
 
 	if( bRes )
 	{
-		uint32_t iMaxIndex = 0;
+		int iMaxIndex = 0;
 
 		for( itTL = m_clsList.begin(); itTL != m_clsList.end(); ++itTL )
 		{

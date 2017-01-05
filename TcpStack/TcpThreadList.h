@@ -77,7 +77,7 @@ public:
 
 	void Close();
 
-	uint32_t	m_iIndex;				// 쓰레드 인덱스
+	int				m_iIndex;				// 쓰레드 인덱스
 	Socket		m_hSend;				// 송신 pipe
 	Socket		m_hRecv;				// 수신 pipe
 
