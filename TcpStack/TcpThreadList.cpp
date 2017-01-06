@@ -237,7 +237,15 @@ bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * psz
 	bool bRes;
 
 	m_clsMutex.acquire();
-	bRes = m_clsList[iThreadIndex]->m_clsSessionList.Send( iSessionIndex, pszPacket, iPacketLen );
+	int iCount = m_clsList.size();
+	for( int i = 0; i < iCount; ++i )
+	{
+		if( m_clsList[i]->m_iIndex == iThreadIndex )
+		{
+			bRes = m_clsList[i]->m_clsSessionList.Send( iSessionIndex, pszPacket, iPacketLen );
+			break;
+		}
+	}
 	m_clsMutex.release();
 
 	return bRes;
