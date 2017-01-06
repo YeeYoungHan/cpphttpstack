@@ -234,7 +234,7 @@ int CTcpThreadList::RecvCommand( Socket hSocket, char * pszData, int iDataSize )
  */
 bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen )
 {
-	bool bRes;
+	bool bRes = false;
 
 	m_clsMutex.acquire();
 	int iCount = m_clsList.size();
