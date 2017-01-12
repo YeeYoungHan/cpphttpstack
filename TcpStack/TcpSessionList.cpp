@@ -358,9 +358,9 @@ bool CTcpSessionList::Send( int iIndex, const char * pszPacket, int iPacketLen )
  */
 bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack )
 {
-	for( int i = 0; i < m_iPollFdMax; ++i )
+	for( int i = 1; i < m_iPoolFdCount; ++i )
 	{
-		if( pclsCallBack->IsSendAll( m_pclsSession ) )
+		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
 		{
 			m_pclsSession[i].Send( pszPacket, iPacketLen );
 		}
@@ -381,7 +381,7 @@ bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStack
  */
 bool CTcpSessionList::SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex )
 {
-	for( int i = 0; i < m_iPollFdMax; ++i )
+	for( int i = 1; i < m_iPoolFdCount; ++i )
 	{
 		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
 		{
