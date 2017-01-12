@@ -40,13 +40,15 @@ void CServerCallBack::SessionClosed( CTcpSessionInfo * pclsSessionInfo )
 
 bool CServerCallBack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo )
 {
-	//gclsServer.SendAll( pszPacket, iPacketLen );
-	gclsServer.SendAllExcept( pszPacket, iPacketLen, pclsSessionInfo->m_iThreadIndex, pclsSessionInfo->m_iSessionIndex );
+	gclsServer.SendAll( pszPacket, iPacketLen );
+	//gclsServer.SendAllExcept( pszPacket, iPacketLen, pclsSessionInfo->m_iThreadIndex, pclsSessionInfo->m_iSessionIndex );
 
 	return true;
 }
 
 bool CServerCallBack::IsSendAll( CTcpSessionInfo * pclsSessionInfo )
 {
+	//if( pclsSessionInfo->m_iSessionIndex % 2 == 0 ) return false;
+
 	return true;
 }

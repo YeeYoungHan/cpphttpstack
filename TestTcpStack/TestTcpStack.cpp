@@ -29,6 +29,7 @@ int main( int argc, char * argv[] )
 	CLog::SetDirectory( "c:\\temp\\tcpstack" );
 
 	clsSetup.m_iListenPort = TCP_PORT;
+	//clsSetup.m_bUseThreadPipe = false;
 
 	if( gclsServer.Start( &clsSetup, &gclsServerCallBack ) == false )
 	{
@@ -59,6 +60,13 @@ int main( int argc, char * argv[] )
 	memset( szBuf, 0, sizeof(szBuf) );
 	TcpRecv( hSocket, szBuf, sizeof(szBuf), 5 );
 	CLog::Print( LOG_NETWORK, "TcpRecv [%s] (me)", szBuf );
+
+	/*
+	while( 1 )
+	{
+		sleep(1);
+	}
+	*/
 
 	return 0;
 }
