@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "TcpSessionMap.h"
+#include "TcpStackCallBack.h"
 #include "MemoryDebug.h"
 
 CTcpSessionMap::CTcpSessionMap() : m_iThreadIndex(0)
@@ -184,7 +185,39 @@ bool CTcpSessionMap::SendAll( const char * pszPacket, int iPacketLen, ITcpStackC
 	m_clsMutex.acquire();
 	for( itTSM = m_clsMap.begin(); itTSM != m_clsMap.end(); ++itTSM )
 	{
-		itTSM->second->Send( pszPacket, iPacketLen );
+		if( pclsCallBack->IsSendAll( itTSM->second ) )
+		{
+			itTSM->second->Send( pszPacket, iPacketLen );
+		}
+	}
+	m_clsMutex.release();
+
+	return true;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 특정 세션을 제외한 모든 세션에 TCP 패킷을 전송한다.
+ * @param pszPacket			패킷
+ * @param iPacketLen		패킷 길이
+ * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
+ * @param iThreadIndex	전송하지 않을 세션의 쓰레드 인덱스
+ * @param iSessionIndex 전송하지 않을 세션 인덱스
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CTcpSessionMap::SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex )
+{
+	TCP_SESSION_MAP::iterator itTSM;
+
+	m_clsMutex.acquire();
+	for( itTSM = m_clsMap.begin(); itTSM != m_clsMap.end(); ++itTSM )
+	{
+		if( pclsCallBack->IsSendAll( itTSM->second ) )
+		{
+			if( itTSM->second->m_iThreadIndex == iThreadIndex && itTSM->second->m_iSessionIndex == iSessionIndex ) continue;
+
+			itTSM->second->Send( pszPacket, iPacketLen );
+		}
 	}
 	m_clsMutex.release();
 

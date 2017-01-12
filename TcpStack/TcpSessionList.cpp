@@ -369,6 +369,37 @@ bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStack
 	return true;
 }
 
+/**
+ * @ingroup TcpStack
+ * @brief 모든 세션에 패킷을 전송한다.
+ * @param pszPacket		패킷
+ * @param iPacketLen	패킷 길이
+ * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
+ * @param iThreadIndex	전송하지 않을 세션의 쓰레드 인덱스
+ * @param iSessionIndex 전송하지 않을 세션 인덱스
+ * @returns true 를 리턴한다.
+ */
+bool CTcpSessionList::SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex )
+{
+	for( int i = 0; i < m_iPollFdMax; ++i )
+	{
+		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
+		{
+			if( m_pclsSession[i].m_iThreadIndex == iThreadIndex && m_pclsSession[i].m_iSessionIndex == iSessionIndex ) continue;
+
+			m_pclsSession[i].Send( pszPacket, iPacketLen );
+		}
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 세션 정보를 저장한다.
+ * @param iIndex			세션 순번
+ * @param clsTcpComm	세션 인덱스
+ */
 void CTcpSessionList::Insert( int iIndex, CTcpComm & clsTcpComm )
 {
 	time_t	iTime;
@@ -399,6 +430,11 @@ void CTcpSessionList::Insert( int iIndex, CTcpComm & clsTcpComm )
 		, iIndex, m_pclsSession[iIndex].m_strIp.c_str(), m_pclsSession[iIndex].m_iPort, clsTcpComm.m_bClient ? "true" : "false" );
 }
 
+/**
+ * @ingroup TcpStack
+ * @brief 세션 소켓 정보를 초기화시킨다.
+ * @param iIndex 세션 인덱스
+ */
 void CTcpSessionList::ClearFd( int iIndex )
 {
 	m_pclsSession[iIndex].m_clsMutex.acquire();

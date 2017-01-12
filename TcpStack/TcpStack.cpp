@@ -197,7 +197,6 @@ bool CTcpStack::Send( int iThreadIndex, int iSessionIndex, const char * pszPacke
  * @brief 모든 세션에 TCP 패킷을 전송한다.
  * @param pszPacket			패킷
  * @param iPacketLen		패킷 길이
- * @param pclsCallBack	세션별로 전송 유무를 결정하는 callback 객체
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CTcpStack::SendAll( const char * pszPacket, int iPacketLen )
@@ -208,4 +207,23 @@ bool CTcpStack::SendAll( const char * pszPacket, int iPacketLen )
 	}
 
 	return m_clsSessionMap.SendAll( pszPacket, iPacketLen, m_pclsCallBack );
+}
+
+/**
+ * @ingroup TcpStack
+ * @brief 특정 세션을 제외한 모든 세션에 TCP 패킷을 전송한다.
+ * @param pszPacket			패킷
+ * @param iPacketLen		패킷 길이
+ * @param iThreadIndex	전송하지 않을 세션의 쓰레드 인덱스
+ * @param iSessionIndex 전송하지 않을 세션 인덱스
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpStack::SendAllExcept( const char * pszPacket, int iPacketLen, int iThreadIndex, int iSessionIndex )
+{
+	if( m_clsSetup.m_bUseThreadPipe )
+	{
+		return m_clsThreadList.SendAllExcept( pszPacket, iPacketLen, m_pclsCallBack, iThreadIndex, iSessionIndex );
+	}
+
+	return m_clsSessionMap.SendAllExcept( pszPacket, iPacketLen, m_pclsCallBack, iThreadIndex, iSessionIndex );
 }

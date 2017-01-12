@@ -42,6 +42,7 @@ public:
 	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen, bool bConnectIfNoSession );
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen );
+	bool SendAllExcept( const char * pszPacket, int iPacketLen, int iThreadIndex, int iSessionIndex );
 
 	CTcpStackSetup m_clsSetup;
 	CTcpThreadList	m_clsThreadList;

@@ -91,6 +91,7 @@ public:
 
 	bool Send( int iIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
+	bool SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex );
 
 	struct pollfd * m_psttPollFd;
 	CTcpSessionInfo * m_pclsSession;

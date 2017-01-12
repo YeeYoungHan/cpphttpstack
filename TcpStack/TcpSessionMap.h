@@ -41,6 +41,7 @@ public:
 	bool Send( const char * pszIp, int iPort, const char * pszPacket, int iPacketLen );
 	bool Send( int iThreadIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
+	bool SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex );
 
 private:
 	void GetKey( const char * pszIp, int iPort, std::string & strKey );

@@ -107,6 +107,7 @@ public:
 
 	bool Send( int iThreadIndex, int iSessionIndex, const char * pszPacket, int iPacketLen );
 	bool SendAll( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack );
+	bool SendAllExcept( const char * pszPacket, int iPacketLen, ITcpStackCallBack * pclsCallBack, int iThreadIndex, int iSessionIndex );
 
 	void DeleteNoUseThread();
 	bool DeleteThread( int iThreadIndex );
