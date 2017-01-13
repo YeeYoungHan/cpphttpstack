@@ -363,6 +363,7 @@ bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStack
 		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
 		{
 			m_pclsSession[i].Send( pszPacket, iPacketLen );
+			pclsCallBack->AfterSendAllPerSession( &m_pclsSession[i], pszPacket, iPacketLen );
 		}
 	}
 
@@ -388,6 +389,7 @@ bool CTcpSessionList::SendAllExcept( const char * pszPacket, int iPacketLen, ITc
 			if( m_pclsSession[i].m_iThreadIndex == iThreadIndex && m_pclsSession[i].m_iSessionIndex == iSessionIndex ) continue;
 
 			m_pclsSession[i].Send( pszPacket, iPacketLen );
+			pclsCallBack->AfterSendAllPerSession( &m_pclsSession[i], pszPacket, iPacketLen );
 		}
 	}
 

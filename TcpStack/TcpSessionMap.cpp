@@ -188,6 +188,7 @@ bool CTcpSessionMap::SendAll( const char * pszPacket, int iPacketLen, ITcpStackC
 		if( pclsCallBack->IsSendAll( itTSM->second ) )
 		{
 			itTSM->second->Send( pszPacket, iPacketLen );
+			pclsCallBack->AfterSendAllPerSession( itTSM->second, pszPacket, iPacketLen );
 		}
 	}
 	m_clsMutex.release();
@@ -217,6 +218,7 @@ bool CTcpSessionMap::SendAllExcept( const char * pszPacket, int iPacketLen, ITcp
 			if( itTSM->second->m_iThreadIndex == iThreadIndex && itTSM->second->m_iSessionIndex == iSessionIndex ) continue;
 
 			itTSM->second->Send( pszPacket, iPacketLen );
+			pclsCallBack->AfterSendAllPerSession( itTSM->second, pszPacket, iPacketLen );
 		}
 	}
 	m_clsMutex.release();

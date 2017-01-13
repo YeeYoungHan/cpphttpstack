@@ -62,6 +62,15 @@ public:
 	 * @returns SendAll 로 전송해도 되는 세션이면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
 	 */
 	virtual bool IsSendAll( CTcpSessionInfo * pclsSessionInfo ){ return false; };
+
+	/**
+	 * @ingroup TcpStack
+	 * @brief SendAll 로 전송할 때에 세션당 Send 함수 호출후, 호출되는 이벤트 핸들러
+	 * @param pclsSessionInfo 세션 정보
+	 * @param pszPacket				전송한 패킷
+	 * @param iPacketLen			전송 패킷 길이
+	 */
+	virtual void AfterSendAllPerSession( CTcpSessionInfo * pclsSessionInfo, const char * pszPacket, int iPacketLen ){};
 };
 
 #endif
