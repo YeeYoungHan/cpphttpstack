@@ -202,7 +202,17 @@ bool SSLServerStop( )
 	if( gbStartSslServer )
 	{
 		SSLStop();
-		SSL_CTX_free( gpsttServerCtx );
+		if( gpsttServerCtx )
+		{
+			SSL_CTX_free( gpsttServerCtx );
+			gpsttServerCtx = NULL;
+		}
+
+		if( gpsttClientCtx )
+		{
+			SSL_CTX_free( gpsttClientCtx );
+			gpsttClientCtx = NULL;
+		}
 
 		gbStartSslServer = false;
 	}
@@ -254,7 +264,11 @@ bool SSLClientStop( )
 	if( gbStartSslServer )
 	{
 		SSLStop();
-		if( gpsttClientCtx ) SSL_CTX_free( gpsttClientCtx );
+		if( gpsttClientCtx )
+		{
+			SSL_CTX_free( gpsttClientCtx );
+			gpsttClientCtx = NULL;
+		}
 
 		gbStartSslServer = false;
 	}
