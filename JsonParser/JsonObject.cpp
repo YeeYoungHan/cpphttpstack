@@ -217,6 +217,40 @@ void CJsonObject::Clear()
 
 /**
  * @ingroup JsonParser
+ * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 문자열 값을 검색한다. 프로퍼티 값이 숫자이면 문자열로 변환한다.
+ * @param pszName		프로퍼티 이름
+ * @param strValue	프로퍼티 값
+ * @returns 검색에 성공하고 해당 값이 문자열 타입인 경우 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::SelectStringData( const char * pszName, std::string & strValue )
+{
+	CJsonType * pclsType;
+
+	if( SelectData( pszName, &pclsType ) == false ) return false;
+	if( pclsType->m_cType == JSON_TYPE_INT )
+	{
+		int64_t iValue = ((CJsonInt *)pclsType)->m_iValue;
+		char szValue[22];
+
+		snprintf( szValue, sizeof(szValue), LONG_LONG_FORMAT, iValue );
+		strValue = szValue;
+	}
+	else
+	{
+		if( pclsType->m_cType != JSON_TYPE_STRING )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not string (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+			return false;
+		}
+
+		strValue = ((CJsonString *)pclsType)->m_strValue;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief Object 자료구조에서 프로퍼티 이름에 해당하는 문자열 값을 검색한다.
  * @param pszName		프로퍼티 이름
  * @param strValue	프로퍼티 값
@@ -367,7 +401,7 @@ bool CJsonObject::SelectData( const char * pszName, CJsonType ** ppclsType )
 	itMap = m_clsMap.find( pszName );
 	if( itMap == m_clsMap.end() )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s) is not found", __FUNCTION__, pszName );
+		CLog::Print( LOG_DEBUG, "%s name(%s) is not found", __FUNCTION__, pszName );
 		return false;
 	}
 

@@ -49,6 +49,8 @@ public:
 	int MakeString( std::string & strText );
 	void Clear();
 
+	bool SelectStringData( const char * pszName, std::string & strValue );
+
 	bool SelectData( const char * pszName, std::string & strValue );
 	bool SelectData( const char * pszName, int32_t & iValue );
 	bool SelectData( const char * pszName, int64_t & iValue );
