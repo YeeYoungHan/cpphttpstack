@@ -412,3 +412,13 @@ bool CJsonArray::InsertData( CJsonType * pclsType )
 
 	return true;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 Element 값을 추가한다.
+ * @returns JSON 배열의 Element 개수를 리턴한다.
+ */
+int CJsonArray::GetCount()
+{
+	return m_clsList.size();
+}

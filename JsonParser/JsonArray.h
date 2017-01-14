@@ -57,6 +57,8 @@ public:
 	bool InsertData( bool bValue );
 	bool InsertData( CJsonType * pclsType );
 
+	int GetCount();
+
 	JSON_LIST m_clsList;
 };
 
