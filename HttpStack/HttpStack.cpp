@@ -94,6 +94,13 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 		if( pclsRecv->IsRequest() )
 		{
 			CHttpMessage clsSend;
+			bool bClose = false;
+
+			CHttpHeader * pclsHeader = pclsRecv->GetHeader( "Connection" );
+			if( pclsHeader && !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
+			{
+				bClose = true;
+			}
 
 			if( m_pclsCallBack->RecvHttpRequest( pclsRecv, &clsSend ) == false )
 			{
@@ -125,6 +132,16 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 			}
 
 			free( pszBuf );
+
+			if( bClose )
+			{
+				return false;
+			}
+		}
+		else
+		{
+			CLog::Print( LOG_ERROR, "%s http request error", __FUNCTION__ );
+			return false;
 		}
 	}
 
