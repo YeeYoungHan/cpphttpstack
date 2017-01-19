@@ -59,6 +59,7 @@ public:
 	bool SelectData( const char * pszName, CJsonArray ** ppclsArray );
 	bool SelectData( const char * pszName, CJsonType ** ppclsType );
 
+	bool InsertData( const char * pszName, std::string & strValue );
 	bool InsertData( const char * pszName, const char * pszValue );
 	bool InsertData( const char * pszName, int32_t iValue );
 	bool InsertData( const char * pszName, int64_t iValue );
