@@ -66,6 +66,8 @@ public:
 	bool InsertData( const char * pszName, bool bValue );
 	bool InsertData( const char * pszName, CJsonType * pclsType );
 
+	bool InsertStringData( const char * pszName, int32_t iValue );
+
 	bool Exist( const char * pszName );
 
 	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );

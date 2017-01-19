@@ -547,6 +547,22 @@ bool CJsonObject::InsertData( const char * pszName, CJsonType * pclsType )
 
 /**
  * @ingroup JsonParser
+ * @brief Object 자료구조에 문자열 프로퍼티를 추가한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertStringData( const char * pszName, int32_t iValue )
+{
+	char szValue[11];
+
+	snprintf( szValue, sizeof(szValue), "%d", iValue );
+
+	return InsertData( pszName, szValue );
+}
+
+/**
+ * @ingroup JsonParser
  * @brief Object 자료구조에서 프로퍼티 이름이 존재하는지 검색한다.
  * @param pszName		프로퍼티 이름
  * @returns 프로퍼티 이름이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
