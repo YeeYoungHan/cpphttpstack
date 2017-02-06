@@ -362,6 +362,8 @@ bool CTcpSessionList::SendAll( const char * pszPacket, int iPacketLen, ITcpStack
 {
 	for( int i = 1; i < m_iPoolFdCount; ++i )
 	{
+		if( m_pclsSession[i].m_hSocket == INVALID_SOCKET ) continue;
+
 		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
 		{
 			m_pclsSession[i].Send( pszPacket, iPacketLen );
@@ -386,6 +388,8 @@ bool CTcpSessionList::SendAllExcept( const char * pszPacket, int iPacketLen, ITc
 {
 	for( int i = 1; i < m_iPoolFdCount; ++i )
 	{
+		if( m_pclsSession[i].m_hSocket == INVALID_SOCKET ) continue;
+
 		if( pclsCallBack->IsSendAll( &m_pclsSession[i] ) )
 		{
 			if( m_pclsSession[i].m_iThreadIndex == iThreadIndex && m_pclsSession[i].m_iSessionIndex == iSessionIndex ) continue;
