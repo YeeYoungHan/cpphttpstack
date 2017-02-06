@@ -317,6 +317,8 @@ void CTcpSessionList::DeleteTimeout( int iTimeout, int iNoPacketTimeout
 
 	for( int i = 1; i < m_iPoolFdCount; ++i )
 	{
+		if( m_pclsSession[i].m_hSocket == INVALID_SOCKET ) continue;
+
 		if( m_pclsSession[i].m_iRecvTime == 0 )
 		{
 			if( m_pclsSession[i].m_iConnectTime < iNoPacketTime )
