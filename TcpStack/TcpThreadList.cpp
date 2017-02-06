@@ -79,13 +79,23 @@ bool CTcpThreadList::Create( CTcpStack * pclsStack )
 	m_iMaxSocketPerThread = pclsStack->m_clsSetup.m_iMaxSocketPerThread + 1;
 	m_pclsStack = pclsStack;
 
+	bool bError = false;
+
+	m_clsMutex.acquire();
 	for( int i = 0; i < pclsStack->m_clsSetup.m_iThreadInitCount; ++i )
 	{
 		if( AddThread() == false )
 		{
-			Destroy();
-			return false;
+			bError = true;
+			break;
 		}
+	}
+	m_clsMutex.release();
+
+	if( bError )
+	{
+		Destroy();
+		return false;
 	}
 
 	return true;
@@ -433,7 +443,7 @@ bool CTcpThreadList::AddThread()
 {
 	if( m_pclsStack->m_clsSetup.m_iThreadMaxCount != 0 )
 	{
-		int iListCount = GetCount();
+		int iListCount = (int)m_clsList.size();
 
 		if( iListCount >= m_pclsStack->m_clsSetup.m_iThreadMaxCount )
 		{
@@ -471,9 +481,7 @@ bool CTcpThreadList::AddThread()
 	pclsTcpThreadInfo->m_clsSessionList.Insert( pclsTcpThreadInfo->m_hRecv );
 	pclsTcpThreadInfo->m_pclsStack = m_pclsStack;
 
-	m_clsMutex.acquire();
 	m_clsList.push_back( pclsTcpThreadInfo );
-	m_clsMutex.release();
 
 	bool bRes = StartThread( "TcpPipeThread", TcpPipeThread, pclsTcpThreadInfo );
 	if( bRes == false )
@@ -535,7 +543,6 @@ int CTcpThreadList::GetThreadIndex()
 {
 	int iThreadIndex = 0;
 
-	m_clsMutex.acquire();
 	++m_iThreadIndex;
 	if( m_iThreadIndex > 2000000000 )
 	{
@@ -552,7 +559,6 @@ int CTcpThreadList::GetThreadIndex()
 	}
 
 	iThreadIndex = m_iThreadIndex;
-	m_clsMutex.release();
 
 	return iThreadIndex;
 }
