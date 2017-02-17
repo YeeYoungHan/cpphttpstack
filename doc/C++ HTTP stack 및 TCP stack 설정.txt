@@ -1,0 +1,79 @@
+C++ HTTP stack 은 HTTP 서버를 개발할 때에 사용되는 라이브러리이고 C++ TCP stack 라이브러리는 TCP 서버를 개발할 때에 사용되는 라이브러리입니다. C++ HTTP stack 은 C++ TCP stack 기반으로 개발되어서 설정 항목이 동일합니다. C++ HTTP stack 및 TCP stack 의 설정 클래스는 다음과 같습니다.
+
+class CTcpStackSetup
+{
+public:
+ CTcpStackSetup();
+ ~CTcpStackSetup();
+
+ bool Parse( CXmlElement & clsXml );
+
+ std::string m_strListenIp;
+ int m_iListenPort;
+ int m_iThreadInitCount;
+ int m_iThreadMaxCount;
+ int m_iMaxSocketPerThread;
+ int m_iTcpRecvTimeout;
+ int m_iTcpNoPacketTimeout;
+ int m_iTcpConnectTimeout;
+ bool m_bUseTls;
+ std::string m_strCertFile;
+ bool m_bUseThreadPipe;
+};
+
+C++ TCP stack 은 thread pool 기반으로 동작할 수도 있고 그냥 클라이언트 연결에 따른 thread 생성 기반으로 동작할 수도 있습니다. thread pool 기반으로 동작한다는 것은 thread 개수에 제한을 설정할 수 있음을 의미하고 하나의 thread 에 N 개의 클라이언트 연결을 관리할 수 있음을 의미합니다.
+
+C++ TCP stack 을 thread pool 기반으로 동작할 경우, 위의 설정 항목의 대부분을 설정하고 thread pool 기반으로 동작하지 않을 경우는 아래의 항목을 설정하지 않아도 됩니다.
+
+m_iThreadInitCount
+m_iThreadMaxCount
+m_iMaxSocketPerThread
+
+C++ TCP stack 의 각 설정 항목에 대한 설명은 다음과 같습니다.
+
+* m_strListenIp
+  - TCP listen IP 주소를 설정한다.
+  - any IP 주소이면 공백으로 입력한다.
+
+* m_iListenPort
+  - TCP listen 포트 번호을 설정한다.
+  - TCP listen 하지 않는 경우에는 설정하지 않으면 된다. 즉, TCP 클라이언트 전용으로 사용할 경우 설정하지 않아도 된다.
+
+* m_iThreadInitCount
+  - 선 실행 Thread 개수를 설정한다.
+  - thread pool 의 최소 쓰레드 개수를 의미한다.
+  - thread pool 기능을 사용할 경우에만 설정한다.
+
+* m_iThreadMaxCount
+  - 최대 Thread 개수를 설정한다.
+  - 0 보다 큰 정수로 설정하면 해당 개수만큼만 쓰레드를 생성한다. 0 이면 시스템이 허락하는 만큼 쓰레드를 생성한다.
+  - thread pool 기능을 사용할 경우에만 설정한다.
+
+* m_iMaxSocketPerThread
+  - 하나의 Thread 에서 사용할 수 있는 최대 소켓 개수를 설정한다.
+  - thread pool 기능을 사용할 경우에만 설정한다.
+
+* m_iTcpRecvTimeout
+  - TCP 수신 timeout (초단위)
+
+* m_iTcpNoPacketTimeout
+  - TCP 연결 후, 최초 패킷이 수신되지 않은 경우의 timeout (초단위)
+
+* m_iTcpConnectTimeout
+  - TCP 연결 timeout (초단위)
+  - TCP 클라이언트로 사용할 경우 설정한다.
+
+* m_bUseTls
+  - TLS 를 사용하는지 설정한다.
+  - true 로 입력하면 TLS 를 사용하는 것이고 false 로 입력하면 평문 통신한다.
+  - 본 항목을 true 로 설정하면 m_strCertFile 을 설정해야 한다.
+
+* m_strCertFile
+  - TLS 서버를 위한 개인키/인증서 PEM 저장 파일 이름 ( full path )
+
+* m_bUseThreadPipe
+  - 쓰레드와 통신에 pipe 를 사용할 것인지 설정한다.
+  - 쓰레드와 통신을 pipe 로 한다는 것은 thread pool 을 사용한다는 것을 의미한다. 
+  - thread pool 을 이용할 경우 true 로 입력하고 그렇지 않으면 false 로 입력한다. 
+
+[출처] http://blog.naver.com/websearch/220937571044
