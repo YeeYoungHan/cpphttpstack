@@ -57,13 +57,15 @@ public:
 	/** TCP 연결 timeout */
 	int m_iTcpConnectTimeout;
 
-	/** TLS 를 사용하는가? */
+	/** TLS 를 사용하는지 설정한다. true 로 입력하면 TLS 를 사용하는 것이고 false 로 입력하면 평문 통신한다.
+			본 항목을 true 로 설정하면 m_strCertFile 을 설정해야 한다. */
 	bool m_bUseTls;
 
 	/** TLS 서버를 위한 개인키/인증서 PEM 저장 파일 이름 ( full path ) */
 	std::string m_strCertFile;
 
-	/** 쓰레드와 통신에 pipe 를 사용할 것인가? */
+	/** 쓰레드와 통신에 pipe 를 사용할 것인지 설정한다. 쓰레드와 통신을 pipe 로 한다는 것은 thread pool 을 사용한다는 것을 의미한다. 
+			thread pool 을 이용할 경우 true 로 입력하고 그렇지 않으면 false 로 입력한다. */
 	bool m_bUseThreadPipe;
 };
 
