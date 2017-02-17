@@ -1,0 +1,70 @@
+C++ HTTP stack 은 HTTP 서버를 개발할 때에 사용되는 라이브러리이고 C++ TCP stack 라이브러리는 TCP 서버를 개발할 때에 사용되는 라이브러리입니다. C++ HTTP stack 은 C++ TCP stack 기반으로 개발되어서 설정 항목이 동일합니다. C++ HTTP stack 및 TCP stack 의 설정 클래스에 대한 설명은 아래의 포스트를 참고하세요.
+
+* [오픈소스] C++ HTTP stack 및 TCP stack 설정 : http://blog.naver.com/websearch/220937571044
+
+C++ HTTP stack 및 TCP stack 의 설정은 XML 파일에 저장하여서 사용할 수 있습니다. XML 파일에 저장된 C++ HTTP stack 및 TCP stack 의 설정을 적용하는 소스 코드 예제는 다음과 같습니다.
+
+CXmlElement clsXml, * pclsElement;
+
+CTcpStackSetup clsHttpSetup;
+
+if( clsXml.ParseFile( pszFileName ) == false )
+{
+  return false;
+}
+
+pclsElement = clsXml.SelectElement( "Http" );
+if( pclsElement == NULL )
+{
+  return false;
+}
+
+clsHttpSetup.Parse( *pclsElement );
+
+
+8080 포트를 사용하고 thread pool 을 사용하지 않는 HTTP 서버의 설정 파일 예제는 다음과 같습니다.
+
+<HttpServer>
+ <Http>
+  <ListenIp></ListenIp>
+  <ListenPort>8080</ListenPort>
+  <TcpRecvTimeout>180</TcpRecvTimeout>
+  <TcpNoPacketTimeout>60</TcpNoPacketTimeout>
+  <UseThreadPipe>false</UseThreadPipe>
+ </Http>
+<HttpServer>
+
+8080 포트를 사용하고 thread pool 을 사용하는 HTTP 서버의 설정 파일 예제는 다음과 같습니다.
+
+<HttpServer>
+ <Http>
+  <ListenIp></ListenIp>
+  <ListenPort>8080</ListenPort>
+  <ThreadInitCount>10</ThreadInitCount>
+  <ThreadMaxCount>100</ThreadMaxCount>
+  <MaxSocketPerThread>10</MaxSocketPerThread>
+  <TcpRecvTimeout>180</TcpRecvTimeout>
+  <TcpNoPacketTimeout>60</TcpNoPacketTimeout>
+  <UseThreadPipe>true</UseThreadPipe>
+ </Http>
+<HttpServer>
+
+
+443 포트를 사용하고 thread pool 을 사용하고 TLS 통신할 경우의 HTTP 서버의 설정 파일 예제는 다음과 같습니다.
+
+<HttpServer>
+ <Http>
+  <ListenIp></ListenIp>
+  <ListenPort>8080</ListenPort>
+  <ThreadInitCount>10</ThreadInitCount>
+  <ThreadMaxCount>100</ThreadMaxCount>
+  <MaxSocketPerThread>10</MaxSocketPerThread>
+  <TcpRecvTimeout>180</TcpRecvTimeout>
+  <TcpNoPacketTimeout>60</TcpNoPacketTimeout>
+  <UseTls>true</UseTls>
+  <CertFile>C:\http.pem</CertFile>
+  <UseThreadPipe>true</UseThreadPipe>
+ </Http>
+<HttpServer>
+
+[출처] http://blog.naver.com/websearch/220937584573
