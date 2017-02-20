@@ -166,15 +166,21 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
  */
 bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputBody, std::string & strOutputBody )
 {
-	strOutputBody.clear();
-
-	HTTP_HEADER_LIST clsHeaderList;
-	CHttpHeader clsHeader( "SOAPAction", pszSoapAction );
 	std::string strOutputContentType;
 
-	clsHeaderList.push_back( clsHeader );
+	strOutputBody.clear();
 
-	return DoPost( pszUrl, &clsHeaderList, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
+	if( pszSoapAction && strlen(pszSoapAction) > 0 )
+	{
+		HTTP_HEADER_LIST clsHeaderList;
+		CHttpHeader clsHeader( "SOAPAction", pszSoapAction );
+
+		clsHeaderList.push_back( clsHeader );
+
+		return DoPost( pszUrl, &clsHeaderList, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
+	}
+	
+	return DoPost( pszUrl, NULL, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
 }
 
 /**
