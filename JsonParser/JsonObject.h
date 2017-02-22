@@ -68,6 +68,7 @@ public:
 	bool InsertData( const char * pszName );
 
 	bool InsertStringData( const char * pszName, int32_t iValue );
+	bool InsertStringOrNullData( const char * pszName, std::string & strValue );
 	bool InsertStringOrNullData( const char * pszName, const char * pszValue );
 
 	bool Exist( const char * pszName );
