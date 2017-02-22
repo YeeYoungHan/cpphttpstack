@@ -547,6 +547,32 @@ bool CJsonObject::InsertData( const char * pszName, CJsonType * pclsType )
 
 /**
  * @ingroup JsonParser
+ * @brief Object 자료구조에 null 프로퍼티를 추가한다.
+ * @param pszName		프로퍼티 이름
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertData( const char * pszName )
+{
+	if( Exist( pszName ) )
+	{
+		CLog::Print( LOG_ERROR, "%s name(%s) is found", __FUNCTION__, pszName );
+		return false;
+	}
+
+	CJsonNull * pclsNew = new CJsonNull();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s Copy error", __FUNCTION__ );
+		return false;
+	}
+
+	m_clsMap.insert( JSON_OBJECT_MAP::value_type( pszName, pclsNew ) );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief Object 자료구조에 문자열 프로퍼티를 추가한다.
  * @param pszName 프로퍼티 이름
  * @param iValue	프로퍼티 값
@@ -559,6 +585,23 @@ bool CJsonObject::InsertStringData( const char * pszName, int32_t iValue )
 	snprintf( szValue, sizeof(szValue), "%d", iValue );
 
 	return InsertData( pszName, szValue );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 문자열 프로퍼티 또는 null 프로퍼티를 추가한다.
+ * @param pszName		프로퍼티 이름
+ * @param pszValue	프로퍼티 값
+ * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::InsertStringOrNullData( const char * pszName, const char * pszValue )
+{
+	if( pszValue == NULL || !strcmp( pszValue, "null" ) )
+	{
+		InsertData( pszName );
+	}
+
+	return InsertData( pszName, pszValue );
 }
 
 /**
