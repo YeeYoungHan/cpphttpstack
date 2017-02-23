@@ -355,7 +355,7 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 		if( pclsPacket->IsCompleted() ) break;
 	}
 
-	if( pclsResponse->m_iStatusCode == 200 )
+	if( pclsResponse->m_iStatusCode / 100 == 2 )
 	{
 		bRes = true;
 	}
