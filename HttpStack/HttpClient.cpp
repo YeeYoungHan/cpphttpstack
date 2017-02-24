@@ -389,6 +389,14 @@ FUNC_END:
 
 			if( clsUri.Parse( pclsHeader->m_strValue.c_str(), pclsHeader->m_strValue.length() ) )
 			{
+				if( clsUri.m_strHost.empty() )
+				{
+					clsUri.m_strHost = pclsUri->m_strHost;
+					clsUri.m_iPort = pclsUri->m_iPort;
+					clsUri.m_strProtocol = pclsUri->m_strProtocol;
+					clsUri.m_strPath = pclsHeader->m_strValue;
+				}
+				
 				pclsRequest->SetRequest( pclsRequest->m_strHttpMethod.c_str(), &clsUri );
 
 				return Execute( &clsUri, pclsRequest, pclsPacket );
