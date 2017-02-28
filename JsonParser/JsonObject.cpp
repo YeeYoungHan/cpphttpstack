@@ -226,6 +226,8 @@ bool CJsonObject::SelectStringData( const char * pszName, std::string & strValue
 {
 	CJsonType * pclsType;
 
+	strValue.clear();
+
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType == JSON_TYPE_INT )
 	{
@@ -234,6 +236,10 @@ bool CJsonObject::SelectStringData( const char * pszName, std::string & strValue
 
 		snprintf( szValue, sizeof(szValue), LONG_LONG_FORMAT, iValue );
 		strValue = szValue;
+	}
+	else if( pclsType->m_cType == JSON_TYPE_NULL )
+	{
+		// null 인 경우에는 아무 것도 입력하지 않는다.
 	}
 	else
 	{
