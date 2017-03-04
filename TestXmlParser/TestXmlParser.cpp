@@ -51,8 +51,13 @@ int main( int argc, char * argv[] )
 
 				printf( "[%s]\n", pclsArg->GetName() );
 			}
+
+			pclsArgList->UpdateElementData( "web:CountryName", "us" );
 		}
 	}
+
+	strXml.clear();
+	clsXml.ToString( strXml );
 
 	return 0;
 }
