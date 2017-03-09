@@ -223,6 +223,21 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
  */
 bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputBody, std::string & strOutputBody )
 {
+	return DoSoap( pszUrl, pszSoapAction, "text/xml;charset=UTF-8", pszInputBody, strOutputBody );
+}
+
+/**
+ * @ingroup HttpClientApi
+ * @brief HTTP POST 기반으로 SOAP 명령을 실행한다.
+ * @param pszUrl				HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pszSoapAction HTTP SOAPAction 헤더에 저장될 문자열 (예:http://ws.cdyne.com/WeatherWS/GetWeatherInformation)
+ * @param pszInputContentType	HTTP Content-Type
+ * @param pszInputBody	전송 body
+ * @param strOutputBody 수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputBody )
+{
 	std::string strOutputContentType;
 
 	strOutputBody.clear();
@@ -234,10 +249,10 @@ bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const
 
 		clsHeaderList.push_back( clsHeader );
 
-		return DoPost( pszUrl, &clsHeaderList, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
+		return DoPost( pszUrl, &clsHeaderList, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
 	}
 	
-	return DoPost( pszUrl, NULL, "text/xml;charset=UTF-8", pszInputBody, strOutputContentType, strOutputBody );
+	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
 }
 
 /**
