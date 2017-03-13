@@ -69,6 +69,8 @@ bool TestJsonObject( )
 	Check( TestJsonObject( "{\"name\":null}", "{ \"name\" : null }" ) );
 
 	Check( TestJsonObject( "{ \"list\" : [ { \"UserId\" : \"Test\" } ] }", "{ \"list\" : [ { \"UserId\" : \"Test\" } ] }" ) );
+	Check( TestJsonObject( "{ \"a\" : \"1\", \"b\" : \"2\", \"list\" : [ ], \"q\" : \"3\", \"z\" : \"4\" }", "{ \"a\" : \"1\", \"b\" : \"2\", \"list\" : [ ], \"q\" : \"3\", \"z\" : \"4\" }" ) );
+	Check( TestJsonObject( "{ \"list\" : [ { \"A\" : [ 1, 2 ], \"UserId\" : \"Test\" } ] }", "{ \"list\" : [ { \"A\" : [ 1, 2 ], \"UserId\" : \"Test\" } ] }" ) );
 
 	CJsonObject clsObject, clsNewObject;
 	std::string strValue, strText;

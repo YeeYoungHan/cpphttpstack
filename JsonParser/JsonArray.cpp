@@ -81,6 +81,11 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 				cType = 1;
 				i += iParseLen - 1;
 			}
+			else if( pszText[i] == ']' )
+			{
+				iPos = i + 1;
+				break;
+			}
 		}
 		else if( pszText[i] == ',' )
 		{

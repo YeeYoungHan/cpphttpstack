@@ -58,5 +58,11 @@ bool TestJsonArray()
 	clsArray.ToString( strText );
 	Check( !strcmp( strText.c_str(), "[ \"a\", { \"name\" : \"value\" } ]" ) );
 
+	strText.clear();
+
+	clsArray.Parse( "[ ]", 3 );
+	clsArray.ToString( strText );
+	Check( !strcmp( strText.c_str(), "[ ]" ) );
+
 	return true;
 }
