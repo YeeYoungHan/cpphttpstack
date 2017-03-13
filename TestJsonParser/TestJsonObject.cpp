@@ -31,10 +31,18 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 	}
 
 	clsObject.ToString( strOutput );
+	int iOutputLen = clsObject.GetStringLen();
 
 	if( strcmp( strOutput.c_str(), pszOutput ) )
 	{
 		printf( "%s input(%s) output(%s) != output_want(%s) error\n", __FUNCTION__, pszInput, strOutput.c_str(), pszOutput );
+		return false;
+	}
+
+	int iWantLen = strlen( pszOutput );
+	if( iOutputLen != iWantLen )
+	{
+		printf( "%s input(%s) output(%s) outputLen(%d) wantLen(%d) error\n", __FUNCTION__, pszInput, pszOutput, iOutputLen, iWantLen );
 		return false;
 	}
 

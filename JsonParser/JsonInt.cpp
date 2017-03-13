@@ -75,6 +75,18 @@ int CJsonInt::ToString( std::string & strText )
 
 /**
  * @ingroup JsonParser
+ * @brief ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ * @returns ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ */
+int CJsonInt::GetStringLen( )
+{
+	char szText[22];
+
+	return snprintf( szText, sizeof(szText), LONG_LONG_FORMAT, m_iValue );
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자신을 복제한 객체를 생성한다.
  * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
  */

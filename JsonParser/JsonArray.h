@@ -41,6 +41,7 @@ public:
 
 	virtual int Parse( const char * pszText, int iTextLen );
 	virtual int ToString( std::string & strText );
+	virtual int GetStringLen( );
 	virtual CJsonType * Copy( );
 	void Clear();
 

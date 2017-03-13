@@ -136,6 +136,33 @@ int CJsonArray::ToString( std::string & strText )
 
 /**
  * @ingroup JsonParser
+ * @brief ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ * @returns ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ */
+int CJsonArray::GetStringLen( )
+{
+	JSON_LIST::iterator itJL;
+	int iLen = 3;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( itJL == m_clsList.begin() )
+		{
+			iLen += 1;
+		}
+		else
+		{
+			iLen += 2;
+		}
+
+		iLen += (*itJL)->GetStringLen();
+	}
+
+	return iLen;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자신을 복제한 객체를 생성한다.
  * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
  */

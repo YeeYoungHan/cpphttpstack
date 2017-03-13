@@ -151,6 +151,31 @@ int CJsonObject::ToString( std::string & strText )
 
 /**
  * @ingroup JsonParser
+ * @brief ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ * @returns ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ */
+int CJsonObject::GetStringLen( )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	int iLen = 3;
+
+	for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
+	{
+		if( itMap != m_clsMap.begin() )
+		{
+			iLen += 1;
+		}
+
+		iLen += 6;
+		iLen += itMap->first.length();
+		iLen += itMap->second->GetStringLen();
+	}
+
+	return iLen;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자신을 복제한 객체를 생성한다.
  * @returns 성공하면 자신을 복제한 객체를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
  */
