@@ -448,7 +448,7 @@ bool CJsonObject::SelectData( const char * pszName, CJsonType ** ppclsType )
  * @param strValue	프로퍼티 값
  * @returns 성공적으로 저장되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CJsonObject::InsertData( const char * pszName, std::string & strValue )
+bool CJsonObject::InsertData( const char * pszName, const std::string & strValue )
 {
 	return InsertData( pszName, strValue.c_str() );
 }
