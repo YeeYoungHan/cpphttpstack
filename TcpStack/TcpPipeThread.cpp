@@ -124,6 +124,10 @@ THREAD_API TcpPipeThread( LPVOID lpParameter )
 								CLog::Print( LOG_INFO, "not allowed TCP session(%s:%d)", clsTcpComm.m_szIp, clsTcpComm.m_iPort );
 								DeleteSession( pclsSessionList, pclsStack, iIndex );
 							}
+							else
+							{
+								pclsStack->m_clsClientMap.Insert( clsTcpComm.m_szIp, clsTcpComm.m_iPort, pclsThreadInfo->m_iIndex, iIndex );
+							}
 						}
 					}
 				}

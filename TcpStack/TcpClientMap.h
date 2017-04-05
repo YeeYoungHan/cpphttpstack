@@ -77,6 +77,7 @@ public:
 	bool DeleteSendPacketList( const char * pszIp, int iPort, SEND_PACKET_LIST & clsList );
 
 	bool SetConnected( const char * pszIp, int iPort, int iThreadIndex, int iSessionIndex );
+	bool Insert( const char * pszIp, int iPort, int iThreadIndex, int iSessionIndex );
 
 private:
 	bool Delete( const char * pszIp, int iPort, SEND_PACKET_LIST & clsList );

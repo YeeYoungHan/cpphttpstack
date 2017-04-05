@@ -211,6 +211,40 @@ bool CTcpClientMap::SetConnected( const char * pszIp, int iPort, int iThreadInde
 
 /**
  * @ingroup TcpStack
+ * @brief TCP 연결을 저장한다.
+ * @param pszIp					TCP 서버 IP 주소
+ * @param iPort					TCP 서버 포트 번호
+ * @param iThreadIndex	TCP 쓰레드 번호
+ * @param iSessionIndex TCP 세션 번호 ( TCP 쓰레드 내의 세션 번호 )
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CTcpClientMap::Insert( const char * pszIp, int iPort, int iThreadIndex, int iSessionIndex )
+{
+	bool bRes = false;
+	std::string strKey;
+	CTcpClientInfo clsInfo;
+	TCP_CLIENT_MAP::iterator itMap;
+
+	GetKey( pszIp, iPort, strKey );
+
+	clsInfo.m_bTrying = false;
+	clsInfo.m_clsIndex.m_iThreadIndex = iThreadIndex;
+	clsInfo.m_clsIndex.m_iSessionIndex = iSessionIndex;
+
+	m_clsMutex.acquire();
+	itMap = m_clsMap.find( strKey );
+	if( itMap == m_clsMap.end() )
+	{
+		m_clsMap.insert( TCP_CLIENT_MAP::value_type( strKey, clsInfo ) );
+		bRes = true;
+	}
+	m_clsMutex.release();
+
+	return bRes;
+}
+
+/**
+ * @ingroup TcpStack
  * @brief TCP 연결 정보를 삭제한다.
  * @param pszIp TCP 서버 IP 주소
  * @param iPort TCP 서버 포트 번호
