@@ -54,11 +54,19 @@ public:
 	bool SelectData( int iIndex, CJsonArray ** ppclsArray );
 	bool SelectData( int iIndex, CJsonType ** ppclsType );
 
+	bool InsertData( std::string & strValue );
 	bool InsertData( const char * pszValue );
 	bool InsertData( int32_t iValue );
 	bool InsertData( int64_t iValue );
 	bool InsertData( bool bValue );
 	bool InsertData( CJsonType * pclsType );
+
+	bool InsertData( int iIndex, std::string & strValue );
+	bool InsertData( int iIndex, const char * pszValue );
+	bool InsertData( int iIndex, int32_t iValue );
+	bool InsertData( int iIndex, int64_t iValue );
+	bool InsertData( int iIndex, bool bValue );
+	bool InsertData( int iIndex, CJsonType * pclsType );
 
 	bool DeleteData( int iIndex );
 

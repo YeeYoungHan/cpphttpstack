@@ -71,5 +71,31 @@ bool TestJsonArray()
 	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ 2 ]" ) );	
 
+	clsArray.Clear();
+	Check( clsArray.InsertData( 1 ) );
+	Check( clsArray.InsertData( 2 ) );
+	Check( clsArray.InsertData( 3 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2, 3 ]" ) );
+	Check( clsArray.InsertData( 0, "100" ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ \"100\", 1, 2, 3 ]" ) );
+	Check( clsArray.InsertData( 4, "200" ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ \"100\", 1, 2, 3, \"200\" ]" ) );
+
+	clsArray.Clear();
+	Check( clsArray.InsertData( 1 ) );
+	Check( clsArray.InsertData( 2 ) );
+	Check( clsArray.InsertData( 3 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2, 3 ]" ) );
+	Check( clsArray.InsertData( 0, 100 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 100, 1, 2, 3 ]" ) );
+	Check( clsArray.InsertData( 4, 200 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 100, 1, 2, 3, 200 ]" ) );
+
 	return true;
 }

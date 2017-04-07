@@ -367,8 +367,19 @@ bool CJsonArray::SelectData( int iIndex, CJsonType ** ppclsType )
 /**
  * @ingroup JsonParser
  * @brief JSON 배열에 문자열 Element 값을 추가한다.
+ * @param strValue Element 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( std::string & strValue )
+{
+	return InsertData( strValue.c_str() );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열에 문자열 Element 값을 추가한다.
  * @param pszValue Element 값
- * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( const char * pszValue )
 {
@@ -389,7 +400,7 @@ bool CJsonArray::InsertData( const char * pszValue )
  * @ingroup JsonParser
  * @brief JSON 배열에 정수 Element 값을 추가한다.
  * @param iValue Element 값
- * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int32_t iValue )
 {
@@ -400,7 +411,7 @@ bool CJsonArray::InsertData( int32_t iValue )
  * @ingroup JsonParser
  * @brief JSON 배열에 정수 Element 값을 추가한다.
  * @param iValue Element 값
- * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int64_t iValue )
 {
@@ -421,7 +432,7 @@ bool CJsonArray::InsertData( int64_t iValue )
  * @ingroup JsonParser
  * @brief JSON 배열에 boolean Element 값을 추가한다.
  * @param bValue Element 값
- * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( bool bValue )
 {
@@ -442,7 +453,7 @@ bool CJsonArray::InsertData( bool bValue )
  * @ingroup JsonParser
  * @brief JSON 배열에 Element 값을 추가한다.
  * @param pclsType Element 값
- * @returns JSON 배열에 Element 값에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( CJsonType * pclsType )
 {
@@ -457,6 +468,218 @@ bool CJsonArray::InsertData( CJsonType * pclsType )
 
 	return true;
 }
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 문자열 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		문자열 Element 를 저장할 인덱스
+ * @param strValue	문자열
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, std::string & strValue )
+{
+	return InsertData( iIndex, strValue.c_str() );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 문자열 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		문자열 Element 를 저장할 인덱스
+ * @param pszValue	문자열
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, const char * pszValue )
+{
+	int iSize = (int)m_clsList.size();
+
+	if( iIndex > iSize )
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		return false;
+	}
+
+	if( iIndex == iSize )
+	{
+		return InsertData( pszValue );
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			CJsonString * pclsNew = new CJsonString();
+			if( pclsNew == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return false;
+			}
+
+			pclsNew->m_strValue = pszValue;
+			m_clsList.insert( itJL, pclsNew );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 정수 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		정수 Element 를 저장할 인덱스
+ * @param pszValue	정수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, int32_t iValue )
+{
+	return InsertData( iIndex, (int64_t)iValue );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 정수 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		정수 Element 를 저장할 인덱스
+ * @param pszValue	정수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, int64_t iValue )
+{
+	int iSize = (int)m_clsList.size();
+
+	if( iIndex > iSize )
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		return false;
+	}
+
+	if( iIndex == iSize )
+	{
+		return InsertData( iValue );
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			CJsonInt * pclsNew = new CJsonInt();
+			if( pclsNew == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return false;
+			}
+
+			pclsNew->m_iValue = iValue;
+			m_clsList.insert( itJL, pclsNew );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 bool Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		bool Element 를 저장할 인덱스
+ * @param pszValue	bool
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, bool bValue )
+{
+	int iSize = (int)m_clsList.size();
+
+	if( iIndex > iSize )
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		return false;
+	}
+
+	if( iIndex == iSize )
+	{
+		return InsertData( bValue );
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			CJsonBool * pclsNew = new CJsonBool();
+			if( pclsNew == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return false;
+			}
+
+			pclsNew->m_bValue = bValue;
+			m_clsList.insert( itJL, pclsNew );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		Element 를 저장할 인덱스
+ * @param pszValue	Element
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( int iIndex, CJsonType * pclsType )
+{
+	int iSize = (int)m_clsList.size();
+
+	if( iIndex > iSize )
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		return false;
+	}
+
+	if( iIndex == iSize )
+	{
+		return InsertData( pclsType );
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			CJsonType * pclsNew = pclsType->Copy();
+			if( pclsNew == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+				return false;
+			}
+
+			m_clsList.insert( itJL, pclsNew );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
+}
+
 
 /**
  * @ingroup JsonParser
