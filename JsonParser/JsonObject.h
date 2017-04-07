@@ -72,7 +72,13 @@ public:
 	bool InsertStringOrNullData( const char * pszName, std::string & strValue );
 	bool InsertStringOrNullData( const char * pszName, const char * pszValue );
 
+	bool UpdateData( const char * pszName, const std::string & strValue );
 	bool UpdateData( const char * pszName, const char * pszValue );
+	bool UpdateData( const char * pszName, int32_t iValue );
+	bool UpdateData( const char * pszName, int64_t iValue );
+	bool UpdateData( const char * pszName, bool bValue );
+	bool UpdateData( const char * pszName, CJsonType * pclsType );
+	bool UpdateData( const char * pszName );
 
 	bool DeleteData( const char * pszName );
 

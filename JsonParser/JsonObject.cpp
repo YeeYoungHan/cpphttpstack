@@ -593,7 +593,7 @@ bool CJsonObject::InsertData( const char * pszName )
 	CJsonNull * pclsNew = new CJsonNull();
 	if( pclsNew == NULL )
 	{
-		CLog::Print( LOG_ERROR, "%s Copy error", __FUNCTION__ );
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 		return false;
 	}
 
@@ -651,6 +651,18 @@ bool CJsonObject::InsertStringOrNullData( const char * pszName, const char * psz
  * @ingroup JsonParser
  * @brief Object 자료구조에 문자열 프로퍼티를 수정한다.
  * @param pszName		프로퍼티 이름
+ * @param strValue	프로퍼티 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, const std::string & strValue )
+{
+	return UpdateData( pszName, strValue.c_str() );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 문자열 프로퍼티를 수정한다.
+ * @param pszName		프로퍼티 이름
  * @param pszValue	프로퍼티 값
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
@@ -662,19 +674,192 @@ bool CJsonObject::UpdateData( const char * pszName, const char * pszValue )
 	itMap = m_clsMap.find( pszName );
 	if( itMap != m_clsMap.end() )
 	{
-		CJsonString * pclsString = new CJsonString();
-		if( pclsString == NULL )
+		if( itMap->second->m_cType == JSON_TYPE_STRING )
 		{
-			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			((CJsonString *)itMap->second)->m_strValue = pszValue;
+			bRes = true;
 		}
 		else
 		{
-			pclsString->m_strValue = pszValue;
+			CJsonString * pclsString = new CJsonString();
+			if( pclsString == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			}
+			else
+			{
+				pclsString->m_strValue = pszValue;
 
+				delete itMap->second;
+				itMap->second = pclsString;
+
+				bRes = true;
+			}
+		}
+	}
+
+	return bRes;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 정수 프로퍼티를 수정한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 성공적하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, int32_t iValue )
+{
+	return UpdateData( pszName, (int64_t)iValue );
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 정수 프로퍼티를 수정한다.
+ * @param pszName 프로퍼티 이름
+ * @param iValue	프로퍼티 값
+ * @returns 성공적하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, int64_t iValue )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		if( itMap->second->m_cType == JSON_TYPE_INT )
+		{
+			((CJsonInt *)itMap->second)->m_iValue = iValue;
+			bRes = true;
+		}
+		else
+		{
+			CJsonInt * pclsInt = new CJsonInt();
+			if( pclsInt == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			}
+			else
+			{
+				pclsInt->m_iValue = iValue;
+
+				delete itMap->second;
+				itMap->second = pclsInt;
+
+				bRes = true;
+			}
+		}
+	}
+
+	return bRes;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 boolean 프로퍼티로 수정한다.
+ * @param pszName 프로퍼티 이름
+ * @param bValue	프로퍼티 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, bool bValue )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		if( itMap->second->m_cType == JSON_TYPE_BOOL )
+		{
+			((CJsonBool *)itMap->second)->m_bValue = bValue;
+		}
+		else
+		{
+			CJsonBool * pclsBool = new CJsonBool();
+			if( pclsBool == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			}
+			else
+			{
+				pclsBool->m_bValue = bValue;
+
+				delete itMap->second;
+				itMap->second = pclsBool;
+
+				bRes = true;
+			}
+		}
+	}
+
+	return bRes;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 프로퍼티를 수정한다.
+ * @param pszName		프로퍼티 이름
+ * @param pclsType	프로퍼티 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, CJsonType * pclsType )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		CJsonType * pclsNew = pclsType->Copy();
+		if( pclsNew == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s Copy error", __FUNCTION__ );
+		}
+		else
+		{
 			delete itMap->second;
-			itMap->second = pclsString;
+			itMap->second = pclsNew;
 
 			bRes = true;
+		}
+	}
+
+	return bRes;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief Object 자료구조에 프로퍼티 이름에 대한 값을 null 로 수정한다.
+ * @param pszName		프로퍼티 이름
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		if( itMap->second->m_cType == JSON_TYPE_NULL )
+		{
+			bRes = true;
+		}
+		else
+		{
+			CJsonNull * pclsNew = new CJsonNull();
+			if( pclsNew == NULL )
+			{
+				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+			}
+			else
+			{
+				delete itMap->second;
+				itMap->second = pclsNew;
+
+				bRes = true;
+			}
 		}
 	}
 
