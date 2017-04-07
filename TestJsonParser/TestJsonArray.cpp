@@ -28,41 +28,48 @@ bool TestJsonArray()
 	Check( clsArray.InsertData( "a" ) );
 	Check( clsArray.InsertData( "b" ) );
 	Check( clsArray.InsertData( "c" ) );
-	clsArray.ToString( strText );
+	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ \"a\", \"b\", \"c\" ]" ) );
 
 	clsArray.Clear();
-	strText.clear();
-
 	Check( clsArray.InsertData( 1 ) );
 	Check( clsArray.InsertData( 2 ) );
 	Check( clsArray.InsertData( 3 ) );
-	clsArray.ToString( strText );
+	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ 1, 2, 3 ]" ) );
 
 	clsArray.Clear();
-	strText.clear();
-
 	Check( clsArray.InsertData( true ) );
 	Check( clsArray.InsertData( false ) );
-	clsArray.ToString( strText );
+	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ true, false ]" ) );
 
 	clsObject.InsertData( "name", "value" );
 
 	clsArray.Clear();
-	strText.clear();
-
 	Check( clsArray.InsertData( "a" ) );
 	Check( clsArray.InsertData( &clsObject ) );
-	clsArray.ToString( strText );
+	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ \"a\", { \"name\" : \"value\" } ]" ) );
 
-	strText.clear();
-
 	clsArray.Parse( "[ ]", 3 );
-	clsArray.ToString( strText );
+	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ ]" ) );
+
+	clsArray.Clear();
+	Check( clsArray.InsertData( 1 ) );
+	Check( clsArray.InsertData( 2 ) );
+	Check( clsArray.InsertData( 3 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2, 3 ]" ) );
+	Check( clsArray.DeleteData( 3 ) == false );
+	Check( clsArray.DeleteData( -1 ) == false );
+	Check( clsArray.DeleteData( 2 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2 ]" ) );
+	Check( clsArray.DeleteData( 0 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 2 ]" ) );	
 
 	return true;
 }

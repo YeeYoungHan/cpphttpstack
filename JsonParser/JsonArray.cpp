@@ -190,6 +190,19 @@ CJsonType * CJsonArray::Copy( )
 
 /**
  * @ingroup JsonParser
+ * @brief 자료구조를 JSON array 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
+ * @param strText JSON array 문자열 저장 변수
+ * @returns JSON object 문자열 길이를 리턴한다.
+ */
+int CJsonArray::MakeString( std::string & strText )
+{
+	strText.clear();
+
+	return ToString( strText );
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 자료구조를 초기화시킨다.
  */
 void CJsonArray::Clear()
@@ -443,6 +456,38 @@ bool CJsonArray::InsertData( CJsonType * pclsType )
 	m_clsList.push_back( pclsNew );
 
 	return true;
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief 배열 자료구조에서 Element 인덱스에 해당하는 값을 삭제한다.
+ * @param iIndex Element 인덱스
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::DeleteData( int iIndex )
+{
+	if( iIndex >= (int)m_clsList.size() ) 
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) >= m_clsList.size(%d)", __FUNCTION__, iIndex, m_clsList.size() );
+		return false;
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			delete *itJL;
+			m_clsList.erase( itJL );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
 }
 
 /**

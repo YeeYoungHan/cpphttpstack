@@ -43,6 +43,8 @@ public:
 	virtual int ToString( std::string & strText );
 	virtual int GetStringLen( );
 	virtual CJsonType * Copy( );
+
+	int MakeString( std::string & strText );
 	void Clear();
 
 	bool SelectData( int iIndex, std::string & strValue );
@@ -57,6 +59,8 @@ public:
 	bool InsertData( int64_t iValue );
 	bool InsertData( bool bValue );
 	bool InsertData( CJsonType * pclsType );
+
+	bool DeleteData( int iIndex );
 
 	int GetCount();
 
