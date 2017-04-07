@@ -128,5 +128,17 @@ bool TestJsonObject( )
 	clsObject.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "{ \"a1\" : { \"name\" : \"value\" } }" ) );
 
+	clsObject.Clear();
+	Check( clsObject.InsertData( "a1", "v1" ) );
+	Check( clsObject.InsertData( "a2", "v2" ) );
+	clsObject.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"a1\" : \"v1\", \"a2\" : \"v2\" }" ) );
+	Check( clsObject.DeleteData( "a2" ) );
+	clsObject.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "{ \"a1\" : \"v1\" }" ) );
+	Check( clsObject.DeleteData( "a1" ) );
+	clsObject.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "{ }" ) );
+
 	return true;
 }

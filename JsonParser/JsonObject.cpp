@@ -649,6 +649,27 @@ bool CJsonObject::InsertStringOrNullData( const char * pszName, const char * psz
 
 /**
  * @ingroup JsonParser
+ * @brief 프로퍼티를 삭제한다.
+ * @param pszName 프로퍼티 이름
+ * @returns 프로퍼티 이름이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonObject::DeleteData( const char * pszName )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		delete itMap->second;
+		m_clsMap.erase( itMap );
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief Object 자료구조에서 프로퍼티 이름이 존재하는지 검색한다.
  * @param pszName		프로퍼티 이름
  * @returns 프로퍼티 이름이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
