@@ -490,42 +490,22 @@ bool CJsonArray::InsertData( int iIndex, std::string & strValue )
  */
 bool CJsonArray::InsertData( int iIndex, const char * pszValue )
 {
-	int iSize = (int)m_clsList.size();
-
-	if( iIndex > iSize )
+	CJsonString * pclsNew = new CJsonString();
+	if( pclsNew == NULL )
 	{
-		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 		return false;
 	}
 
-	if( iIndex == iSize )
+	pclsNew->m_strValue = pszValue;
+
+	if( InsertDataNoCopy( iIndex, pclsNew ) == false )
 	{
-		return InsertData( pszValue );
+		delete pclsNew;
+		return false;
 	}
 
-	JSON_LIST::iterator itJL;
-	int iCount = 0;
-
-	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
-	{
-		if( iIndex == iCount )
-		{
-			CJsonString * pclsNew = new CJsonString();
-			if( pclsNew == NULL )
-			{
-				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-				return false;
-			}
-
-			pclsNew->m_strValue = pszValue;
-			m_clsList.insert( itJL, pclsNew );
-			return true;
-		}
-
-		++iCount;
-	}
-
-	return false;
+	return true;
 }
 
 /**
@@ -549,42 +529,22 @@ bool CJsonArray::InsertData( int iIndex, int32_t iValue )
  */
 bool CJsonArray::InsertData( int iIndex, int64_t iValue )
 {
-	int iSize = (int)m_clsList.size();
-
-	if( iIndex > iSize )
+	CJsonInt * pclsNew = new CJsonInt();
+	if( pclsNew == NULL )
 	{
-		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 		return false;
 	}
 
-	if( iIndex == iSize )
+	pclsNew->m_iValue = iValue;
+
+	if( InsertDataNoCopy( iIndex, pclsNew ) == false )
 	{
-		return InsertData( iValue );
+		delete pclsNew;
+		return false;
 	}
 
-	JSON_LIST::iterator itJL;
-	int iCount = 0;
-
-	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
-	{
-		if( iIndex == iCount )
-		{
-			CJsonInt * pclsNew = new CJsonInt();
-			if( pclsNew == NULL )
-			{
-				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-				return false;
-			}
-
-			pclsNew->m_iValue = iValue;
-			m_clsList.insert( itJL, pclsNew );
-			return true;
-		}
-
-		++iCount;
-	}
-
-	return false;
+	return true;
 }
 
 /**
@@ -596,42 +556,22 @@ bool CJsonArray::InsertData( int iIndex, int64_t iValue )
  */
 bool CJsonArray::InsertData( int iIndex, bool bValue )
 {
-	int iSize = (int)m_clsList.size();
-
-	if( iIndex > iSize )
+	CJsonBool * pclsNew = new CJsonBool();
+	if( pclsNew == NULL )
 	{
-		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 		return false;
 	}
 
-	if( iIndex == iSize )
+	pclsNew->m_bValue = bValue;
+
+	if( InsertDataNoCopy( iIndex, pclsNew ) == false )
 	{
-		return InsertData( bValue );
+		delete pclsNew;
+		return false;
 	}
 
-	JSON_LIST::iterator itJL;
-	int iCount = 0;
-
-	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
-	{
-		if( iIndex == iCount )
-		{
-			CJsonBool * pclsNew = new CJsonBool();
-			if( pclsNew == NULL )
-			{
-				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-				return false;
-			}
-
-			pclsNew->m_bValue = bValue;
-			m_clsList.insert( itJL, pclsNew );
-			return true;
-		}
-
-		++iCount;
-	}
-
-	return false;
+	return true;
 }
 
 /**
@@ -643,41 +583,20 @@ bool CJsonArray::InsertData( int iIndex, bool bValue )
  */
 bool CJsonArray::InsertData( int iIndex, CJsonType * pclsType )
 {
-	int iSize = (int)m_clsList.size();
-
-	if( iIndex > iSize )
+	CJsonType * pclsNew = pclsType->Copy();
+	if( pclsNew == NULL )
 	{
-		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
 		return false;
 	}
 
-	if( iIndex == iSize )
+	if( InsertDataNoCopy( iIndex, pclsType ) == false )
 	{
-		return InsertData( pclsType );
+		delete pclsNew;
+		return false;
 	}
 
-	JSON_LIST::iterator itJL;
-	int iCount = 0;
-
-	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
-	{
-		if( iIndex == iCount )
-		{
-			CJsonType * pclsNew = pclsType->Copy();
-			if( pclsNew == NULL )
-			{
-				CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
-				return false;
-			}
-
-			m_clsList.insert( itJL, pclsNew );
-			return true;
-		}
-
-		++iCount;
-	}
-
-	return false;
+	return true;
 }
 
 
@@ -721,4 +640,44 @@ bool CJsonArray::DeleteData( int iIndex )
 int CJsonArray::GetCount()
 {
 	return m_clsList.size();
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief 입력된 값을 copy 하지 않고 JSON 배열의 지정된 위치에 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		Element 를 저장할 인덱스
+ * @param pszValue	Element
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertDataNoCopy( int iIndex, CJsonType * pclsType )
+{
+	int iSize = (int)m_clsList.size();
+
+	if( iIndex > iSize )
+	{
+		CLog::Print( LOG_ERROR, "%s iIndex(%d) > m_clsList.size(%d)", __FUNCTION__, iIndex, iSize );
+		return false;
+	}
+
+	if( iIndex == iSize )
+	{
+		m_clsList.push_back( pclsType );
+		return true;
+	}
+
+	JSON_LIST::iterator itJL;
+	int iCount = 0;
+
+	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	{
+		if( iIndex == iCount )
+		{
+			m_clsList.insert( itJL, pclsType );
+			return true;
+		}
+
+		++iCount;
+	}
+
+	return false;
 }

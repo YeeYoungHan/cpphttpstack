@@ -73,6 +73,9 @@ public:
 	int GetCount();
 
 	JSON_LIST m_clsList;
+
+private:
+	bool InsertDataNoCopy( int iIndex, CJsonType * pclsType );
 };
 
 #endif
