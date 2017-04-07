@@ -72,6 +72,8 @@ public:
 	bool InsertStringOrNullData( const char * pszName, std::string & strValue );
 	bool InsertStringOrNullData( const char * pszName, const char * pszValue );
 
+	bool UpdateData( const char * pszName, const char * pszValue );
+
 	bool DeleteData( const char * pszName );
 
 	bool Exist( const char * pszName );

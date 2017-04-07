@@ -649,6 +649,40 @@ bool CJsonObject::InsertStringOrNullData( const char * pszName, const char * psz
 
 /**
  * @ingroup JsonParser
+ * @brief Object 자료구조에 문자열 프로퍼티를 수정한다.
+ * @param pszName		프로퍼티 이름
+ * @param pszValue	프로퍼티 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonObject::UpdateData( const char * pszName, const char * pszValue )
+{
+	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
+
+	itMap = m_clsMap.find( pszName );
+	if( itMap != m_clsMap.end() )
+	{
+		CJsonString * pclsString = new CJsonString();
+		if( pclsString == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		}
+		else
+		{
+			pclsString->m_strValue = pszValue;
+
+			delete itMap->second;
+			itMap->second = pclsString;
+
+			bRes = true;
+		}
+	}
+
+	return bRes;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 프로퍼티를 삭제한다.
  * @param pszName 프로퍼티 이름
  * @returns 프로퍼티 이름이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
@@ -656,16 +690,17 @@ bool CJsonObject::InsertStringOrNullData( const char * pszName, const char * psz
 bool CJsonObject::DeleteData( const char * pszName )
 {
 	JSON_OBJECT_MAP::iterator itMap;
+	bool bRes = false;
 
 	itMap = m_clsMap.find( pszName );
 	if( itMap != m_clsMap.end() )
 	{
 		delete itMap->second;
 		m_clsMap.erase( itMap );
-		return true;
+		bRes = true;
 	}
 
-	return false;
+	return bRes;
 }
 
 /**
