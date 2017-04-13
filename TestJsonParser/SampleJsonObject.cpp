@@ -16,13 +16,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#include "Main.h"
+#include "JsonObject.h"
 
-#define Check(x)	if( !(x) ){ printf( "%s %d error\n", __FILE__, __LINE__ ); return false; }
+void SampleJsonObject()
+{
+	{
+		// { "a" : "v", "b" : 2, "c" : true, "d" : null, "f" : { "n", "v2" } } 积己规过
+		CJsonObject clsObject, clsChild;
+		std::string strJson;
 
-bool TestJsonObject();
-bool TestJsonArray();
-void SampleJsonObject();
+		clsObject.InsertData( "a", "v" );
+		clsObject.InsertData( "b", 2 );
+		clsObject.InsertData( "c", true );
+		clsObject.InsertData( "d" );
 
-#endif
+		clsChild.InsertData( "n", "v2" );
+		clsObject.InsertData( "f", &clsChild );
+
+		clsObject.MakeString( strJson );
+
+		printf( "#1 [%s]\n", strJson.c_str() );
+	}
+}

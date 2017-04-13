@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SampleJsonObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestJsonArray.cpp"
 				>
 			</File>

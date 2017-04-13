@@ -28,6 +28,11 @@ int main( int argc, char * argv[] )
 
 	bool bRes = false;
 
+	if( argc > 1 )
+	{
+		SampleJsonObject();
+	}
+
 	if( TestJsonArray() == false ) goto FUNC_END;
 	if( TestJsonObject() == false ) goto FUNC_END;
 
