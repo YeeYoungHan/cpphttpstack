@@ -131,7 +131,7 @@ int CJsonArray::ToString( std::string & strText )
 	strBuf.append( " ]" );
 	strText.append( strBuf );
 
-	return strBuf.length();
+	return (int)strBuf.length();
 }
 
 /**
@@ -639,7 +639,7 @@ bool CJsonArray::DeleteData( int iIndex )
  */
 int CJsonArray::GetCount()
 {
-	return m_clsList.size();
+	return (int)m_clsList.size();
 }
 
 /**

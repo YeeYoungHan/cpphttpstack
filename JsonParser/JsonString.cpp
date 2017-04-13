@@ -75,7 +75,7 @@ int CJsonString::ToString( std::string & strText )
 	strText.append( m_strValue );
 	strText.append( "\"" );
 
-	return m_strValue.length() + 2;
+	return (int)m_strValue.length() + 2;
 }
 
 /**
@@ -85,7 +85,7 @@ int CJsonString::ToString( std::string & strText )
  */
 int CJsonString::GetStringLen( )
 {
-	return m_strValue.length() + 2;
+	return (int)m_strValue.length() + 2;
 }
 
 /**

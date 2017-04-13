@@ -62,7 +62,7 @@ int CJsonNumber::ToString( std::string & strText )
 {
 	strText.append( m_strValue );
 
-	return m_strValue.length();
+	return (int)m_strValue.length();
 }
 
 /**
@@ -72,7 +72,7 @@ int CJsonNumber::ToString( std::string & strText )
  */
 int CJsonNumber::GetStringLen( )
 {
-	return m_strValue.length();
+	return (int)m_strValue.length();
 }
 
 /**
@@ -98,7 +98,7 @@ CJsonType * CJsonNumber::Copy( )
 bool CJsonNumber::IsDouble( )
 {
 	const char * pszValue = m_strValue.c_str();
-	int iLen = m_strValue.length();
+	int iLen = (int)m_strValue.length();
 
 	for( int i = 0; i < iLen; ++i )
 	{

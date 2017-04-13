@@ -146,7 +146,7 @@ int CJsonObject::ToString( std::string & strText )
 	strBuf.append( " }" );
 	strText.append( strBuf );
 
-	return strBuf.length();
+	return (int)strBuf.length();
 }
 
 /**
@@ -167,7 +167,7 @@ int CJsonObject::GetStringLen( )
 		}
 
 		iLen += 6;
-		iLen += itMap->first.length();
+		iLen += (int)itMap->first.length();
 		iLen += itMap->second->GetStringLen();
 	}
 
@@ -208,7 +208,7 @@ CJsonType * CJsonObject::Copy( )
  */
 int CJsonObject::Parse( std::string & strText )
 {
-	return Parse( strText.c_str(), strText.length() );
+	return Parse( strText.c_str(), (int)strText.length() );
 }
 
 /**
