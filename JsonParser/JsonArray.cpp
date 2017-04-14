@@ -531,7 +531,7 @@ bool CJsonArray::InsertData( int iIndex, const char * pszValue )
  * @ingroup JsonParser
  * @brief JSON 배열의 지정된 위치에 정수 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
  * @param iIndex		정수 Element 를 저장할 인덱스
- * @param pszValue	정수
+ * @param iValue		정수
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int iIndex, int32_t iValue )
@@ -543,7 +543,7 @@ bool CJsonArray::InsertData( int iIndex, int32_t iValue )
  * @ingroup JsonParser
  * @brief JSON 배열의 지정된 위치에 정수 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
  * @param iIndex		정수 Element 를 저장할 인덱스
- * @param pszValue	정수
+ * @param iValue		정수
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int iIndex, int64_t iValue )
@@ -570,7 +570,7 @@ bool CJsonArray::InsertData( int iIndex, int64_t iValue )
  * @ingroup JsonParser
  * @brief JSON 배열의 지정된 위치에 bool Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
  * @param iIndex		bool Element 를 저장할 인덱스
- * @param pszValue	bool
+ * @param bValue		bool
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int iIndex, bool bValue )
@@ -597,7 +597,7 @@ bool CJsonArray::InsertData( int iIndex, bool bValue )
  * @ingroup JsonParser
  * @brief JSON 배열의 지정된 위치에 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
  * @param iIndex		Element 를 저장할 인덱스
- * @param pszValue	Element
+ * @param pclsType	Element
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CJsonArray::InsertData( int iIndex, CJsonType * pclsType )
@@ -609,7 +609,7 @@ bool CJsonArray::InsertData( int iIndex, CJsonType * pclsType )
 		return false;
 	}
 
-	if( InsertDataNoCopy( iIndex, pclsType ) == false )
+	if( InsertDataNoCopy( iIndex, pclsNew ) == false )
 	{
 		delete pclsNew;
 		return false;
@@ -618,6 +618,29 @@ bool CJsonArray::InsertData( int iIndex, CJsonType * pclsType )
 	return true;
 }
 
+/**
+ * @ingroup JsonParser
+ * @brief JSON 배열의 지정된 위치에 null Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
+ * @param iIndex		Element 를 저장할 인덱스
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertDataNull( int iIndex )
+{
+	CJsonNull * pclsNew = new CJsonNull();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	if( InsertDataNoCopy( iIndex, pclsNew ) == false )
+	{
+		delete pclsNew;
+		return false;
+	}
+
+	return true;
+}
 
 /**
  * @ingroup JsonParser

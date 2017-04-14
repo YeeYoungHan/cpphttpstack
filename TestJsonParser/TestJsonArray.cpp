@@ -96,6 +96,12 @@ bool TestJsonArray()
 	Check( clsArray.InsertData( 4, 200 ) );
 	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ 100, 1, 2, 3, 200 ]" ) );
+	Check( clsArray.InsertData( ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 100, 1, 2, 3, 200, null ]" ) );
+	Check( clsArray.InsertDataNull( 1 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 100, null, 1, 2, 3, 200, null ]" ) );
 
 	return true;
 }

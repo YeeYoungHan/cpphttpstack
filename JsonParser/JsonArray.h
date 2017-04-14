@@ -68,6 +68,7 @@ public:
 	bool InsertData( int iIndex, int64_t iValue );
 	bool InsertData( int iIndex, bool bValue );
 	bool InsertData( int iIndex, CJsonType * pclsType );
+	bool InsertDataNull( int iIndex );
 
 	bool DeleteData( int iIndex );
 
