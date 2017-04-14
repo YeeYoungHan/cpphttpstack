@@ -60,6 +60,7 @@ public:
 	bool InsertData( int64_t iValue );
 	bool InsertData( bool bValue );
 	bool InsertData( CJsonType * pclsType );
+	bool InsertData( );
 
 	bool InsertData( int iIndex, std::string & strValue );
 	bool InsertData( int iIndex, const char * pszValue );

@@ -24,5 +24,6 @@
 bool TestJsonObject();
 bool TestJsonArray();
 void SampleJsonObject();
+void SampleJsonArray();
 
 #endif

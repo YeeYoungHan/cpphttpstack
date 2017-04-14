@@ -36,6 +36,6 @@ void SampleJsonObject()
 
 		clsObject.MakeString( strJson );
 
-		printf( "#1 [%s]\n", strJson.c_str() );
+		printf( "#100 [%s]\n", strJson.c_str() );
 	}
 }

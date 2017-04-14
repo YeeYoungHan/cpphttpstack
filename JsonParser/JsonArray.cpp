@@ -471,6 +471,25 @@ bool CJsonArray::InsertData( CJsonType * pclsType )
 
 /**
  * @ingroup JsonParser
+ * @brief JSON 배열에 null Element 값을 추가한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertData( )
+{
+	CJsonNull * pclsNew = new CJsonNull();
+	if( pclsNew == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s new error", __FUNCTION__ );
+		return false;
+	}
+
+	m_clsList.push_back( pclsNew );
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief JSON 배열의 지정된 위치에 문자열 Element 를 추가한다. 지정된 위치부터 element 는 한칸씩 뒤로 밀린다.
  * @param iIndex		문자열 Element 를 저장할 인덱스
  * @param strValue	문자열

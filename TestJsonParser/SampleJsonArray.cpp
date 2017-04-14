@@ -16,39 +16,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include <stdio.h>
 #include "Main.h"
+#include "JsonObject.h"
 
-int main( int argc, char * argv[] )
+void SampleJsonArray()
 {
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	bool bRes = false;
-
-	if( argc > 1 )
 	{
-		SampleJsonObject();
-		SampleJsonArray();
+		// [ "a", 2, true, null, { "n", "v2" } ] 积己规过
+		CJsonArray clsArray;
+		CJsonObject clsChild;
+		std::string strJson;
+
+		clsArray.InsertData( "a" );
+		clsArray.InsertData( 2 );
+		clsArray.InsertData( true );
+		clsArray.InsertData( );
+
+		clsChild.InsertData( "n", "v2" );
+		clsArray.InsertData( &clsChild );
+
+		clsArray.MakeString( strJson );
+
+		printf( "#200 [%s]\n", strJson.c_str() );
 	}
-
-	if( TestJsonArray() == false ) goto FUNC_END;
-	if( TestJsonObject() == false ) goto FUNC_END;
-
-	bRes = true;
-
-FUNC_END:
-
-	if( bRes == false )
-	{
-		printf( "ERROR!!!\n" );
-	}
-	else
-	{
-		printf( "ALL PASS!!!\n" );
-	}
-
-	return 0;
 }
