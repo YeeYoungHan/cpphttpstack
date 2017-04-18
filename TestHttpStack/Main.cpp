@@ -49,8 +49,9 @@ int main( int argc, char * argv[] )
 	clsSetup.m_iMaxSocketPerThread = 1;
 	clsSetup.m_iThreadMaxCount = 0;
 	clsSetup.m_bUseThreadPipe = false;
-
-	/* thread pool 을 사용할 경우
+	
+	/*
+	//thread pool 을 사용할 경우
 	clsSetup.m_iMaxSocketPerThread = 10;
 	clsSetup.m_iThreadMaxCount = 10;
 	clsSetup.m_bUseThreadPipe = true;
