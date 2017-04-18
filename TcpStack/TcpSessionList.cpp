@@ -49,7 +49,7 @@ bool CTcpSessionInfo::Send( const char * pszPacket, int iPacketLen )
 {
 	bool bRes = false;
 
-	if( ( CLog::GetLevel() & LOG_NETWORK ) && (uint8_t)pszPacket[0] != 0xFF )
+	if( CLog::GetLevel() & LOG_NETWORK )
 	{
 		Log( pszPacket, iPacketLen, true );
 	}

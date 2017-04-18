@@ -118,6 +118,11 @@ THREAD_API TcpNoPipeThread( LPVOID lpParameter )
 					break;
 				}
 
+				if( CLog::GetLevel() & LOG_NETWORK )
+				{
+					clsSessionInfo.Log( szPacket, n, false );
+				}
+
 				time( &clsSessionInfo.m_iRecvTime );
 
 				if( pclsStack->m_pclsCallBack->RecvPacket( szPacket, n, &clsSessionInfo ) == false )

@@ -158,6 +158,11 @@ THREAD_API TcpPipeThread( LPVOID lpParameter )
 				continue;
 			}
 
+			if( CLog::GetLevel() & LOG_NETWORK )
+			{
+				pclsSessionList->m_pclsSession[iIndex].Log( szPacket, n, false );
+			}
+
 			pclsSessionList->m_pclsSession[iIndex].m_iRecvTime = iTime;
 
 			if( pclsStack->m_pclsCallBack->RecvPacket( szPacket, n, &pclsSessionList->m_pclsSession[iIndex] ) == false )

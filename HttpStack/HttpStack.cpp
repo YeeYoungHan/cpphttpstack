@@ -97,7 +97,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 			bool bClose = false;
 
 			CHttpHeader * pclsHeader = pclsRecv->GetHeader( "Connection" );
-			if( pclsHeader && !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
+			if( pclsHeader == NULL || !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
 			{
 				bClose = true;
 			}

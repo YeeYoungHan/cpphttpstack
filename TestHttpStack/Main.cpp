@@ -39,7 +39,9 @@ int main( int argc, char * argv[] )
 
 #ifdef WIN32
 	CLog::SetDirectory( "c:\\temp\\http" );
-	CLog::SetLevel( LOG_INFO | LOG_DEBUG );
+#ifdef _DEBUG
+	CLog::SetLevel( LOG_INFO | LOG_DEBUG | LOG_NETWORK );
+#endif
 #endif
 
 	// HTTP 수신 포트 번호를 설정한다.
@@ -47,6 +49,12 @@ int main( int argc, char * argv[] )
 	clsSetup.m_iMaxSocketPerThread = 1;
 	clsSetup.m_iThreadMaxCount = 0;
 	clsSetup.m_bUseThreadPipe = false;
+
+	/* thread pool 을 사용할 경우
+	clsSetup.m_iMaxSocketPerThread = 10;
+	clsSetup.m_iThreadMaxCount = 10;
+	clsSetup.m_bUseThreadPipe = true;
+	*/
 
 	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
 	clsServer.m_strDocumentRoot = argv[1];
