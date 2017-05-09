@@ -644,6 +644,28 @@ bool CJsonArray::InsertDataNull( int iIndex )
 
 /**
  * @ingroup JsonParser
+ * @brief 입력한 JSON 배열의 element 들을 추가한다.
+ * @param pclsArray JSON 배열
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CJsonArray::InsertArray( CJsonArray * pclsArray )
+{
+	int iCount = pclsArray->GetCount();
+	CJsonType * pclsData;
+		
+	for( int i = 0; i < iCount; ++i )
+	{
+		if( pclsArray->SelectData( i, &pclsData ) )
+		{
+			InsertData( pclsData );
+		}
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup JsonParser
  * @brief 배열 자료구조에서 Element 인덱스에 해당하는 값을 삭제한다.
  * @param iIndex Element 인덱스
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.

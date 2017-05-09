@@ -70,6 +70,8 @@ public:
 	bool InsertData( int iIndex, CJsonType * pclsType );
 	bool InsertDataNull( int iIndex );
 
+	bool InsertArray( CJsonArray * pclsArray );
+
 	bool DeleteData( int iIndex );
 
 	int GetCount();

@@ -22,7 +22,7 @@
 bool TestJsonArray()
 {
 	CJsonObject clsObject;
-	CJsonArray clsArray;
+	CJsonArray clsArray, clsAppend;
 	std::string strText;
 
 	Check( clsArray.InsertData( "a" ) );
@@ -102,6 +102,19 @@ bool TestJsonArray()
 	Check( clsArray.InsertDataNull( 1 ) );
 	clsArray.MakeString( strText );
 	Check( !strcmp( strText.c_str(), "[ 100, null, 1, 2, 3, 200, null ]" ) );
+
+	clsArray.Clear();
+	Check( clsArray.InsertData( 1 ) );
+	Check( clsArray.InsertData( 2 ) );
+	Check( clsArray.InsertData( 3 ) );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2, 3 ]" ) );
+	Check( clsAppend.InsertData( 4 ) );
+	Check( clsAppend.InsertData( 5 ) );
+	Check( clsAppend.InsertData( 6 ) );
+	clsArray.InsertArray( &clsAppend );
+	clsArray.MakeString( strText );
+	Check( !strcmp( strText.c_str(), "[ 1, 2, 3, 4, 5, 6 ]" ) );
 
 	return true;
 }
