@@ -231,7 +231,11 @@ bool CJsonArray::SelectData( int iIndex, std::string & strValue )
 	if( SelectData( iIndex, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_STRING )
 	{
-		CLog::Print( LOG_ERROR, "%s type(%d) is not string (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s type(%d) is not string (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -254,7 +258,11 @@ bool CJsonArray::SelectData( int iIndex, int64_t & iValue )
 	if( SelectData( iIndex, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_INT )
 	{
-		CLog::Print( LOG_ERROR, "%s type(%d) is not int (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s type(%d) is not int (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -277,7 +285,11 @@ bool CJsonArray::SelectData( int iIndex, bool & bValue )
 	if( SelectData( iIndex, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_BOOL )
 	{
-		CLog::Print( LOG_ERROR, "%s type(%d) is not bool (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s type(%d) is not bool (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -300,7 +312,11 @@ bool CJsonArray::SelectData( int iIndex, CJsonObject ** ppclsObject )
 	if( SelectData( iIndex, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_OBJECT )
 	{
-		CLog::Print( LOG_ERROR, "%s type(%d) is not object (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s type(%d) is not object (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -323,7 +339,11 @@ bool CJsonArray::SelectData( int iIndex, CJsonArray ** ppclsArray )
 	if( SelectData( iIndex, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_ARRAY )
 	{
-		CLog::Print( LOG_ERROR, "%s type(%d) is not array (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s type(%d) is not array (%s)", __FUNCTION__, iIndex, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 

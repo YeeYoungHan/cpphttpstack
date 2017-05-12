@@ -294,7 +294,11 @@ bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_STRING )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not string (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not string (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -317,7 +321,11 @@ bool CJsonObject::SelectData( const char * pszName, int32_t & iValue )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_INT )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -340,7 +348,11 @@ bool CJsonObject::SelectData( const char * pszName, int64_t & iValue )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_INT )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not int (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -363,7 +375,11 @@ bool CJsonObject::SelectData( const char * pszName, bool & bValue )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_BOOL )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not bool (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not bool (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -386,7 +402,11 @@ bool CJsonObject::SelectData( const char * pszName, CJsonObject ** ppclsObject )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_OBJECT )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not object (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not object (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
@@ -409,7 +429,11 @@ bool CJsonObject::SelectData( const char * pszName, CJsonArray ** ppclsArray )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_ARRAY )
 	{
-		CLog::Print( LOG_ERROR, "%s name(%s)'s type is not array (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		if( pclsType->m_cType != JSON_TYPE_NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not array (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
+		}
+
 		return false;
 	}
 
