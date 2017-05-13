@@ -39,9 +39,11 @@ public:
 	bool DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputBody );
 
 	void SetRecvTimeout( int iRecvTimeout );
+	int GetStatusCode();
 
 private:
 	int m_iRecvTimeout;
+	int m_iStatusCode;
 
 	bool Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttpPacket * pclsPacket );
 };

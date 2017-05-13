@@ -23,7 +23,7 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
-CHttpClient::CHttpClient() : m_iRecvTimeout(10)
+CHttpClient::CHttpClient() : m_iRecvTimeout(10), m_iStatusCode(0)
 {
 	InitNetwork();
 }
@@ -267,6 +267,16 @@ void CHttpClient::SetRecvTimeout( int iRecvTimeout )
 
 /**
  * @ingroup HttpStack
+ * @brief HTTP 응답 status code 를 리턴한다.
+ * @returns HTTP 응답 status code 를 리턴한다.
+ */
+int CHttpClient::GetStatusCode()
+{
+	return m_iStatusCode;
+}
+
+/**
+ * @ingroup HttpStack
  * @brief HTTP 서버에 연결하여서 HTTP 요청 메시지를 전송한 후, HTTP 응답 메시지를 수신한다.
  * @param pclsUri				HTTP request URI
  * @param pclsRequest		HTTP request
@@ -369,6 +379,8 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 
 		if( pclsPacket->IsCompleted() ) break;
 	}
+
+	m_iStatusCode = pclsResponse->m_iStatusCode;
 
 	if( pclsResponse->m_iStatusCode / 100 == 2 )
 	{
