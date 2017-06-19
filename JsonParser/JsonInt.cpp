@@ -43,7 +43,11 @@ int CJsonInt::Parse( const char * pszText, int iTextLen )
 
 	for( int i = 0; i < iTextLen; ++i )
 	{
-		if( isdigit( pszText[i] ) == 0 )
+		if( i == 0 && pszText[i] == '-' )
+		{
+			// 첫번째 - 는 음수이므로 넘어간다.
+		}
+		else if( isdigit( pszText[i] ) == 0 )
 		{
 			std::string strInt;
 

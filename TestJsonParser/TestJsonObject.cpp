@@ -63,6 +63,7 @@ bool TestJsonObject( )
 
 	Check( TestJsonObject( "{ \"name\" : 1234 }", "{ \"name\" : 1234 }" ) );
 	Check( TestJsonObject( "{\"name\":1234}", "{ \"name\" : 1234 }" ) );
+	Check( TestJsonObject( "{ \"name\" : -1 }", "{ \"name\" : -1 }" ) );
 	Check( TestJsonObject( "{ \"name\" : 12e31 }", "{ \"name\" : 12e31 }" ) );
 
 	Check( TestJsonObject( "{ \"name\" : [ \"value\", \"value2\" ] }", "{ \"name\" : [ \"value\", \"value2\" ] }" ) );

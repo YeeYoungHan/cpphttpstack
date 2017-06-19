@@ -42,7 +42,11 @@ int CJsonNumber::Parse( const char * pszText, int iTextLen )
 
 	for( int i = 0; i < iTextLen; ++i )
 	{
-		if( isspace( pszText[i] ) || pszText[i] == ',' || pszText[i] == '}' || pszText[i] == ']' )
+		if( i == 0 && pszText[i] == '-' )
+		{
+			// 첫번째 - 는 음수이므로 넘어간다.
+		}
+		else if( isspace( pszText[i] ) || pszText[i] == ',' || pszText[i] == '}' || pszText[i] == ']' )
 		{
 			m_strValue.append( pszText, i );
 			return i;

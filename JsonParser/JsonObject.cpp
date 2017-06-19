@@ -970,7 +970,7 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 			return NULL;
 		}
 	}
-	else if( isdigit(pszText[iPos]) )
+	else if( isdigit(pszText[iPos]) || ( pszText[iPos] == '-' && isdigit(pszText[iPos+1]) ) )
 	{
 		CJsonNumber clsNumber;
 
