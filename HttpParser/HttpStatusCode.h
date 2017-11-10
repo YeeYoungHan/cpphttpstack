@@ -20,6 +20,7 @@
 #define _HTTP_STATUS_CODE_H_
 
 #define HTTP_TRYING                        100
+#define HTTP_SWITCHING_PROTOCOLS           101
 #define HTTP_RINGING                       180
 #define HTTP_CALL_IS_BEING_FORWARDED       181
 #define HTTP_QUEUED                        182

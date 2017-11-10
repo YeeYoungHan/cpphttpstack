@@ -16,27 +16,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _SIMPLE_HTTP_SERVER_H_
-#define _SIMPLE_HTTP_SERVER_H_
+#ifndef _BASE64_H_
+#define _BASE64_H_
 
-#include "HttpStack.h"
+#include <string>
 
-/**
- * @ingroup TestHttpStack
- * @brief HTTP 요청 callback 클래스
- */
-class CSimpleHttpServer : public IHttpStackCallBack
-{
-public:
-	CSimpleHttpServer();
-	virtual ~CSimpleHttpServer();
+int GetBase64EncodeLength( int iLength );
+int GetBase64DecodeLength( int iLength );
+int Base64Encode( const char * pszInput, int iInputLength, char * pszOutput, int iOutputLength );
+int Base64Decode( const char * pszInput, int iInputLength, char * pszOutput, int iOutputLength );
 
-	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
-	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort );
-	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort );
-
-	std::string m_strDocumentRoot;
-	bool m_bStop;
-};
+bool Base64Encode( const char * pszInput, int iInputLength, std::string & strOutput );
 
 #endif

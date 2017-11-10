@@ -17,11 +17,20 @@
  */
 
 #include "HttpStack.h"
+#include "HttpStatusCode.h"
 #include "Log.h"
+#include "Base64.h"
 #include "MemoryDebug.h"
+
+const EVP_MD * CHttpStack::m_psttMd = NULL;
 
 CHttpStack::CHttpStack() : m_pclsCallBack(NULL)
 {
+	if( m_psttMd == NULL )
+	{
+		OpenSSL_add_all_digests();
+		m_psttMd = EVP_get_digestbyname( "sha1" );
+	}
 }
 
 CHttpStack::~CHttpStack()
@@ -65,7 +74,15 @@ bool CHttpStack::InComingConnected( CTcpSessionInfo * pclsSessionInfo )
 
 void CHttpStack::SessionClosed( CTcpSessionInfo * pclsSessionInfo )
 {
+	if( pclsSessionInfo->m_pclsApp )
+	{
+		CHttpStackSession * pclsApp = (CHttpStackSession *)pclsSessionInfo->m_pclsApp;
 
+		if( pclsApp->m_bWebSocket )
+		{
+			m_pclsCallBack->WebSocketClosed( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort );
+		}
+	}
 }
 
 bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo )
@@ -82,68 +99,129 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 
 	CHttpStackSession * pclsApp = (CHttpStackSession *)pclsSessionInfo->m_pclsApp;
 
-	if( pclsApp->m_clsPacket.AddPacket( pszPacket, iPacketLen ) == false )
+	if( pclsApp->m_bWebSocket )
 	{
-		CLog::Print( LOG_ERROR, "%s m_clsPacket.AddPacket error", __FUNCTION__ );
+		// QQQ: WebSocket 패킷 파싱 & callback 기능 추가할 것
+	}
+	else
+	{
+		if( pclsApp->m_clsPacket.AddPacket( pszPacket, iPacketLen ) == false )
+		{
+			CLog::Print( LOG_ERROR, "%s m_clsPacket.AddPacket error", __FUNCTION__ );
+			return false;
+		}
+
+		if( pclsApp->m_clsPacket.IsCompleted() )
+		{
+			CHttpMessage * pclsRecv = pclsApp->m_clsPacket.GetHttpMessage();
+			if( pclsRecv->IsRequest() )
+			{
+				CHttpMessage clsSend;
+				CHttpHeader * pclsHeader;
+				bool bClose = false;
+
+				pclsHeader = pclsRecv->GetHeader( "Upgrade" );
+				if( pclsHeader && !strcmp( pclsHeader->m_strValue.c_str(), "websocket" ) )
+				{
+					if( MakeWebSocketResponse( pclsRecv, &clsSend ) == false )
+					{
+						return false;
+					}
+
+					pclsApp->m_bWebSocket = true;
+				}
+				else
+				{
+					pclsHeader = pclsRecv->GetHeader( "Connection" );
+					if( pclsHeader == NULL || !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
+					{
+						bClose = true;
+					}
+
+					if( m_pclsCallBack->RecvHttpRequest( pclsRecv, &clsSend ) == false )
+					{
+						CLog::Print( LOG_ERROR, "%s RecvHttpRequest error", __FUNCTION__ );
+						return false;
+					}
+				}
+
+				int iNewBufLen = 8192 + clsSend.m_strBody.length();
+				char * pszBuf = (char *)malloc( iNewBufLen );
+				if( pszBuf == NULL )
+				{
+					CLog::Print( LOG_ERROR, "%s malloc error", __FUNCTION__ );
+					return false;
+				}
+				
+				int iBufLen = clsSend.ToString( pszBuf, iNewBufLen );
+				if( iBufLen == -1 )
+				{
+					CLog::Print( LOG_ERROR, "%s ToString error", __FUNCTION__ );
+					free( pszBuf );
+					return false;
+				}
+
+				if( pclsSessionInfo->Send( pszBuf, iBufLen ) == false )
+				{
+					CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
+					free( pszBuf );
+					return false;
+				}
+
+				free( pszBuf );
+
+				if( bClose )
+				{
+					return false;
+				}
+
+				if( pclsApp->m_bWebSocket )
+				{
+					m_pclsCallBack->WebSocketConnected( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort );
+				}
+			}
+			else
+			{
+				CLog::Print( LOG_ERROR, "%s http request error", __FUNCTION__ );
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+bool CHttpStack::MakeWebSocketResponse( CHttpMessage * pclsRecv, CHttpMessage * pclsSend )
+{
+	CHttpHeader * pclsHeader = pclsRecv->GetHeader( "Sec-WebSocket-Key" );
+	if( pclsHeader == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s Sec-WebSocket-Key is not found", __FUNCTION__ );
 		return false;
 	}
 
-	if( pclsApp->m_clsPacket.IsCompleted() )
-	{
-		CHttpMessage * pclsRecv = pclsApp->m_clsPacket.GetHttpMessage();
-		if( pclsRecv->IsRequest() )
-		{
-			CHttpMessage clsSend;
-			bool bClose = false;
+	std::string strKey = pclsHeader->m_strValue;
 
-			CHttpHeader * pclsHeader = pclsRecv->GetHeader( "Connection" );
-			if( pclsHeader == NULL || !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
-			{
-				bClose = true;
-			}
+	pclsSend->m_iStatusCode = HTTP_SWITCHING_PROTOCOLS;
+	pclsSend->AddHeader( "Upgrade", "websocket" );
+	pclsSend->AddHeader( "Connection", "Upgrade" );
 
-			if( m_pclsCallBack->RecvHttpRequest( pclsRecv, &clsSend ) == false )
-			{
-				CLog::Print( LOG_ERROR, "%s RecvHttpRequest error", __FUNCTION__ );
-				return false;
-			}
+	EVP_MD_CTX	sttCtx;
+	uint8_t			szDigest[EVP_MAX_MD_SIZE];
+	char				szOutput[EVP_MAX_MD_SIZE*2+1];
+	uint32_t		iDigestLen;
 
-			int iNewBufLen = 8192 + clsSend.m_strBody.length();
-			char * pszBuf = (char *)malloc( iNewBufLen );
-			if( pszBuf == NULL )
-			{
-				CLog::Print( LOG_ERROR, "%s malloc error", __FUNCTION__ );
-				return false;
-			}
-			
-			int iBufLen = clsSend.ToString( pszBuf, iNewBufLen );
-			if( iBufLen == -1 )
-			{
-				CLog::Print( LOG_ERROR, "%s ToString error", __FUNCTION__ );
-				free( pszBuf );
-				return false;
-			}
+	memset( szDigest, 0, sizeof(szDigest) );
+	memset( szOutput, 0, sizeof(szOutput) );
 
-			if( pclsSessionInfo->Send( pszBuf, iBufLen ) == false )
-			{
-				CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
-				free( pszBuf );
-				return false;
-			}
+	EVP_DigestInit( &sttCtx, m_psttMd );
+	EVP_DigestUpdate( &sttCtx, strKey.c_str(), strKey.length() );
+	EVP_DigestUpdate( &sttCtx, "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", 36 );
+	EVP_DigestFinal( &sttCtx, szDigest, &iDigestLen );
 
-			free( pszBuf );
+	Base64Encode( (char *)szDigest, iDigestLen, szOutput, sizeof(szOutput) );
 
-			if( bClose )
-			{
-				return false;
-			}
-		}
-		else
-		{
-			CLog::Print( LOG_ERROR, "%s http request error", __FUNCTION__ );
-			return false;
-		}
-	}
+	pclsSend->AddHeader( "Sec-WebSocket-Accept", szOutput );
 
 	return true;
 }

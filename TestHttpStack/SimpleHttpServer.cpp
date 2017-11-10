@@ -135,3 +135,13 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 
 	return true;
 }
+
+void CSimpleHttpServer::WebSocketConnected( const char * pszClientIp, int iClientPort )
+{
+
+}
+
+void CSimpleHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
+{
+
+}

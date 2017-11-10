@@ -30,10 +30,11 @@
 class CHttpStackSession : public ITcpSessionApp
 {
 public:
-	CHttpStackSession(){};
+	CHttpStackSession() : m_bWebSocket(false){};
 	virtual ~CHttpStackSession(){};
 
 	CHttpPacket m_clsPacket;
+	bool m_bWebSocket;
 };
 
 /**
@@ -56,8 +57,11 @@ public:
 	virtual bool RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo );
 
 private:
+	bool MakeWebSocketResponse( CHttpMessage * pclsRecv, CHttpMessage * pclsSend );
+
 	CTcpStack m_clsTcpStack;
 	IHttpStackCallBack * m_pclsCallBack;
+	static const EVP_MD * m_psttMd;
 };
 
 #endif

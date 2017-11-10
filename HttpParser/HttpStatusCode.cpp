@@ -29,7 +29,8 @@ const char * GetReasonPhrase( int iSipCode )
 {
 	switch( iSipCode )
 	{
-	case HTTP_TRYING:											return "Trying";
+	case HTTP_TRYING:											 return "Trying";
+	case HTTP_SWITCHING_PROTOCOLS:         return "Switching Protocols";
 	case HTTP_RINGING:                     return "Ringing";
 	case HTTP_CALL_IS_BEING_FORWARDED:     return "Call Is Being Forwarded";
 	case HTTP_QUEUED:                      return "Queued";
@@ -47,20 +48,20 @@ const char * GetReasonPhrase( int iSipCode )
 	case HTTP_FORBIDDEN:                   return "Forbidden";
 	case HTTP_NOT_FOUND:                   return "Not Found";
 	case HTTP_METHOD_NOT_ALLOWED:          return "Method Not Allowed";
-	case HTTP_NOT_ACCEPTABLE:							return "Not Acceptable";
+	case HTTP_NOT_ACCEPTABLE:							 return "Not Acceptable";
 	case HTTP_PROXY_AUTHENTICATION_REQUIRED:	return "Proxy Authentication Required";
 	case HTTP_REQUEST_TIME_OUT:            return "Request Timeout";
-	case HTTP_CONFLICT:										return "Conflict";
+	case HTTP_CONFLICT:										 return "Conflict";
 	case HTTP_GONE:                        return "Gone";
-	case HTTP_LENGTH_REQUIRED:							return "Length Required";
-	case HTTP_CONDITIONAL_REQUEST_FAILED:	return "Conditional Request Failed";
+	case HTTP_LENGTH_REQUIRED:						 return "Length Required";
+	case HTTP_CONDITIONAL_REQUEST_FAILED:	 return "Conditional Request Failed";
 	case HTTP_REQUEST_ENTITY_TOO_LARGE:    return "Request Entity Too Large";
 	case HTTP_REQUEST_URI_TOO_LARGE:       return "Request-URI Too Large";
 	case HTTP_UNSUPPORTED_MEDIA_TYPE:      return "Unsupported Media Type";
 	case HTTP_UNSUPPORTED_URI_SCHEME:      return "Unsupported Uri Scheme";
 	case HTTP_BAD_EXTENSION:               return "Bad Extension";
 	case HTTP_EXTENSION_REQUIRED:          return "Extension Required";
-	case HTTP_SESSION_INTERVAL_TOO_SMALL:	return "Session Interval Too Small";
+	case HTTP_SESSION_INTERVAL_TOO_SMALL:  return "Session Interval Too Small";
 	case HTTP_INTERVAL_TOO_BRIEF:          return "Interval Too Brief";
 	case HTTP_TEMPORARILY_UNAVAILABLE:     return "Temporarily not available";
 	case HTTP_CALL_TRANSACTION_DOES_NOT_EXIST: return "Call Leg/Transaction Does Not Exist";
@@ -84,8 +85,8 @@ const char * GetReasonPhrase( int iSipCode )
 	case HTTP_BUSY_EVRYWHERE:              return "Busy Everywhere";
 	case HTTP_DECLINE:                     return "Decline";
 	case HTTP_DOES_NOT_EXIST_ANYWHERE:     return "Does not exist anywhere";
-	case HTTP_CONNECT_ERROR:								return "Connect error";
-	case HTTP_RING_TIMEOUT_ERROR:					return "Ring Timeout error";
+	case HTTP_CONNECT_ERROR:							 return "Connect error";
+	case HTTP_RING_TIMEOUT_ERROR:					 return "Ring Timeout error";
 	}
 
 	return "Not Acceptable";

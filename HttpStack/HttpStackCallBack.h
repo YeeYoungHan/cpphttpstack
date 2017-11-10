@@ -39,6 +39,10 @@ public:
 	 * @returns 응용에서 HTTP 응답 메시지를 정상적으로 생성하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
 	 */
 	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse ) = 0;
+
+	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort ) = 0;
+
+	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort ) = 0;
 };
 
 #endif
