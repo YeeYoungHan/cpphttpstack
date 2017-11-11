@@ -67,6 +67,15 @@ bool CHttpStack::Stop( )
 	return m_clsTcpStack.Stop();
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 클라이언트로 데이터를 전송한다.
+ * @param pszClientIp WebSocket 클라이언트 IP 주소
+ * @param iClientPort WebSocket 클라이언트 포트 번호
+ * @param pszData			WebSocket 으로 전송할 payload 데이터
+ * @param iDataLen		WebSocket 으로 전송할 payload 데이터 길이
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttpStack::SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen )
 {
 	int iPacketLen = 0;

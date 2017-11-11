@@ -40,10 +40,30 @@ public:
 	 */
 	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse ) = 0;
 
+	/**
+	 * @ingroup HttpStack
+	 * @brief WebSocket 클라이언트 TCP 연결 시작 이벤트 callback
+	 * @param pszClientIp WebSocket 클라이언트 IP 주소
+	 * @param iClientPort WebSocket 클라이언트 포트 번호
+	 */
 	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort ) = 0;
 
+	/**
+	 * @ingroup HttpStack
+	 * @brief WebSocket 클라이언트 TCP 연결 종료 이벤트 callback
+	 * @param pszClientIp WebSocket 클라이언트 IP 주소
+	 * @param iClientPort WebSocket 클라이언트 포트 번호
+	 */
 	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort ) = 0;
 
+	/**
+	 * @ingroup HttpStack
+	 * @brief WebSocket 클라이언트 데이터 수신 이벤트 callback
+	 * @param pszClientIp WebSocket 클라이언트 IP 주소
+	 * @param iClientPort WebSocket 클라이언트 포트 번호
+	 * @param strData			WebSocket 클라이언트가 전송한 데이터
+	 * @returns WebSocket 클라이언트 연결을 유지하려면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+	 */
 	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData ) = 0;
 };
 
