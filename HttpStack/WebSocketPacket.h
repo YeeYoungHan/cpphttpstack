@@ -21,12 +21,20 @@
 
 #include <string>
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 헤더 정보 저장 클래스
+ */
 class CWebSocketPacketHeader
 {
 public:
 	uint8_t	m_iOpCode;
 };
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 패킷 파싱 클래스
+ */
 class CWebSocketPacket
 {
 public:

@@ -29,6 +29,13 @@ CWebSocketPacket::~CWebSocketPacket()
 {
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 패킷을 저장한다.
+ * @param pszPacket		패킷
+ * @param iPacketLen	패킷 길이
+ * @returns true 를 리턴한다.
+ */
 bool CWebSocketPacket::AddPacket( const char * pszPacket, int iPacketLen )
 {
 	m_strBuf.append( pszPacket, iPacketLen );
@@ -36,6 +43,13 @@ bool CWebSocketPacket::AddPacket( const char * pszPacket, int iPacketLen )
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 수신 데이터를 가져온다.
+ * @param clsHeader WebSocket 헤더 정보 저장 객체
+ * @param strData		WebSocket 수신 데이터
+ * @returns WebSocket 수신 데이터가 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CWebSocketPacket::GetData( CWebSocketPacketHeader & clsHeader, std::string & strData )
 {
 	strData.clear();
