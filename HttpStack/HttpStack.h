@@ -21,6 +21,7 @@
 
 #include "TcpStack.h"
 #include "HttpPacket.h"
+#include "WebSocketPacket.h"
 #include "HttpStackCallBack.h"
 
 /**
@@ -33,7 +34,8 @@ public:
 	CHttpStackSession() : m_bWebSocket(false){};
 	virtual ~CHttpStackSession(){};
 
-	CHttpPacket m_clsPacket;
+	CHttpPacket				m_clsHttpPacket;
+	CWebSocketPacket	m_clsWsPacket;
 	bool m_bWebSocket;
 };
 
@@ -49,6 +51,8 @@ public:
 
 	bool Start( CTcpStackSetup * pclsSetup, IHttpStackCallBack * pclsCallBack );
 	bool Stop( );
+
+	bool SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen );
 
 	// ITcpStackCallBack
 	virtual bool InComingConnected( CTcpSessionInfo * pclsSessionInfo );

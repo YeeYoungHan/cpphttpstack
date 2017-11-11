@@ -16,29 +16,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _SIMPLE_HTTP_SERVER_H_
-#define _SIMPLE_HTTP_SERVER_H_
+#ifndef _WEB_SOCKET_PACKET_H_
+#define _WEB_SOCKET_PACKET_H_
 
-#include "HttpStack.h"
+#include <string>
 
-/**
- * @ingroup TestHttpStack
- * @brief HTTP 요청 callback 클래스
- */
-class CSimpleHttpServer : public IHttpStackCallBack
+class CWebSocketPacketHeader
 {
 public:
-	CSimpleHttpServer();
-	virtual ~CSimpleHttpServer();
+	uint8_t	m_iOpCode;
+};
 
-	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
+class CWebSocketPacket
+{
+public:
+	CWebSocketPacket();
+	~CWebSocketPacket();
 
-	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort );
-	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort );
-	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData );
+	bool AddPacket( const char * pszPacket, int iPacketLen );
+	bool GetData( CWebSocketPacketHeader & clsHeader, std::string & strData );
 
-	std::string m_strDocumentRoot;
-	bool m_bStop;
+private:
+	std::string m_strBuf;
 };
 
 #endif

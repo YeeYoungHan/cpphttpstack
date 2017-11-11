@@ -43,6 +43,8 @@ public:
 	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort ) = 0;
 
 	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort ) = 0;
+
+	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData ) = 0;
 };
 
 #endif

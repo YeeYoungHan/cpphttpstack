@@ -24,6 +24,8 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
+extern CHttpStack gclsStack;
+
 CSimpleHttpServer::CSimpleHttpServer() : m_bStop(false)
 {
 }
@@ -138,10 +140,19 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 
 void CSimpleHttpServer::WebSocketConnected( const char * pszClientIp, int iClientPort )
 {
-
+	printf( "WebSocket[%s:%d] connected\n", pszClientIp, iClientPort );
 }
 
 void CSimpleHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 {
+	printf( "WebSocket[%s:%d] closeed\n", pszClientIp, iClientPort );
+}
 
+bool CSimpleHttpServer::WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData )
+{
+	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
+
+	gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), strData.length() );
+
+	return true;
 }

@@ -67,6 +67,68 @@ bool CHttpStack::Stop( )
 	return m_clsTcpStack.Stop();
 }
 
+bool CHttpStack::SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen )
+{
+	int iPacketLen = 0;
+
+	if( iDataLen > 65536 )
+	{
+		iPacketLen = 2 + 8 + iDataLen;
+	}
+	else if( iDataLen > 125 )
+	{
+		iPacketLen = 2 + 2 + iDataLen;
+	}
+	else
+	{
+		iPacketLen = 2 + iDataLen;
+	}
+
+	char * pszPacket = (char *)malloc( iPacketLen );
+	if( pszPacket == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s malloc error", __FUNCTION__ );
+		return false;
+	}
+
+	pszPacket[0] = (uint8_t)0x81;
+
+	int iPayLoadPos = 2;
+
+	if( iDataLen > 65536 )
+	{
+		pszPacket[1] = 127;
+
+		uint64_t lDataLen = iDataLen;
+
+		lDataLen = htonll( lDataLen );
+		memcpy( pszPacket + 2, &lDataLen, 8 );
+		iPayLoadPos = 2 + 8;
+	}
+	else if( iDataLen > 125 )
+	{
+		pszPacket[1] = 126;
+
+		uint16_t sDataLen = iDataLen;
+
+		sDataLen = htons( sDataLen );
+		memcpy( pszPacket + 2, &sDataLen, 2 );
+		iPayLoadPos = 2 + 2;
+	}
+	else
+	{
+		pszPacket[1] = iDataLen;
+	}
+
+	memcpy( pszPacket + iPayLoadPos, pszData, iDataLen );
+
+	bool bRes = m_clsTcpStack.Send( pszClientIp, iClientPort, pszPacket, iPacketLen, false );
+
+	free( pszPacket );
+
+	return bRes;
+}
+
 bool CHttpStack::InComingConnected( CTcpSessionInfo * pclsSessionInfo )
 {
 	return true;
@@ -101,19 +163,46 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 
 	if( pclsApp->m_bWebSocket )
 	{
-		// QQQ: WebSocket 패킷 파싱 & callback 기능 추가할 것
+		CWebSocketPacketHeader clsHeader;
+		std::string strData;
+
+		pclsApp->m_clsWsPacket.AddPacket( pszPacket, iPacketLen );
+
+		while( pclsApp->m_clsWsPacket.GetData( clsHeader, strData ) )
+		{
+			if( clsHeader.m_iOpCode == 1 || clsHeader.m_iOpCode == 2 )
+			{
+				if( m_pclsCallBack->WebSocketData( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strData ) == false )
+				{
+					return false;
+				}
+			}
+			else if( clsHeader.m_iOpCode == 9 )
+			{
+				char szPacket[2];
+
+				memset( szPacket, 0, sizeof(szPacket) );
+				szPacket[0] = (uint8_t)0xFA;
+
+				if( pclsSessionInfo->Send( szPacket, 2 ) == false )
+				{
+					CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
+					return false;
+				}
+			}
+		}
 	}
 	else
 	{
-		if( pclsApp->m_clsPacket.AddPacket( pszPacket, iPacketLen ) == false )
+		if( pclsApp->m_clsHttpPacket.AddPacket( pszPacket, iPacketLen ) == false )
 		{
 			CLog::Print( LOG_ERROR, "%s m_clsPacket.AddPacket error", __FUNCTION__ );
 			return false;
 		}
 
-		if( pclsApp->m_clsPacket.IsCompleted() )
+		if( pclsApp->m_clsHttpPacket.IsCompleted() )
 		{
-			CHttpMessage * pclsRecv = pclsApp->m_clsPacket.GetHttpMessage();
+			CHttpMessage * pclsRecv = pclsApp->m_clsHttpPacket.GetHttpMessage();
 			if( pclsRecv->IsRequest() )
 			{
 				CHttpMessage clsSend;

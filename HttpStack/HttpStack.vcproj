@@ -177,6 +177,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="WebSocket"
+			>
+			<File
+				RelativePath=".\WebSocketPacket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WebSocketPacket.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
