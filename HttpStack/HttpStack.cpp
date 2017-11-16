@@ -138,11 +138,22 @@ bool CHttpStack::SendWebSocketPacket( const char * pszClientIp, int iClientPort,
 	return bRes;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP 클라이언트가 연결 이벤트 핸들러
+ * @param pclsSessionInfo 세션 정보
+ * @return HTTP 클라이언트 연결을 허용하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttpStack::InComingConnected( CTcpSessionInfo * pclsSessionInfo )
 {
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP 클라이언트 세션이 종료 이벤트 핸들러
+ * @param pclsSessionInfo 세션 정보
+ */
 void CHttpStack::SessionClosed( CTcpSessionInfo * pclsSessionInfo )
 {
 	if( pclsSessionInfo->m_pclsApp )
@@ -156,6 +167,14 @@ void CHttpStack::SessionClosed( CTcpSessionInfo * pclsSessionInfo )
 	}
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief TCP 패킷 수신 이벤트 핸들러
+ * @param pszPacket				수신 패킷
+ * @param iPacketLen			수신 패킷 길이
+ * @param pclsSessionInfo 세션 정보
+ * @returns TCP 세션을 유지하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo )
 {
 	if( pclsSessionInfo->m_pclsApp == NULL )
@@ -300,6 +319,13 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief WebSocket 연결을 위한 HTTP 요청 메시지에 대한 HTTP 응답 메시지를 생성한다.
+ * @param pclsRecv 수신된 HTTP 요청 메시지
+ * @param pclsSend 전송할 HTTP 응답 메시지
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CHttpStack::MakeWebSocketResponse( CHttpMessage * pclsRecv, CHttpMessage * pclsSend )
 {
 	CHttpHeader * pclsHeader = pclsRecv->GetHeader( "Sec-WebSocket-Key" );
