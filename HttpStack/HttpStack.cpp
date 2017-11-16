@@ -172,6 +172,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 
 	if( pclsApp->m_bWebSocket )
 	{
+		// WebSocket 프로토콜
 		CWebSocketPacketHeader clsHeader;
 		std::string strData;
 
@@ -183,6 +184,14 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 			{
 				if( m_pclsCallBack->WebSocketData( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strData ) == false )
 				{
+					return false;
+				}
+			}
+			else if( clsHeader.m_iOpCode == 8 )
+			{
+				if( pclsSessionInfo->Send( pszPacket, iPacketLen ) == false )
+				{
+					CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
 					return false;
 				}
 			}
@@ -203,6 +212,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 	}
 	else
 	{
+		// HTTP 프로토콜
 		if( pclsApp->m_clsHttpPacket.AddPacket( pszPacket, iPacketLen ) == false )
 		{
 			CLog::Print( LOG_ERROR, "%s m_clsPacket.AddPacket error", __FUNCTION__ );
@@ -221,6 +231,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 				pclsHeader = pclsRecv->GetHeader( "Upgrade" );
 				if( pclsHeader && !strcmp( pclsHeader->m_strValue.c_str(), "websocket" ) )
 				{
+					// WebSocket 을 위한 HTTP 요청이면 응용으로 callback 호출하지 않고 응답 메시지를 전송한다.
 					if( MakeWebSocketResponse( pclsRecv, &clsSend ) == false )
 					{
 						return false;
