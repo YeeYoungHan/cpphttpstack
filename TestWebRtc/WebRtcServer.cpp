@@ -22,6 +22,7 @@
 #include "FileUtility.h"
 #include "Directory.h"
 #include "Log.h"
+#include "UserMap.h"
 #include "MemoryDebug.h"
 
 extern CHttpStack gclsStack;
@@ -171,6 +172,91 @@ void CWebRtcServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData )
 {
 	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
+
+	STRING_LIST clsList;
+	STRING_LIST::iterator itList;
+	int iIndex = 0;
+	const char * pszCol;
+	bool bReq = true;
+	int iCommand = 0;
+	std::string strTo, strSdp;
+
+	SplitString( strData.c_str(), clsList, '|' );
+
+	for( itList = clsList.begin(); itList != clsList.end(); ++itList )
+	{
+		pszCol = itList->c_str();
+
+		switch( iIndex )
+		{
+		case 0:
+			if( !strcmp( pszCol, "req" ) )
+			{
+				bReq = true;
+			}
+			else
+			{
+				bReq = false;
+			}
+			break;
+		case 1:
+			if( !strcmp( pszCol, "register" ) )
+			{
+				iCommand = 1;
+			}
+			else if( !strcmp( pszCol, "invite" ) )
+			{
+				iCommand = 2;
+			}
+			else if( !strcmp( pszCol, "bye" ) )
+			{
+				iCommand = 3;
+			}
+			break;
+		case 2:
+			if( bReq )
+			{
+				switch( iCommand )
+				{
+				case 1:
+					if( gclsUserMap.Insert( pszCol, pszClientIp, iClientPort ) == false )
+					{
+					}
+					break;
+				case 2:
+					strTo = pszCol;
+					break;
+				}
+			}
+			else
+			{
+
+			}
+			break;
+		case 3:
+			if( bReq )
+			{
+				switch( iCommand )
+				{
+				case 2:
+					strSdp = pszCol;
+
+					{
+						CUserInfo clsToUser;
+
+						if( gclsUserMap.Select( strTo.c_str(), clsToUser ) == false )
+						{
+							
+						}
+					}
+					break;
+				}
+			}
+			break;
+		}
+		
+		++iIndex;
+	}
 
 	//gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), strData.length() );
 

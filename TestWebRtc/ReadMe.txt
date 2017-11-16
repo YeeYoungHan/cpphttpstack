@@ -18,8 +18,8 @@ TestWebRtc 프로그램
 
 4. 실행 방법
 
- TestWebRtc.exe 프로그램은 Document root 폴더를 인자로 아래와 같이 실행하면 됩니다. Document root 는 TestWebRtc 폴더로 설정하시면 됩니다.
+ TestWebRtc.exe 프로그램은 TestWebRtc 폴더의 html 폴더를 document root 로 설정하여 실행하면 됩니다.
 
- # TestHttpStack.exe {Document root}
+ # TestHttpStack.exe C:\OpenProject\CppHttpStack\trunk\TestWebRtc\html
 
  
