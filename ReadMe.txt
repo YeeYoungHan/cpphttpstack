@@ -28,6 +28,7 @@ C++ HTTP stack 라이브러리
 
  * HttpStack
    - HTTP 클라이언트/서버 라이브러리
+   - WebSocket 서버 라이브러리
 
  * JsonParser
    - JSON 문자열 파싱 및 생성 라이브러리
@@ -45,6 +46,13 @@ C++ HTTP stack 라이브러리
 
  * XmlParser
    - XML 문서를 파싱하는 라이브러리
+
+ * TestHttpStack
+   - HttpStack 을 이용한 간단한 HTTP 서버 샘플 프로그램
+   - HttpStack 을 이용한 WebSocket echo 서버 프로그램
+
+ * doc
+   - 본 프로젝트와 관련된 문서 저장 폴더
 
 6. HTTP GET 요청/응답 개발 방법
 
