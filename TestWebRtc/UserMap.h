@@ -23,6 +23,10 @@
 #include <string>
 #include <map>
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 사용자 정보 저장 클래스
+ */
 class CUserInfo
 {
 public:
@@ -36,6 +40,10 @@ typedef std::map< std::string, CUserInfo > USER_MAP;
 // key = client ip + port
 typedef std::map< std::string, std::string > USER_KEY_MAP;
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 사용자 정보 저장 자료구조 클래스
+ */
 class CUserMap
 {
 public:

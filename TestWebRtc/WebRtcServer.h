@@ -24,7 +24,7 @@
 
 /**
  * @ingroup TestHttpStack
- * @brief HTTP 요청 callback 클래스
+ * @brief HTTP 요청 및 WebSocket callback 클래스
  */
 class CWebRtcServer : public IHttpStackCallBack
 {
@@ -43,7 +43,7 @@ public:
 
 private:
 	bool Send( const char * pszClientIp, int iClientPort, const char * fmt, ... );
-	bool SendCall( const char * pszClientIp, int iClientPort, STRING_VECTOR & clsList, std::string & strData, std::string & strUserId );
+	bool SendCall( const char * pszClientIp, int iClientPort, std::string & strData, std::string & strUserId );
 };
 
 #endif

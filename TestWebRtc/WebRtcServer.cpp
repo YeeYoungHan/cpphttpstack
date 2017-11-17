@@ -262,7 +262,7 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 
 			int iStatus = atoi( clsList[2].c_str() );
 
-			SendCall( pszClientIp, iClientPort, clsList, strData, strUserId );
+			SendCall( pszClientIp, iClientPort, strData, strUserId );
 
 			if( iStatus > 200 )
 			{
@@ -272,7 +272,7 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 	}
 	else if( !strcmp( pszCommand, "bye" ) )
 	{
-		SendCall( pszClientIp, iClientPort, clsList, strData, strUserId );
+		SendCall( pszClientIp, iClientPort, strData, strUserId );
 
 		gclsCallMap.Delete( strUserId.c_str() );
 	}
@@ -280,6 +280,14 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 	return true;
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief WebSocket 클라이언트로 패킷을 전송한다.
+ * @param pszClientIp WebSocket 클라이언트 IP 주소
+ * @param iClientPort WebSocket 클라이언트 포트 번호
+ * @param fmt					전송 문자열
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CWebRtcServer::Send( const char * pszClientIp, int iClientPort, const char * fmt, ... )
 {
 	va_list	ap;
@@ -299,7 +307,16 @@ bool CWebRtcServer::Send( const char * pszClientIp, int iClientPort, const char 
 	return false;
 }
 
-bool CWebRtcServer::SendCall( const char * pszClientIp, int iClientPort, STRING_VECTOR & clsList, std::string & strData, std::string & strUserId )
+/**
+ * @ingroup TestWebRtc
+ * @brief 통화 INVITE 응답 및 BYE 요청/응답을 전송한다.
+ * @param pszClientIp WebSocket 클라이언트 IP 주소
+ * @param iClientPort WebSocket 클라이언트 포트 번호
+ * @param strData			전송 패킷
+ * @param strUserId		전송된 사용자 아이디
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CWebRtcServer::SendCall( const char * pszClientIp, int iClientPort, std::string & strData, std::string & strUserId )
 {
 	std::string strOtherId;
 	CUserInfo clsOtherInfo;

@@ -29,6 +29,14 @@ CUserMap::~CUserMap()
 {
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 사용자 정보를 저장한다.
+ * @param pszUserId 사용자 아이디
+ * @param pszIp			WebSocket 클라이언트 IP 주소
+ * @param iPort			WebSocket 클라이언트 포트 번호
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CUserMap::Insert( const char * pszUserId, const char * pszIp, int iPort )
 {
 	bool bRes = false;
@@ -61,6 +69,13 @@ bool CUserMap::Insert( const char * pszUserId, const char * pszIp, int iPort )
 	return bRes;
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 사용자 정보를 검색한다.
+ * @param pszUserId		사용자 아이디
+ * @param clsUserInfo 사용자 정보 저장 객체
+ * @returns 검색되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CUserMap::Select( const char * pszUserId, CUserInfo & clsUserInfo )
 {
 	bool bRes = false;
@@ -79,6 +94,14 @@ bool CUserMap::Select( const char * pszUserId, CUserInfo & clsUserInfo )
 	return bRes;
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief WebSocket 클라이언트 정보로 사용자 아이디를 검색한다.
+ * @param pszIp			WebSocket 클라이언트 IP 주소
+ * @param iPort			WebSocket 클라이언트 포트 번호
+ * @param strUserId 사용자 아이디
+ * @returns 검색되면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CUserMap::SelectUserId( const char * pszIp, int iPort, std::string & strUserId )
 {
 	bool bRes = false;
@@ -99,6 +122,14 @@ bool CUserMap::SelectUserId( const char * pszIp, int iPort, std::string & strUse
 	return bRes;
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief WebSocket 클라이언트 정보로 사용자 정보를 삭제한다.
+ * @param pszIp			WebSocket 클라이언트 IP 주소
+ * @param iPort			WebSocket 클라이언트 포트 번호
+ * @param strUserId 사용자 아이디
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
 bool CUserMap::Delete( const char * pszIp, int iPort, std::string & strUserId )
 {
 	bool bRes = false;
@@ -128,6 +159,13 @@ bool CUserMap::Delete( const char * pszIp, int iPort, std::string & strUserId )
 	return bRes;
 }
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 자료구조에 사용할 키를 생성한다.
+ * @param pszIp		WebSocket 클라이언트 IP 주소
+ * @param iPort		WebSocket 클라이언트 포트 번호
+ * @param strKey	자료구조 키
+ */
 void CUserMap::GetKey( const char * pszIp, int iPort, std::string & strKey )
 {
 	char szPort[11];

@@ -26,6 +26,10 @@
 // key = caller user id, value = callee user id
 typedef std::map< std::string, std::string > CALL_MAP;
 
+/**
+ * @ingroup TestWebRtc
+ * @brief 통화 정보 저장 자료구조 클래스
+ */
 class CCallMap
 {
 public:
