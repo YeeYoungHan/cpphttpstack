@@ -30,7 +30,11 @@ public:
 	int					m_iPort;
 };
 
+// key = user id
 typedef std::map< std::string, CUserInfo > USER_MAP;
+
+// key = client ip + port
+typedef std::map< std::string, std::string > USER_KEY_MAP;
 
 class CUserMap
 {
@@ -40,11 +44,15 @@ public:
 
 	bool Insert( const char * pszUserId, const char * pszIp, int iPort );
 	bool Select( const char * pszUserId, CUserInfo & clsUserInfo );
+	bool SelectUserId( const char * pszIp, int iPort, std::string & strUserId );
 	bool Delete( const char * pszIp, int iPort );
 
 private:
-	USER_MAP	m_clsMap;
-	CSipMutex	m_clsMutex;
+	USER_MAP			m_clsMap;
+	USER_KEY_MAP	m_clsKeyMap;
+	CSipMutex			m_clsMutex;
+
+	void GetKey( const char * pszIp, int iPort, std::string & strKey );
 };
 
 extern CUserMap gclsUserMap;

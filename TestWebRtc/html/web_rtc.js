@@ -9,15 +9,50 @@ var pc_config = null;
 
 //
 var pc_constraints = { 'optional': [{'DtlsSrtpKeyAgreement': true} ]};
-
 var sdpConstraints = {};
 
-var localVideo, remoteVideo;
-var btnCall, btnAccept, btnDecline, btnBye;
+var localVideo = document.getElementById("localVideo");
+var remoteVideo = document.getElementById("remoteVideo");
 
-function log(text)
+var btnRegister = document.getElementById("btnRegister");
+var btnInvite = document.getElementById("btnInvite");
+var btnAccept = document.getElementById("btnAccept");
+var btnDecline = document.getElementById("btnDecline");
+var btnBye = document.getElementById("btnBye");
+var lyLog = document.getElementById('log');
+
+var iLogMaxRowCount = 3000;
+var iLogRowCount = 0;
+
+InitButton();
+
+function Log(strLog)
 {
-  console.log("At time: " + (performance.now() / 1000).toFixed(3) + " --> " + text);
+  var clsDate = new Date();
+  var strTime = "[" + clsDate.getHours() + ":" + clsDate.getMinutes() + ":" + clsDate.getSeconds() + "] ";
+
+  if( iLogRowCount == iLogMaxRowCount )
+  {
+    lyLog.innerHTML = strTime + strLog + "<br>";
+    iLogRowCount = 0;
+  }
+  else
+  {
+    lyLog.innerHTML += strTime + strLog + "<br>";
+  }
+
+  ++iLogRowCount;
+
+  //console.log(strLog);
+}
+
+function InitButton()
+{
+	btnRegister.disabled = false;
+	btnInvite.disabled = true;
+	btnAccept.disabled = true;
+	btnDecline.disabled = true;
+	btnBye.disabled = true;
 }
 
 function handleLocalMedia(stream)
@@ -43,19 +78,6 @@ function handleUserMediaError(error)
 
 function startLocal()
 {
-  localVideo = document.getElementById("localVideo");
-  remoteVideo = document.getElementById("remoteVideo");
-
-  btnCall = document.getElementById("btnCall");
-  btnAccept = document.getElementById("btnAccept");
-  btnDecline = document.getElementById("btnDecline");
-  btnBye = document.getElementById("btnBye");
-
-  btnCall.disabled = true;
-  btnAccept.disabled = true;
-  btnDecline.disabled = true;
-  btnBye.disabled = true;
-
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   navigator.getUserMedia( { audio:true, video:true }, handleLocalMedia, handleUserMediaError );
 }
@@ -69,7 +91,7 @@ function stopPeer()
 
 function createOffer()
 {
-  console.log( "#### createOffer ####")
+  Log( "#### createOffer ####")
 
   if( navigator.webkitGetUserMedia )
   {
@@ -95,7 +117,7 @@ function createOffer()
 
 function createAnswer(strSdp)
 {
-  console.log("#### createAnswer sdp(" + strSdp + ")");
+  Log("#### createAnswer sdp(" + strSdp + ")");
 
   if( navigator.webkitGetUserMedia )
   {
@@ -126,7 +148,7 @@ function createAnswer(strSdp)
 
 function handleRemoteStreamAdded(event)
 {
-  console.log("##### handleRemoteStreamAdded #####" );
+  Log("##### handleRemoteStreamAdded #####" );
 
   if (window.URL)
   {
@@ -142,17 +164,17 @@ function handleRemoteStreamAdded(event)
 
 function handleRemoteStreamRemoved(event)
 {
-  console.log( "##### handleRemoteStreamRemoved #####" );
+  Log( "##### handleRemoteStreamRemoved #####" );
 }
 
 function setIceCandidateOffer(event)
 {
   if( event.candidate == null )
   {
-    console.log( "setIceCandidateOffer(null)" );
-    console.log( "local sdp(" + pc.localDescription.sdp + ")" );
+    Log( "setIceCandidateOffer(null)" );
+    Log( "local sdp(" + pc.localDescription.sdp + ")" );
 
-    Invite(pc.localDescription.sdp);
+    Invite( pc.localDescription.sdp );
   }
   else
   {
@@ -164,8 +186,8 @@ function setIceCandidateAnswer(event)
 {
   if( event.candidate == null )
   {
-    console.log( "setIceCandidateAnswer(null)" );
-    console.log( "local sdp(" + pc.localDescription.sdp + ")" );
+    Log( "setIceCandidateAnswer(null)" );
+    Log( "local sdp(" + pc.localDescription.sdp + ")" );
 
     Accept(pc.localDescription.sdp);
   }
@@ -179,7 +201,7 @@ function setLocalOffer(sessionDescription)
 {
   pc.setLocalDescription(sessionDescription);
 
-  console.log("createOffer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
+  Log("createOffer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
 
   // IceCandidate 를 가져오기 전에 호출된다. IceCandidate callback 호출에서 Invite 메소드를 호출한다.
 }
@@ -187,14 +209,14 @@ function setLocalOffer(sessionDescription)
 function setLocalAnswer(sessionDescription) {
   pc.setLocalDescription(sessionDescription);
 
-  console.log("createAnswer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
+  Log("createAnswer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
 
   // IceCandidate 를 가져오기 전에 호출된다. IceCandidate callback 호출에서 Accept 메소드를 호출한다.
 }
 
 function onSignalingError(error)
 {
-  console.log('Failed to create signaling message : ' + error.name);
+  Log('Failed to create signaling message : ' + error.name);
 }
 
 function setAnswer(strSdp)
@@ -205,5 +227,5 @@ function setAnswer(strSdp)
 
   pc.setRemoteDescription(sd);
 
-  console.log('setAnswer remote sdp(' + strSdp + ")" );
+  Log('setAnswer remote sdp(' + strSdp + ")" );
 }

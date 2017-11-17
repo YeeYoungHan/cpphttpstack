@@ -16,32 +16,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _SIMPLE_HTTP_SERVER_H_
-#define _SIMPLE_HTTP_SERVER_H_
+#ifndef _CALL_MAP_H_
+#define _CALL_MAP_H_
 
-#include "HttpStack.h"
-
-/**
- * @ingroup TestHttpStack
- * @brief HTTP 요청 callback 클래스
- */
-class CWebRtcServer : public IHttpStackCallBack
+class CCallMap
 {
 public:
-	CWebRtcServer();
-	virtual ~CWebRtcServer();
-
-	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
-
-	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort );
-	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort );
-	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData );
-
-	std::string m_strDocumentRoot;
-	bool m_bStop;
-
-private:
-	bool Send( const char * pszClientIp, int iClientPort, const char * fmt, ... );
+	CCallMap();
+	~CCallMap();
 };
 
 #endif

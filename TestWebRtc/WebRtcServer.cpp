@@ -159,6 +159,8 @@ void CWebRtcServer::WebSocketConnected( const char * pszClientIp, int iClientPor
 void CWebRtcServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 {
 	printf( "WebSocket[%s:%d] closed\n", pszClientIp, iClientPort );
+
+	gclsUserMap.Delete( pszClientIp, iClientPort );
 }
 
 /**
@@ -178,7 +180,7 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 	int iIndex = 0;
 	const char * pszCol;
 	bool bReq = true;
-	int iCommand = 0;
+	int iCommand = 0, iStatusCode = 0;
 	std::string strTo, strSdp;
 
 	SplitString( strData.c_str(), clsList, '|' );
@@ -221,6 +223,11 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 				case 1:
 					if( gclsUserMap.Insert( pszCol, pszClientIp, iClientPort ) == false )
 					{
+						Send( pszClientIp, iClientPort, "res|register|500" );
+					}
+					else
+					{
+						Send( pszClientIp, iClientPort, "res|register|200" );
 					}
 					break;
 				case 2:
@@ -230,7 +237,16 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 			}
 			else
 			{
+				switch( iCommand )
+				{
+				case 2:
+					iStatusCode = atoi( pszCol );
+					if( iStatusCode > 200 )
+					{
 
+					}
+					break;
+				}
 			}
 			break;
 		case 3:
@@ -243,12 +259,36 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 
 					{
 						CUserInfo clsToUser;
+						std::string strUserId;
 
 						if( gclsUserMap.Select( strTo.c_str(), clsToUser ) == false )
 						{
-							
+							Send( pszClientIp, iClientPort, "res|invite|404" );
+						}
+						else if( gclsUserMap.SelectUserId( pszClientIp, iClientPort, strUserId ) == false )
+						{
+							Send( pszClientIp, iClientPort, "res|invite|403" );
+						}
+						else
+						{
+							if( Send( clsToUser.m_strIp.c_str(), clsToUser.m_iPort, "req|invite|%s|%s", strUserId.c_str(), strSdp.c_str() ) == false )
+							{
+								Send( pszClientIp, iClientPort, "res|invite|500" );
+							}
+							else
+							{
+								Send( pszClientIp, iClientPort, "res|invite|180" );
+							}
 						}
 					}
+					break;
+				}
+			}
+			else
+			{
+				switch( iCommand )
+				{
+				case 2:
 					break;
 				}
 			}
@@ -261,4 +301,23 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 	//gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), strData.length() );
 
 	return true;
+}
+
+bool CWebRtcServer::Send( const char * pszClientIp, int iClientPort, const char * fmt, ... )
+{
+	va_list	ap;
+	char		szBuf[8192];
+	int			iBufLen;
+
+	va_start( ap, fmt );
+	iBufLen = vsnprintf( szBuf, sizeof(szBuf)-1, fmt, ap );
+	va_end( ap );
+
+	if( gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, szBuf, iBufLen ) )
+	{
+		printf( "WebSocket[%s:%d] send[%s]\n", pszClientIp, iClientPort, szBuf );
+		return true;
+	}
+
+	return false;
 }

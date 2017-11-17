@@ -21,7 +21,8 @@ LIB=-L../HttpStack -lhttpstack \
 all: TestWebRtc.exe
 
 SRV_OBJ=Main.o \
-	WebRtcServer.o
+	WebRtcServer.o \
+	UserMap.o CallMap.o
 
 TestWebRtc.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)
