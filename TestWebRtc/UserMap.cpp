@@ -99,7 +99,7 @@ bool CUserMap::SelectUserId( const char * pszIp, int iPort, std::string & strUse
 	return bRes;
 }
 
-bool CUserMap::Delete( const char * pszIp, int iPort )
+bool CUserMap::Delete( const char * pszIp, int iPort, std::string & strUserId )
 {
 	bool bRes = false;
 	std::string strKey;
@@ -112,6 +112,8 @@ bool CUserMap::Delete( const char * pszIp, int iPort )
 	itKeyMap = m_clsKeyMap.find( strKey );
 	if( itKeyMap != m_clsKeyMap.end() )
 	{
+		strUserId = itKeyMap->second;
+
 		itMap = m_clsMap.find( itKeyMap->second );
 		if( itMap != m_clsMap.end() )
 		{

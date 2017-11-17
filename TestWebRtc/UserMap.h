@@ -45,7 +45,7 @@ public:
 	bool Insert( const char * pszUserId, const char * pszIp, int iPort );
 	bool Select( const char * pszUserId, CUserInfo & clsUserInfo );
 	bool SelectUserId( const char * pszIp, int iPort, std::string & strUserId );
-	bool Delete( const char * pszIp, int iPort );
+	bool Delete( const char * pszIp, int iPort, std::string & strUserId );
 
 private:
 	USER_MAP			m_clsMap;

@@ -160,7 +160,10 @@ void CWebRtcServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 {
 	printf( "WebSocket[%s:%d] closed\n", pszClientIp, iClientPort );
 
-	gclsUserMap.Delete( pszClientIp, iClientPort );
+	std::string strUserId;
+
+	gclsUserMap.Delete( pszClientIp, iClientPort, strUserId );
+	gclsCallMap.Delete( strUserId.c_str() );
 }
 
 /**

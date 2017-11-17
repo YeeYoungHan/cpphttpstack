@@ -25,6 +25,7 @@ var iLogMaxRowCount = 3000;
 var iLogRowCount = 0;
 
 InitButton();
+startLocal();
 
 function Log(strLog)
 {
@@ -74,7 +75,7 @@ function handleLocalMedia(stream)
 function handleUserMediaError(error)
 {
   Log("#### handleUserMediaError ####");
-  Log("error(" + error + ")");
+  Log("error(" + error.name + ")");
 }
 
 function startLocal()

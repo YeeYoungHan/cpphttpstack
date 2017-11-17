@@ -69,6 +69,7 @@ function StartSession()
 				{
 				case "invite":
 					gstrToId = arrData[2];
+					gstrSdp = arrData[3];
           var txtPeerId = document.getElementById('peer_id');
           txtPeerId.value = gstrToId;
 
@@ -83,6 +84,8 @@ function StartSession()
 				case "bye":
 					gstrToId = "";
           stopPeer();
+          btnInvite.disabled = false;
+  				btnBye.disabled = true;
           break;
 				}
 			}
@@ -141,7 +144,7 @@ function SendAccept()
   btnInvite.disabled = true;
   btnAccept.disabled = true;
   btnDecline.disabled = true;
-  btnBye.disabled = true;
+  btnBye.disabled = false;
 
   createAnswer(gstrSdp);
   //Accept( "o=accept" );
@@ -158,5 +161,8 @@ function SendBye()
 {
   stopPeer();
   Send( "req|bye" );
+  gstrToId = "";
+  btnInvite.disabled = false;
+  btnBye.disabled = true;
 }
 
