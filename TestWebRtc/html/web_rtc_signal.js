@@ -61,6 +61,15 @@ function StartSession()
 	          btnDecline.disabled = true;
 	          btnBye.disabled = false;
           }
+          else
+          {
+          	var iStatusCode = parseInt( arrData[2] );
+          	
+          	if( iStatusCode > 200 )
+          	{
+          		btnInvite.disabled = false;
+          	}
+          }
 					break;
 				}
 				break;
@@ -154,6 +163,10 @@ function SendAccept()
 function SendDecline()
 {
 	Send( "res|invite|603" );
+	
+	btnInvite.disabled = false;
+  btnAccept.disabled = true;
+  btnDecline.disabled = true;
 }
 
 /** BYE 를 전송한다. */
