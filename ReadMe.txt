@@ -51,6 +51,10 @@ C++ HTTP stack 라이브러리
    - HttpStack 을 이용한 간단한 HTTP 서버 샘플 프로그램
    - HttpStack 을 이용한 WebSocket echo 서버 프로그램
 
+ * TestWebRtc
+   - WebSocket 을 이용한 WebRTC 연동 샘플 프로그램
+   - 사용법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
+
  * doc
    - 본 프로젝트와 관련된 문서 저장 폴더
 

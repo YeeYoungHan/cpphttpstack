@@ -22,4 +22,6 @@ TestWebRtc 프로그램
 
  # TestHttpStack.exe C:\OpenProject\CppHttpStack\trunk\TestWebRtc\html
 
+ 테스트 방법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
+
  
