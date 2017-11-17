@@ -20,6 +20,7 @@
 #define _SIMPLE_HTTP_SERVER_H_
 
 #include "HttpStack.h"
+#include "StringUtility.h"
 
 /**
  * @ingroup TestHttpStack
@@ -42,6 +43,7 @@ public:
 
 private:
 	bool Send( const char * pszClientIp, int iClientPort, const char * fmt, ... );
+	bool SendCall( const char * pszClientIp, int iClientPort, STRING_VECTOR & clsList, std::string & strData, std::string & strUserId );
 };
 
 #endif

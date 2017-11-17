@@ -18,11 +18,11 @@
 
 #include "WebRtcServer.h"
 #include "HttpStatusCode.h"
-#include "StringUtility.h"
 #include "FileUtility.h"
 #include "Directory.h"
 #include "Log.h"
 #include "UserMap.h"
+#include "CallMap.h"
 #include "MemoryDebug.h"
 
 extern CHttpStack gclsStack;
@@ -175,130 +175,104 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 {
 	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
 
-	STRING_LIST clsList;
-	STRING_LIST::iterator itList;
-	int iIndex = 0;
-	const char * pszCol;
-	bool bReq = true;
-	int iCommand = 0, iStatusCode = 0;
-	std::string strTo, strSdp;
+	STRING_VECTOR clsList;
 
 	SplitString( strData.c_str(), clsList, '|' );
 
-	for( itList = clsList.begin(); itList != clsList.end(); ++itList )
+	int iCount = clsList.size();
+
+	if( iCount < 2 )
 	{
-		pszCol = itList->c_str();
-
-		switch( iIndex )
-		{
-		case 0:
-			if( !strcmp( pszCol, "req" ) )
-			{
-				bReq = true;
-			}
-			else
-			{
-				bReq = false;
-			}
-			break;
-		case 1:
-			if( !strcmp( pszCol, "register" ) )
-			{
-				iCommand = 1;
-			}
-			else if( !strcmp( pszCol, "invite" ) )
-			{
-				iCommand = 2;
-			}
-			else if( !strcmp( pszCol, "bye" ) )
-			{
-				iCommand = 3;
-			}
-			break;
-		case 2:
-			if( bReq )
-			{
-				switch( iCommand )
-				{
-				case 1:
-					if( gclsUserMap.Insert( pszCol, pszClientIp, iClientPort ) == false )
-					{
-						Send( pszClientIp, iClientPort, "res|register|500" );
-					}
-					else
-					{
-						Send( pszClientIp, iClientPort, "res|register|200" );
-					}
-					break;
-				case 2:
-					strTo = pszCol;
-					break;
-				}
-			}
-			else
-			{
-				switch( iCommand )
-				{
-				case 2:
-					iStatusCode = atoi( pszCol );
-					if( iStatusCode > 200 )
-					{
-
-					}
-					break;
-				}
-			}
-			break;
-		case 3:
-			if( bReq )
-			{
-				switch( iCommand )
-				{
-				case 2:
-					strSdp = pszCol;
-
-					{
-						CUserInfo clsToUser;
-						std::string strUserId;
-
-						if( gclsUserMap.Select( strTo.c_str(), clsToUser ) == false )
-						{
-							Send( pszClientIp, iClientPort, "res|invite|404" );
-						}
-						else if( gclsUserMap.SelectUserId( pszClientIp, iClientPort, strUserId ) == false )
-						{
-							Send( pszClientIp, iClientPort, "res|invite|403" );
-						}
-						else
-						{
-							if( Send( clsToUser.m_strIp.c_str(), clsToUser.m_iPort, "req|invite|%s|%s", strUserId.c_str(), strSdp.c_str() ) == false )
-							{
-								Send( pszClientIp, iClientPort, "res|invite|500" );
-							}
-							else
-							{
-								Send( pszClientIp, iClientPort, "res|invite|180" );
-							}
-						}
-					}
-					break;
-				}
-			}
-			else
-			{
-				switch( iCommand )
-				{
-				case 2:
-					break;
-				}
-			}
-			break;
-		}
-		
-		++iIndex;
+		return false;
 	}
 
-	//gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), strData.length() );
+	bool bReq = true;
+	if( strcmp( clsList[0].c_str(), "req" ) ) bReq = false;
+
+	const char * pszCommand = clsList[1].c_str();
+	std::string strUserId;
+
+	if( !strcmp( pszCommand, "register" ) )
+	{
+		if( iCount < 3 )
+		{
+			printf( "register request arg is not correct\n" );
+			return false;
+		}
+
+		if( gclsUserMap.Insert( clsList[2].c_str(), pszClientIp, iClientPort ) == false )
+		{
+			Send( pszClientIp, iClientPort, "res|register|500" );
+		}
+		else
+		{
+			Send( pszClientIp, iClientPort, "res|register|200" );
+		}
+	}
+	else if( !strcmp( pszCommand, "invite" ) )
+	{
+		if( bReq )
+		{
+			if( iCount < 4 )
+			{
+				printf( "invite request arg is not correct\n" );
+				return false;
+			}
+
+			const char * pszToId = clsList[2].c_str();
+			const char * pszSdp = clsList[3].c_str();
+
+			CUserInfo clsToUser;
+			std::string strUserId;
+
+			if( gclsUserMap.SelectUserId( pszClientIp, iClientPort, strUserId ) == false )
+			{
+				Send( pszClientIp, iClientPort, "res|invite|403" );
+			}
+			else if( gclsUserMap.Select( pszToId, clsToUser ) == false )
+			{
+				Send( pszClientIp, iClientPort, "res|invite|404" );
+			}
+			else if( gclsCallMap.Insert( strUserId.c_str(), pszToId ) == false )
+			{
+				Send( pszClientIp, iClientPort, "res|invite|500" );
+			}
+			else
+			{
+				if( Send( clsToUser.m_strIp.c_str(), clsToUser.m_iPort, "req|invite|%s|%s", strUserId.c_str(), pszSdp ) == false )
+				{
+					Send( pszClientIp, iClientPort, "res|invite|500" );
+				}
+				else
+				{
+					Send( pszClientIp, iClientPort, "res|invite|180" );
+				}
+			}
+		}
+		else
+		{
+			if( iCount < 3 )
+			{
+				printf( "invite response arg is not correct\n" );
+				return false;
+			}
+
+			int iStatus = atoi( clsList[2].c_str() );
+
+			SendCall( pszClientIp, iClientPort, clsList, strData, strUserId );
+
+			if( iStatus > 200 )
+			{
+				gclsCallMap.Delete( strUserId.c_str() );
+			}
+		}
+	}
+	else if( !strcmp( pszCommand, "bye" ) )
+	{
+		SendCall( pszClientIp, iClientPort, clsList, strData, strUserId );
+
+		gclsCallMap.Delete( strUserId.c_str() );
+	}
 
 	return true;
 }
@@ -320,4 +294,28 @@ bool CWebRtcServer::Send( const char * pszClientIp, int iClientPort, const char 
 	}
 
 	return false;
+}
+
+bool CWebRtcServer::SendCall( const char * pszClientIp, int iClientPort, STRING_VECTOR & clsList, std::string & strData, std::string & strUserId )
+{
+	std::string strOtherId;
+	CUserInfo clsOtherInfo;
+
+	if( gclsUserMap.SelectUserId( pszClientIp, iClientPort, strUserId ) == false )
+	{
+		printf( "gclsUserMap.SelectUserId(%s:%d) error\n", pszClientIp, iClientPort );
+		return false;
+	}
+	else if( gclsCallMap.Select( strUserId.c_str(), strOtherId ) == false )
+	{
+		printf( "gclsCallMap.Select(%s) error\n", strUserId.c_str() );
+		return false;
+	}
+	else if( gclsUserMap.Select( strOtherId.c_str(), clsOtherInfo ) == false )
+	{
+		printf( "gclsUserMap.Select(%s) error\n", strOtherId.c_str() );
+		return false;
+	}
+
+	return Send( clsOtherInfo.m_strIp.c_str(), clsOtherInfo.m_iPort, "%s", strData.c_str() );
 }

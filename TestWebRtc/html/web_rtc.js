@@ -73,7 +73,8 @@ function handleLocalMedia(stream)
 
 function handleUserMediaError(error)
 {
-  Log("handleUserMediaError");
+  Log("#### handleUserMediaError ####");
+  Log("error(" + error + ")");
 }
 
 function startLocal()
@@ -148,7 +149,7 @@ function createAnswer(strSdp)
 
 function handleRemoteStreamAdded(event)
 {
-  Log("##### handleRemoteStreamAdded #####" );
+  Log("#### handleRemoteStreamAdded ####" );
 
   if (window.URL)
   {
@@ -164,7 +165,7 @@ function handleRemoteStreamAdded(event)
 
 function handleRemoteStreamRemoved(event)
 {
-  Log( "##### handleRemoteStreamRemoved #####" );
+  Log( "#### handleRemoteStreamRemoved ####" );
 }
 
 function setIceCandidateOffer(event)
@@ -172,7 +173,7 @@ function setIceCandidateOffer(event)
   if( event.candidate == null )
   {
     Log( "setIceCandidateOffer(null)" );
-    Log( "local sdp(" + pc.localDescription.sdp + ")" );
+    //Log( "local sdp(" + pc.localDescription.sdp + ")" );
 
     Invite( pc.localDescription.sdp );
   }
@@ -187,7 +188,7 @@ function setIceCandidateAnswer(event)
   if( event.candidate == null )
   {
     Log( "setIceCandidateAnswer(null)" );
-    Log( "local sdp(" + pc.localDescription.sdp + ")" );
+    //Log( "local sdp(" + pc.localDescription.sdp + ")" );
 
     Accept(pc.localDescription.sdp);
   }
