@@ -36,7 +36,7 @@ CWebRtcServer::~CWebRtcServer()
 }
 
 /**
- * @ingroup TestHttpStack
+ * @ingroup TestWebRtc
  * @brief HTTP 요청 수신 이벤트 callback
  * @param pclsRequest		HTTP 요청 메시지
  * @param pclsResponse	HTTP 응답 메시지 - 응용에서 저장한다.
@@ -140,7 +140,7 @@ bool CWebRtcServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * 
 }
 
 /**
- * @ingroup TestHttpStack
+ * @ingroup TestWebRtc
  * @brief WebSocket 클라이언트 TCP 연결 시작 이벤트 callback
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호
@@ -151,7 +151,7 @@ void CWebRtcServer::WebSocketConnected( const char * pszClientIp, int iClientPor
 }
 
 /**
- * @ingroup TestHttpStack
+ * @ingroup TestWebRtc
  * @brief WebSocket 클라이언트 TCP 연결 종료 이벤트 callback
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호
@@ -167,7 +167,7 @@ void CWebRtcServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 }
 
 /**
- * @ingroup TestHttpStack
+ * @ingroup TestWebRtc
  * @brief WebSocket 클라이언트 데이터 수신 이벤트 callback
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호

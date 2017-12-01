@@ -23,7 +23,7 @@
 #include "StringUtility.h"
 
 /**
- * @ingroup TestHttpStack
+ * @ingroup TestWebRtc
  * @brief HTTP 요청 및 WebSocket callback 클래스
  */
 class CWebRtcServer : public IHttpStackCallBack
