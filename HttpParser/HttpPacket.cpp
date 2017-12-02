@@ -206,6 +206,7 @@ bool CHttpPacket::ParseChunkedBody( )
 
 	if( iBufLen >= m_iChunkedLen )
 	{
+		// chuck body 뒤에 \r\n 이 붙어 있어서 +2 해 주었다. if 를 2번 사용한 이유는 chunk body 뒤의 \r\n 을 제거하기 위함이다.
 		if( iBufLen >= ( m_iChunkedLen + 2 ) )
 		{
 			m_clsMessage.m_strBody.append( pszBuf, m_iChunkedLen );
