@@ -25,9 +25,9 @@ CHttpStack gclsStack;
 
 int main( int argc, char * argv[] )
 {
-	if( argc != 2 )
+	if( argc <= 2 )
 	{
-		printf( "[Usage] %s {Document root path}\n", argv[0] );
+		printf( "[Usage] %s {Document root path} {RSA key/cert file path}\n", argv[0] );
 		return 0;
 	}
 
@@ -45,6 +45,14 @@ int main( int argc, char * argv[] )
 #endif
 #endif
 
+	const char * pszDocumentRoot = argv[1];
+	const char * pszCertFile = NULL;
+
+	if( argc >= 3 )
+	{
+		pszCertFile = argv[2];
+	}
+
 	// HTTP 수신 포트 번호를 설정한다.
 	clsSetup.m_iListenPort = 8080;
 	clsSetup.m_iMaxSocketPerThread = 1;
@@ -58,8 +66,15 @@ int main( int argc, char * argv[] )
 	clsSetup.m_bUseThreadPipe = true;
 	*/
 
+	if( pszCertFile )
+	{
+		clsSetup.m_iListenPort = 443;
+		clsSetup.m_bUseTls = true;
+		clsSetup.m_strCertFile = pszCertFile;
+	}
+
 	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
-	clsServer.m_strDocumentRoot = argv[1];
+	clsServer.m_strDocumentRoot = pszDocumentRoot;
 
 	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) == false )
 	{
