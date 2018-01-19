@@ -47,6 +47,11 @@ function Log(strLog)
   //console.log(strLog);
 }
 
+function ClearLog()
+{
+	lyLog.innerHTML = "";
+}
+
 function InitButton()
 {
 	btnRegister.disabled = false;
@@ -58,9 +63,16 @@ function InitButton()
 
 function handleLocalMedia(stream)
 {
-  if (window.URL)
+  if( window.URL )
   {
-    localVideo.src = URL.createObjectURL(stream);
+  	try
+  	{
+    	localVideo.src = URL.createObjectURL(stream);
+    }
+    catch( exception )
+    {
+    	localVideo.src = stream;
+    }
   }
   else
   {
@@ -117,7 +129,7 @@ function createOffer()
   pc.createOffer( setLocalOffer, onSignalingError, sdpConstraints );
 }
 
-function createAnswer(strSdp)
+function createAnswer( strSdp )
 {
   Log("#### createAnswer sdp(" + strSdp + ")");
 
@@ -140,9 +152,7 @@ function createAnswer(strSdp)
   pc.onaddstream = handleRemoteStreamAdded;
   pc.onremovestream = handleRemoteStreamRemoved;
 
-  var sd = new RTCSessionDescription();
-  sd.sdp = strSdp;
-  sd.type = "offer";
+  var sd = new RTCSessionDescription( { sdp: strSdp, type:"offer" } );
 
   pc.setRemoteDescription(sd);
   pc.createAnswer(setLocalAnswer, onSignalingError, sdpConstraints);
@@ -152,9 +162,16 @@ function handleRemoteStreamAdded(event)
 {
   Log("#### handleRemoteStreamAdded ####" );
 
-  if (window.URL)
+  if( window.URL )
   {
-    remoteVideo.src = URL.createObjectURL(event.stream);
+  	try
+  	{
+    	remoteVideo.src = URL.createObjectURL(event.stream);
+    }
+    catch( exception )
+    {
+    	remoteVideo.src = event.stream;
+    }
   }
   else
   {
@@ -203,7 +220,7 @@ function setLocalOffer(sessionDescription)
 {
   pc.setLocalDescription(sessionDescription);
 
-  Log("createOffer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
+  Log( "createOffer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
 
   // IceCandidate 를 가져오기 전에 호출된다. IceCandidate callback 호출에서 Invite 메소드를 호출한다.
 }
@@ -211,23 +228,21 @@ function setLocalOffer(sessionDescription)
 function setLocalAnswer(sessionDescription) {
   pc.setLocalDescription(sessionDescription);
 
-  Log("createAnswer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
+  Log( "createAnswer result sdp(" + sessionDescription.sdp + ") type(" + sessionDescription.type + ")" );
 
   // IceCandidate 를 가져오기 전에 호출된다. IceCandidate callback 호출에서 Accept 메소드를 호출한다.
 }
 
 function onSignalingError(error)
 {
-  Log('Failed to create signaling message : ' + error.name);
+  Log( "Failed to create signaling message : " + error.name);
 }
 
 function setAnswer(strSdp)
 {
-  var sd = new RTCSessionDescription();
-  sd.sdp = strSdp;
-  sd.type = "answer";
+  var sd = new RTCSessionDescription( { sdp: strSdp, type:"answer" } );
 
   pc.setRemoteDescription(sd);
 
-  Log('setAnswer remote sdp(' + strSdp + ")" );
+  Log( "setAnswer remote sdp(" + strSdp + ")" );
 }
