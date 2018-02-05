@@ -191,5 +191,10 @@ LOOP_END:
 		delete pclsThreadInfo;
 	}
 
+	if( pclsStack->m_clsSetup.m_bUseTls )
+	{
+		ERR_remove_thread_state( NULL );
+	}
+
 	return 0;
 }
