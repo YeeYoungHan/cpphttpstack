@@ -72,6 +72,7 @@ function handleLocalMedia(stream)
     catch( exception )
     {
     	localVideo.src = stream;
+    	localVideo.srcObject = stream;
     }
   }
   else
@@ -101,6 +102,7 @@ function stopPeer()
   if( pc ) pc.close();
   pc = null;
   remoteVideo.src = null;
+  remoteVideo.srcObject = null;
 }
 
 function createOffer()
@@ -171,6 +173,7 @@ function handleRemoteStreamAdded(event)
     catch( exception )
     {
     	remoteVideo.src = event.stream;
+    	remoteVideo.srcObject = event.stream;
     }
   }
   else
