@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="설정파일">
+      <UniqueIdentifier>{88beb31b-9e2b-4f14-a0e6-d4e7067d276d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="자료구조">
+      <UniqueIdentifier>{65904625-3e3d-4e99-bcf2-9b0941618548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TLS">
+      <UniqueIdentifier>{142ff888-4044-4c52-a6ef-fcf76545f482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="쓰레드">
+      <UniqueIdentifier>{b44ec221-f639-4607-8b05-10814ee37b9c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TcpStack.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FileLogSetup.cpp">
+      <Filter>설정파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpStackSetup.cpp">
+      <Filter>설정파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClientMap.cpp">
+      <Filter>자료구조</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpSessionList.cpp">
+      <Filter>자료구조</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpSessionMap.cpp">
+      <Filter>자료구조</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpThreadList.cpp">
+      <Filter>자료구조</Filter>
+    </ClCompile>
+    <ClCompile Include="TlsFunction.cpp">
+      <Filter>TLS</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClientThread.cpp">
+      <Filter>쓰레드</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpListenThread.cpp">
+      <Filter>쓰레드</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpNoPipeThread.cpp">
+      <Filter>쓰레드</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpPipeThread.cpp">
+      <Filter>쓰레드</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TcpStack.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpStackCallBack.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLogSetup.h">
+      <Filter>설정파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpStackSetup.h">
+      <Filter>설정파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClientMap.h">
+      <Filter>자료구조</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpSessionList.h">
+      <Filter>자료구조</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpSessionMap.h">
+      <Filter>자료구조</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpThreadList.h">
+      <Filter>자료구조</Filter>
+    </ClInclude>
+    <ClInclude Include="TlsFunction.h">
+      <Filter>TLS</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpThread.h">
+      <Filter>쓰레드</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>
