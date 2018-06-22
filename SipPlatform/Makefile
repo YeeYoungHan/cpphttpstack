@@ -20,7 +20,8 @@ LIB_OBJ=Directory.o Log.o FileLog.o ServerUtility.o \
 	StringUtility.o StringMap.o \
 	TimeString.o TimeUtility.o \
 	FileUtility.o Base64.o \
-	MonitorString.o
+	MonitorString.o \
+	SafeCount.o
 
 libsipplatform.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)
