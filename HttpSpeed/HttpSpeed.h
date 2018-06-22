@@ -24,6 +24,7 @@
 #include "TimeUtility.h"
 #include "HttpClient.h"
 #include "HttpSpeedArg.h"
+#include <stdlib.h>
 
 bool StartTestThread( int iThreadCount );
 
