@@ -17,6 +17,7 @@ all:
 	cd TestHttpStack && make
 	cd TestWsdlParser && make
 	cd TestJsonParser && make
+	cd HttpSpeed && make
 
 clean:
 	cd SipPlatform && make clean
@@ -31,6 +32,7 @@ clean:
 	cd TestHttpStack && make clean
 	cd TestWsdlParser && make clean
 	cd TestJsonParser && make clean
+	cd HttpSpeed && make clean
 
 install:
 
