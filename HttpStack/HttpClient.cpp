@@ -21,6 +21,7 @@
 #include "TlsFunction.h"
 #include "HttpClient.h"
 #include "Log.h"
+#include "FileUtility.h"
 #include "MemoryDebug.h"
 
 CHttpClient::CHttpClient() : m_iRecvTimeout(10), m_iStatusCode(0)
@@ -146,7 +147,7 @@ bool CHttpClient::DoGet( const char * pszUrl, const char * pszInputContentType, 
  */
 bool CHttpClient::DoPost( const char * pszUrl, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputContentType, std::string & strOutputBody )
 {
-	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
+	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, 0, strOutputContentType, strOutputBody );
 }
 
 /**
@@ -156,11 +157,12 @@ bool CHttpClient::DoPost( const char * pszUrl, const char * pszInputContentType,
  * @param pclsHeaderList				전송 헤더에 포함될 헤더 항목 리스트
  * @param pszInputContentType		전송 Content-Type
  * @param pszInputBody					전송 body
+ * @param iInputBodyLen					전송 body 길이
  * @param strOutputContentType	수신 Content-Type
  * @param strOutputBody					수신 body
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputContentType, std::string & strOutputBody )
+bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody )
 {
 	strOutputContentType.clear();
 	strOutputBody.clear();
@@ -173,7 +175,16 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
 
 	CHttpUri clsUri;
 	int iUrlLen = strlen( pszUrl );
-	int iContentLength = strlen( pszInputBody );
+	int iContentLength = 0;
+
+	if( iInputBodyLen > 0 )
+	{
+		iContentLength = iInputBodyLen;
+	}
+	else
+	{
+		iContentLength = strlen( pszInputBody );
+	}
 
 	if( iContentLength <= 0 )
 	{
@@ -193,7 +204,7 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
 	clsRequest.SetRequest( "POST", &clsUri );
 	clsRequest.m_strContentType = pszInputContentType;
 	clsRequest.m_iContentLength = iContentLength;
-	clsRequest.m_strBody = pszInputBody;
+	clsRequest.m_strBody.append( pszInputBody, iContentLength );
 
 	if( pclsHeaderList )
 	{
@@ -249,10 +260,82 @@ bool CHttpClient::DoSoap( const char * pszUrl, const char * pszSoapAction, const
 
 		clsHeaderList.push_back( clsHeader );
 
-		return DoPost( pszUrl, &clsHeaderList, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
+		return DoPost( pszUrl, &clsHeaderList, pszInputContentType, pszInputBody, 0, strOutputContentType, strOutputBody );
 	}
 	
-	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, strOutputContentType, strOutputBody );
+	return DoPost( pszUrl, NULL, pszInputContentType, pszInputBody, 0, strOutputContentType, strOutputBody );
+}
+
+/**
+ * @ingroup HttpStack
+ * @brief	HTTP POST 명령으로 파일 업로드한다.
+ * @param pszUrl								HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pszFilePath						업로드할 파일 경로 ( full path )
+ * @param pszPostName						업로드 파일에 대한 POST 인자(name)
+ * @param	clsPostDataMap				POST 데이터
+ * @param strOutputContentType	수신 Content-Type
+ * @param strOutputBody					수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoUpload( const char * pszUrl, const char * pszFilePath, const char * pszPostName, POST_NAME_VALUE_MAP & clsPostDataMap, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	std::string strContentType, strBody, strBoundary, strFileName;
+	char szBuf[8192];
+	int iLen;
+
+	GetFileNameOfFilePath( pszFilePath, strFileName );
+
+	strBoundary = "D265359A-0089-402c-BD68-BD0E20D4D5B8";
+	strContentType = "multipart/form-data; boundary=";
+	strContentType.append( strBoundary );
+
+	POST_NAME_VALUE_MAP::iterator itPM;
+
+	for( itPM = clsPostDataMap.begin(); itPM != clsPostDataMap.end(); ++itPM )
+	{
+		strBody.append( "--" );
+		strBody.append( strBoundary );
+		strBody.append( "\r\n" );
+		strBody.append( "Content-Disposition: form-data; name=\"" );
+		strBody.append( itPM->first );
+		strBody.append( "\"\r\n\r\n" );
+		strBody.append( itPM->second );
+		strBody.append( "\r\n" );
+	}
+
+	strBody.append( "--" );
+	strBody.append( strBoundary );
+	strBody.append( "\r\n" );
+
+	strBody.append( "Content-Disposition: form-data; name=\"" );
+	strBody.append( pszPostName );
+	strBody.append( "\"; filename=\"" );
+	strBody.append( strFileName );
+	strBody.append( "\"\r\nContent-Type: application/octet-stream\r\n\r\n" );
+	
+	FILE * fd = fopen( pszFilePath, "rb" );
+	if( fd == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s fopen(%s) error(%d)", __FUNCTION__, pszFilePath, GetError() );
+		return false;
+	}
+
+	while( 1 )
+	{
+		iLen = fread( szBuf, 1, sizeof(szBuf), fd );
+		if( iLen <= 0 ) break;
+
+		strBody.append( szBuf, iLen );
+	}
+
+	fclose( fd );
+
+	strBody.append( "\r\n" );
+	strBody.append( "--" );
+	strBody.append( strBoundary );
+	strBody.append( "--\r\n" );
+
+	return DoPost( pszUrl, NULL, strContentType.c_str(), strBody.c_str(), strBody.length(), strOutputContentType, strOutputBody );
 }
 
 /**

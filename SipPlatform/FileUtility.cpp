@@ -81,3 +81,41 @@ bool GetFileExt( const char * pszFileName, std::string & strExt )
 
 	return false;
 }
+
+/**
+ * @ingroup SipPlatform
+ * @brief 파일 경로에서 파일 이름 가져오기
+ * @param pszFilePath 파일 경로
+ * @param strFileName 파일 이름 저장 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool GetFileNameOfFilePath( const char * pszFilePath, std::string & strFileName )
+{
+	strFileName.clear();
+
+	if( pszFilePath == NULL ) return false;
+
+	int iLen = (int)strlen( pszFilePath );
+	if( iLen < 2 ) return false;
+
+#ifdef WIN32
+	if( pszFilePath[iLen-1] == '\\' ) return false;
+#else
+	if( pszFilePath[iLen-1] == '/' ) return false;
+#endif
+
+	for( int i = iLen - 2; i >= 0; --i )
+	{
+#ifdef WIN32
+		if( pszFilePath[i] == '\\' )
+#else
+		if( pszFilePath[i] == '/' )
+#endif
+		{
+			strFileName.append( pszFilePath + i + 1 );
+			return true;
+		}
+	}
+
+	return false;
+}

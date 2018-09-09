@@ -17,39 +17,28 @@
  */
 
 #include "HttpClient.h"
-#include "SipTcp.h"
 #include "Log.h"
 #include "MemoryDebug.h"
 
-int TestHttpClientGet( int argc, char * argv[] );
-int TestHttpClientPost( int argc, char * argv[] );
-int TestHttpClientSoap( int argc, char * argv[] );
-int TestHttpClientUpload( int argc, char * argv[] );
-
-int main( int argc, char * argv[] )
+int TestHttpClientUpload( int argc, char * argv[] )
 {
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
+	std::string strSendBody, strRecvBodyType, strRecvBody;
+	CHttpClient clsClient;
+	
+	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
-	if( argc >= 2 )
+	POST_NAME_VALUE_MAP clsPostNameValueMap;
+
+	clsPostNameValueMap.insert( POST_NAME_VALUE_MAP::value_type( "id", "userid" ) );
+	clsPostNameValueMap.insert( POST_NAME_VALUE_MAP::value_type( "pw", "password" ) );
+
+	if( clsClient.DoUpload( "http://127.0.0.1:8080/board/file_upload", "C:\\Temp\\test\\IE.LOG", "file", clsPostNameValueMap, strRecvBodyType, strRecvBody ) )
 	{
-		if( !strcmp( argv[1], "soap" ) )
-		{
-			TestHttpClientSoap( argc, argv );
-		}
-		else if( !strcmp( argv[1], "post" ) )
-		{
-			TestHttpClientPost( argc, argv );
-		}
-		else if( !strcmp( argv[1], "upload" ) )
-		{
-			TestHttpClientUpload( argc, argv );
-		}
-		else
-		{
-			TestHttpClientGet( argc, argv );
-		}
+		printf( "[%s]\n", strRecvBody.c_str() );
+	}
+	else
+	{
+		printf( "clsClient.DoUpload error\n" );
 	}
 
 	return 0;

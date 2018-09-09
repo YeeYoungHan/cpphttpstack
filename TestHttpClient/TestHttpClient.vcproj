@@ -190,6 +190,10 @@
 				RelativePath=".\TestHttpClientSoap.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHttpClientUpload.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

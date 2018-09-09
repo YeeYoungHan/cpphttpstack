@@ -39,7 +39,7 @@ int TestHttpClientPost( int argc, char * argv[] )
    "</soapenv:Body>"
 	 "</soapenv:Envelope>";
 
-	if( clsClient.DoPost( "http://www.webserviceX.NET/globalweather.asmx", &clsHeaderList, "text/xml;charset=UTF-8", strSendBody.c_str(), strRecvBodyType, strRecvBody ) )
+	if( clsClient.DoPost( "http://www.webserviceX.NET/globalweather.asmx", &clsHeaderList, "text/xml;charset=UTF-8", strSendBody.c_str(), 0, strRecvBodyType, strRecvBody ) )
 	{
 		printf( "[%s]\n", strRecvBody.c_str() );
 	}

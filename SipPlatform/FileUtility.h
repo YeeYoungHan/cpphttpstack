@@ -25,5 +25,6 @@
 bool IsExistFile( const char * pszFileName );
 int64_t GetFileSize( const char * pszFileName );
 bool GetFileExt( const char * pszFileName, std::string & strExt );
+bool GetFileNameOfFilePath( const char * pszFilePath, std::string & strFileName );
 
 #endif
