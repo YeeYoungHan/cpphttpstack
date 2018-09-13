@@ -16,36 +16,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include <stdio.h>
-#include "MemoryDebug.h"
+#ifndef _HTTP_PARAMETER_H_
+#define _HTTP_PARAMETER_H_
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
+#include <string>
+#include <list>
 
-int main( int argc, char * argv[] )
+/**
+ * @ingroup HttpParser
+ * @brief parameter 정보를 저장하는 클래스
+ */
+class CHttpParameter
 {
-	bool bOk = false;
+public:
+	CHttpParameter();
+	~CHttpParameter();
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+	/** 이름 */
+	std::string	m_strName;
+
+	/** 값 */
+	std::string	m_strValue;
+
+	int Parse( const char * pszText, int iTextLen );
+	int ToString( char * pszText, int iTextSize );
+	void Clear();
+};
+
+/** parameter 리스트 */
+typedef std::list< CHttpParameter > HTTP_PARAMETER_LIST;
+
 #endif
-
-	if( TestHttpParameterList( ) == false ) goto FUNC_END;
-	if( TestHttpPacket( ) == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
-	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
-	}
-
-	return 0;
-}

@@ -18,6 +18,7 @@
 
 #include "SimpleHttpServer.h"
 #include "HttpStatusCode.h"
+#include "HttpParameterList.h"
 #include "StringUtility.h"
 #include "FileUtility.h"
 #include "Directory.h"
@@ -78,6 +79,13 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		strPath.append( pclsRequest->m_strReqUri );
 	}
 
+	// 파일 경로에서 GET parameter 를 제거한다.
+	size_t iPos = strPath.find( "?" );
+	if( iPos < std::string::npos )
+	{
+		strPath.erase( iPos );
+	}
+
 	if( IsExistFile( strPath.c_str() ) == false )
 	{
 		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
@@ -91,6 +99,18 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	if( !strcmp( pszExt, "html" ) || !strcmp( pszExt, "htm" ) )
 	{
 		pclsResponse->m_strContentType = "text/html";
+
+		// GET Query parameter list 가져오기
+		CHttpParameterList clsParamList;
+		HTTP_PARAMETER_LIST::iterator itPL;
+
+		if( clsParamList.ParseUrl( pclsRequest->m_strReqUri ) != -1 )
+		{
+			for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
+			{
+				printf( "name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
+			}
+		}
 	}
 	else if( !strcmp( pszExt, "css" ) )
 	{

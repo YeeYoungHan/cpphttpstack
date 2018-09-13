@@ -163,6 +163,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HttpParameter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpParameterList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\HttpStatusCode.cpp"
 				>
 			</File>
@@ -186,6 +194,14 @@
 			</File>
 			<File
 				RelativePath=".\HttpPacket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpParameter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpParameterList.h"
 				>
 			</File>
 			<File

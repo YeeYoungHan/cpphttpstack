@@ -180,6 +180,10 @@
 				RelativePath=".\TestHttpPacket.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHttpParameter.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
