@@ -140,6 +140,15 @@ bool CHttpStack::SendWebSocketPacket( const char * pszClientIp, int iClientPort,
 
 /**
  * @ingroup HttpStack
+ * @brief openssl 알고리즘에 할당된 메모리를 제거한다.
+ */
+void CHttpStack::Release()
+{
+	EVP_cleanup();
+}
+
+/**
+ * @ingroup HttpStack
  * @brief HTTP 클라이언트가 연결 이벤트 핸들러
  * @param pclsSessionInfo 세션 정보
  * @return HTTP 클라이언트 연결을 허용하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.

@@ -85,6 +85,7 @@ int main( int argc, char * argv[] )
 	sleep(2);
 
 #ifdef WIN32
+	CHttpStack::Release();
 	CLog::Release();
 #endif
 

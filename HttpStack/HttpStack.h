@@ -54,6 +54,8 @@ public:
 
 	bool SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen );
 
+	static void Release();
+
 	// ITcpStackCallBack
 	virtual bool InComingConnected( CTcpSessionInfo * pclsSessionInfo );
 	virtual void SessionClosed( CTcpSessionInfo * pclsSessionInfo );
