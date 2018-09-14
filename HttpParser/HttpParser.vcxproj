@@ -79,6 +79,8 @@
     <ClCompile Include="HttpHeader.cpp" />
     <ClCompile Include="HttpMessage.cpp" />
     <ClCompile Include="HttpPacket.cpp" />
+    <ClCompile Include="HttpParameter.cpp" />
+    <ClCompile Include="HttpParameterList.cpp" />
     <ClCompile Include="HttpStatusCode.cpp" />
     <ClCompile Include="HttpUri.cpp" />
   </ItemGroup>
@@ -86,6 +88,8 @@
     <ClInclude Include="HttpHeader.h" />
     <ClInclude Include="HttpMessage.h" />
     <ClInclude Include="HttpPacket.h" />
+    <ClInclude Include="HttpParameter.h" />
+    <ClInclude Include="HttpParameterList.h" />
     <ClInclude Include="HttpStatusCode.h" />
     <ClInclude Include="HttpUri.h" />
   </ItemGroup>
