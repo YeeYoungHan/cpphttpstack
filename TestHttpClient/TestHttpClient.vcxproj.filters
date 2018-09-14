@@ -19,5 +19,8 @@
     <ClCompile Include="TestHttpClientSoap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestHttpClientUpload.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

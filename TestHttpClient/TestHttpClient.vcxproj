@@ -97,6 +97,7 @@
     <ClCompile Include="TestHttpClientGet.cpp" />
     <ClCompile Include="TestHttpClientPost.cpp" />
     <ClCompile Include="TestHttpClientSoap.cpp" />
+    <ClCompile Include="TestHttpClientUpload.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">

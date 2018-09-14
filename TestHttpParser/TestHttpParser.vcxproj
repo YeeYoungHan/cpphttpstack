@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TestHttpPacket.cpp" />
+    <ClCompile Include="TestHttpParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">
