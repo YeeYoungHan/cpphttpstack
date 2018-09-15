@@ -108,7 +108,25 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		{
 			for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
 			{
-				printf( "name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
+				printf( "GET name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
+			}
+		}
+
+		if( !strcmp( pclsRequest->m_strHttpMethod.c_str(), "POST" ) )
+		{
+			if( strstr( pclsRequest->m_strContentType.c_str(), "multipart" ) )
+			{
+
+			}
+			else
+			{
+				if( clsParamList.Parse( pclsRequest->m_strBody ) != -1 )
+				{
+					for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
+					{
+						printf( "POST name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
+					}
+				}
 			}
 		}
 	}
