@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestHttpMultipart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestHttpPacket.cpp"
 				>
 			</File>

@@ -17,37 +17,26 @@
  */
 
 #include "SipPlatformDefine.h"
-#include <stdio.h>
+#include "HttpMultipart.h"
 #include "MemoryDebug.h"
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
-bool TestHttpMultipart( );
-
-int main( int argc, char * argv[] )
+bool TestHttpMultipart( )
 {
-	bool bOk = false;
+	const char * pszBoundary = "---------------------------7e21152f00c8";
+	const char * pszBody = "-----------------------------7e21152f00c8\r\n"
+		"Content-Disposition: form-data; name=\"id\"\r\n"
+		"\r\n"
+		"id1\r\n"
+		"-----------------------------7e21152f00c8\r\n"
+		"Content-Disposition: form-data; name=\"pw\"\r\n"
+		"\r\n"
+		"pw1\r\n"
+		"-----------------------------7e21152f00c8\r\n"
+		"Content-Disposition: form-data; name=\"file\"; filename=\"1234.txt\"\r\n"
+		"Content-Type: text/plain\r\n"
+		"\r\n"
+		"1234\r\n"
+		"-----------------------------7e21152f00c8--\r\n";
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	if( TestHttpMultipart( ) == false ) goto FUNC_END;
-	if( TestHttpParameterList( ) == false ) goto FUNC_END;
-	if( TestHttpPacket( ) == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
-	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
-	}
-
-	return 0;
+	return true;
 }

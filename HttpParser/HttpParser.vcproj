@@ -159,6 +159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HttpMultipart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\HttpPacket.cpp"
 				>
 			</File>
@@ -190,6 +194,10 @@
 			</File>
 			<File
 				RelativePath=".\HttpMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpMultipart.h"
 				>
 			</File>
 			<File

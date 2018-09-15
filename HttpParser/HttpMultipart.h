@@ -16,38 +16,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include <stdio.h>
-#include "MemoryDebug.h"
+#ifndef _HTTP_MULTIPART_H_
+#define _HTTP_MULTIPART_H_
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
-bool TestHttpMultipart( );
+#include <string>
 
-int main( int argc, char * argv[] )
+class CHttpMultipart
 {
-	bool bOk = false;
+public:
+	CHttpMultipart();
+	~CHttpMultipart();
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+	void SetBoundary( const char * pszBoundary );
+
+	int Parse( const char * pszText, int iTextLen );
+	int ToString( char * pszText, int iTextSize );
+
+private:
+	std::string m_strBoundary;
+};
+
 #endif
-
-	if( TestHttpMultipart( ) == false ) goto FUNC_END;
-	if( TestHttpParameterList( ) == false ) goto FUNC_END;
-	if( TestHttpPacket( ) == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
-	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
-	}
-
-	return 0;
-}

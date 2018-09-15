@@ -16,38 +16,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include <stdio.h>
-#include "MemoryDebug.h"
+#include "HttpMultipart.h"
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
-bool TestHttpMultipart( );
-
-int main( int argc, char * argv[] )
+CHttpMultipart::CHttpMultipart()
 {
-	bool bOk = false;
+}
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
+CHttpMultipart::~CHttpMultipart()
+{
+}
 
-	if( TestHttpMultipart( ) == false ) goto FUNC_END;
-	if( TestHttpParameterList( ) == false ) goto FUNC_END;
-	if( TestHttpPacket( ) == false ) goto FUNC_END;
+void CHttpMultipart::SetBoundary( const char * pszBoundary )
+{
+	m_strBoundary = "--";
+	m_strBoundary.append( pszBoundary );
+}
 
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
+int CHttpMultipart::Parse( const char * pszText, int iTextLen )
+{
+	for( int i = 0; i < iTextLen; )
 	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
+
 	}
 
-	return 0;
+	return -1;
+}
+
+int CHttpMultipart::ToString( char * pszText, int iTextSize )
+{
+	return -1;
 }
