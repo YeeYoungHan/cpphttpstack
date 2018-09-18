@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TestHttpMultipart.cpp" />
     <ClCompile Include="TestHttpPacket.cpp" />
     <ClCompile Include="TestHttpParameter.cpp" />
   </ItemGroup>
@@ -99,6 +100,9 @@
     <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">
       <Project>{fdc90de9-6824-47be-b089-2b22cf515d7f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SipPlatform\SipPlatform.vcxproj">
+      <Project>{59766094-16e8-4602-9621-6c1e5ed9af5f}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

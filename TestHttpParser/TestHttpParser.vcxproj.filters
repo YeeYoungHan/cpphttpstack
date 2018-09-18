@@ -16,5 +16,8 @@
     <ClCompile Include="TestHttpParameter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestHttpMultipart.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
