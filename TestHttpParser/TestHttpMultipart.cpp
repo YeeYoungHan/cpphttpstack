@@ -37,6 +37,22 @@ bool TestHttpMultipart( )
 		"\r\n"
 		"1234\r\n"
 		"-----------------------------7e21152f00c8--\r\n";
+	CHttpMultipart clsMultipart;
+	std::string strText;
+
+	clsMultipart.SetBoundary( pszBoundary );
+	if( clsMultipart.Parse( pszBody, strlen(pszBody) ) == -1 )
+	{
+		printf( "clsMultipart.Parse error\n" );
+		return false;
+	}
+
+	clsMultipart.ToString( strText );
+	if( strcmp( strText.c_str(), pszBody ) )
+	{
+		printf( "clsMultipart Parse or ToString error\n" );
+		return false;
+	}
 
 	return true;
 }
