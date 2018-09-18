@@ -19,6 +19,7 @@
 #include "SimpleHttpServer.h"
 #include "HttpStatusCode.h"
 #include "HttpParameterList.h"
+#include "HttpMultipart.h"
 #include "StringUtility.h"
 #include "FileUtility.h"
 #include "Directory.h"
@@ -116,7 +117,33 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		{
 			if( strstr( pclsRequest->m_strContentType.c_str(), "multipart" ) )
 			{
+				CHttpMultipart clsMultipart;
 
+				clsMultipart.SetContentType( pclsRequest->m_strContentType.c_str() );
+				if( clsMultipart.Parse( pclsRequest->m_strBody ) != -1 )
+				{
+					HTTP_MULTIPART_DATA_MAP::iterator itMD;
+
+					for( itMD = clsMultipart.m_clsMap.begin(); itMD != clsMultipart.m_clsMap.end(); ++itMD )
+					{
+						if( itMD->second->m_strFileName.empty() )
+						{
+							printf( "POST name[%s] = value[%s]\n", itMD->first.c_str(), itMD->second->m_strValue.c_str() );
+						}
+						else
+						{
+							// 업로드한 파일을 저장할 파일 이름을 적절히 설정해야 한다.
+							std::string strFileName = "c:\\temp\\upload.txt";
+
+							FILE * fd = fopen( strFileName.c_str(), "wb" );
+							if( fd )
+							{
+								fwrite( itMD->second->m_strValue.c_str(), 1, itMD->second->m_strValue.length(), fd );
+								fclose( fd );
+							}
+						}
+					}
+				}
 			}
 			else
 			{

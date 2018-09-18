@@ -32,7 +32,7 @@ bool TestHttpMultipart( )
 		"\r\n"
 		"pw1\r\n"
 		"-----------------------------7e21152f00c8\r\n"
-		"Content-Disposition: form-data; name=\"file\"; filename=\"1234.txt\"\r\n"
+		"Content-Disposition: form-data; name=\"zfile\"; filename=\"1234.txt\"\r\n"
 		"Content-Type: text/plain\r\n"
 		"\r\n"
 		"1234\r\n"

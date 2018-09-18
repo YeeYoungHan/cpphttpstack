@@ -28,7 +28,7 @@
 class CHttpParameterList
 {
 public:
-	CHttpParameterList();
+	CHttpParameterList( char cSep = '&', bool bRemoveFrontSpace = false );
 	~CHttpParameterList();
 
 	int Parse( const char * pszText );
@@ -51,6 +51,12 @@ public:
 	void ClearParam();
 
 	HTTP_PARAMETER_LIST m_clsParamList;
+
+	/** 구분자 &; */
+	char				m_cSep;
+
+	/** name 앞에 있는 공백을 제거한다. */
+	bool				m_bRemoveFrontSpace;
 };
 
 #endif

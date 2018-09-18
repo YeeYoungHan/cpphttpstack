@@ -20,7 +20,7 @@
 #include "HttpParameterList.h"
 #include "MemoryDebug.h"
 
-CHttpParameterList::CHttpParameterList()
+CHttpParameterList::CHttpParameterList( char cSep, bool bRemoveFrontSpace ) : m_cSep( cSep ), m_bRemoveFrontSpace( bRemoveFrontSpace )
 {
 }
 
@@ -67,10 +67,19 @@ int CHttpParameterList::Parse( const char * pszText, int iTextLen )
 
 	while( iCurPos < iTextLen )
 	{
-		if( pszText[iCurPos] == '&' )
+		if( pszText[iCurPos] == m_cSep )
 		{
 			++iCurPos;
 			continue;
+		}
+
+		if( m_bRemoveFrontSpace )
+		{
+			if( pszText[iCurPos] == ' ' )
+			{
+				++iCurPos;
+				continue;
+			}
 		}
 
 		iPos = ParseOne( pszText + iCurPos, iTextLen - iCurPos );
@@ -139,7 +148,7 @@ int CHttpParameterList::ParseUrl( const char * pszText, int iTextLen )
  */
 int CHttpParameterList::ParseOne( const char * pszText, int iTextLen )
 {
-	CHttpParameter clsParam;
+	CHttpParameter clsParam( m_cSep );
 
 	int iPos = clsParam.Parse( pszText, iTextLen );
 	if( iPos == -1 ) return -1;
@@ -167,7 +176,7 @@ int CHttpParameterList::ToString( char * pszText, int iTextSize )
 
 		if( itList != m_clsParamList.begin() )
 		{
-			pszText[iLen++] = '&';
+			pszText[iLen++] = m_cSep;
 		}
 
 		iPos = itList->ToString( pszText + iLen, iTextSize - iLen );

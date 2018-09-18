@@ -20,7 +20,7 @@
 #include "HttpParameter.h"
 #include "MemoryDebug.h"
 
-CHttpParameter::CHttpParameter()
+CHttpParameter::CHttpParameter( char cSep ) : m_cSep(cSep)
 {
 }
 
@@ -49,7 +49,7 @@ int CHttpParameter::Parse( const char * pszText, int iTextLen )
 			m_strName.append( pszText, iPos );
 			iValuePos = iPos + 1;
 		}
-		else if( pszText[iPos] == '&' )
+		else if( pszText[iPos] == m_cSep )
 		{
 			break;
 		}

@@ -39,8 +39,10 @@ public:
 	~CHttpMultipart();
 
 	void SetBoundary( const char * pszBoundary );
+	void SetContentType( const char * pszContentType );
 	void Clear();
 
+	int Parse( const std::string & strText );
 	int Parse( const char * pszText, int iTextLen );
 	int ToString( std::string & strText );
 
@@ -48,6 +50,8 @@ private:
 	int ParseData( const char * pszText, int iTextLen );
 
 	std::string m_strBoundary;
+
+public:
 	HTTP_MULTIPART_DATA_MAP	m_clsMap;
 };
 

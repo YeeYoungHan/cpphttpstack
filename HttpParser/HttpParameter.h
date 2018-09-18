@@ -29,7 +29,7 @@
 class CHttpParameter
 {
 public:
-	CHttpParameter();
+	CHttpParameter( char cSep = '&' );
 	~CHttpParameter();
 
 	/** 이름 */
@@ -37,6 +37,9 @@ public:
 
 	/** 값 */
 	std::string	m_strValue;
+
+	/** 구분자 &; */
+	char				m_cSep;
 
 	int Parse( const char * pszText, int iTextLen );
 	int ToString( char * pszText, int iTextSize );
