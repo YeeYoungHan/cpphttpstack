@@ -61,15 +61,18 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP GET 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientGet.cpp 파일입니다.
 
+```
  CHttpClient clsClient;
  std::string strBodyType, strBody;
 
  clsClient.DoGet( "http://www.naver.com", strBodyType, strBody );
+```
 
 ### HTTP POST 요청/응답 개발 방법
 HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP POST 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientPost.cpp 파일입니다.
 
+```
  std::string strSendBody, strRecvBodyType, strRecvBody;
  CHttpClient clsClient;
  HTTP_HEADER_LIST clsHeaderList;
@@ -86,11 +89,13 @@ HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP POST 프로
   "</soapenv:Envelope>";
 
   clsClient.DoPost( "http://www.webserviceX.NET/globalweather.asmx", &clsHeaderList, "text/xml;charset=UTF-8", strSendBody.c_str(), strRecvBodyType, strRecvBody );
+```
 
 ### HTTP SOAP 요청/응답 개발 방법
 HttpStack 라이브러리의 CHttpClient 클래스를 이용한 웹 서비스 연동하는 소스 코드 예제는 다음과 같습니다.
 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientSoap.cpp 파일입니다.
 
+```
  std::string strSendBody, strRecvBody;
  CHttpClient clsClient;
 
@@ -105,6 +110,7 @@ HttpStack 라이브러리의 CHttpClient 클래스를 이용한 웹 서비스 �
   "</soapenv:Envelope>";
 
  clsClient.DoSoap( "http://www.webserviceX.NET/globalweather.asmx", "http://www.webserviceX.NET/GetWeather", strSendBody.c_str(), strRecvBody );
+```
 
 ### 초간단 HTTP 서버 개발 방법
 초간단 HTTP 서버 개발 소스 코드 예제는 TestHttpStack 프로젝트에 있습니다. TestHttpStack 프로젝트 소스 코드를 참고하시면 CHttpStack 을 이용하여서 어떻게 HTTP 서버를 개발할 수 있을지 확인하실 수 있습니다.
@@ -113,6 +119,7 @@ HttpStack 라이브러리의 CHttpClient 클래스를 이용한 웹 서비스 �
 WSDL 파일을 읽어서 SOAP 통신용 클래스 생성하는 소스 코드 예제는 다음과 같습니다.
 테스트용 샘플 소스 코드는 TestWsdlParser 프로젝트를 확인해 보세요.
 
+```
  CWsdlMessage clsWsdl;
 
  if( clsWsdl.ParseFile( "globalweather.xml" ) == false )
@@ -123,10 +130,12 @@ WSDL 파일을 읽어서 SOAP 통신용 클래스 생성하는 소스 코드 예
  {
   clsWsdl.GetSoap()->MakeSource( NULL );
  }
+```
 
 ### 생성한 SOAP 통신용 클래스로 SOAP 통신하는 방법
 위에서 WSDL 문서로 생성한 SOAP 클래스로 SOAP 통신하여서 응답을 수신하는 소스 코드는 다음과 같습니다.
 
+```
  CSoapGlobalWeatherSoap clsSoap;
  std::string strInput, strOutput;
 
@@ -135,6 +144,7 @@ WSDL 파일을 읽어서 SOAP 통신용 클래스 생성하는 소스 코드 예
  if( clsSoap.GetCitiesByCountry( strInput, strOutput ) == false ) return false;
 
  printf( "[%s]\n", strOutput.c_str() );
+```
 
 ### JSON 문자열 파싱 및 생성하는 방법
 TestJsonParser 폴더의 소스 코드를 참고하세요.
