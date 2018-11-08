@@ -34,4 +34,4 @@ HttpSpeed.exe 가 모든 HTTP 요청 개수를 처리 완료하면 아래의 항
 
 ### 관련 포스트
 
-* https://blog.naver.com/websearch/221304621705
+* https://blog.naver.com/websearch/221304621705 : HTTP 서버 성능 측정 프로그램 1차 개발 완료

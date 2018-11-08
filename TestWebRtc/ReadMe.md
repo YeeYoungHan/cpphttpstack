@@ -22,4 +22,8 @@ TestWebRtc.exe 프로그램은 TestWebRtc 폴더의 html 폴더를 document root
 
 테스트 방법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
 
+### 관련 포스트
+
+* https://blog.naver.com/websearch/221142356741 : WebRTC 테스트 프로그램 개발 완료
+
  
