@@ -102,9 +102,6 @@
     <ClInclude Include="TlsFunction.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\XmlParser\XmlParser.vcxproj">
       <Project>{af551bc2-1af3-419b-9b54-04c2ef4fac72}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
