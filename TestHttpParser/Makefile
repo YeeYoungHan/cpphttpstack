@@ -18,7 +18,7 @@ LIB=-L../HttpParser -lhttpparser \
 all: TestHttpParser.exe
 
 SRV_OBJ=Main.o \
-	TestHttpPacket.o TestHttpParameter.o
+	TestHttpPacket.o TestHttpParameter.o TestHttpMultipart.o
 
 TestHttpParser.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)
