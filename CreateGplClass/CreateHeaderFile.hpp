@@ -82,9 +82,10 @@ void GetDefineName( const char * pszName, std::string & strDefine )
  * @brief 헤더 파일을 생성한다.
  * @param pszFileName		확장자를 제외한 헤더 파일 이름
  * @param pszClassName	클래스 이름
+ * @param bUsePragmaOnce	pragma once 를 사용한다.
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
+bool MakeHeaderFile( const char * pszFileName, const char * pszClassName, bool bUsePragmaOnce )
 {
 	std::string strDefine, strFileName;
 
@@ -108,10 +109,17 @@ bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
 
 	PrintGPL( fd );
 
-	fprintf( fd, "#ifndef %s\n", strDefine.c_str() );
-	fprintf( fd, "#define %s\n", strDefine.c_str() );
-	fprintf( fd, "\n" );
+	if( bUsePragmaOnce )
+	{
+		fprintf( fd, "#pragma once\n" );
+	}
+	else
+	{
+		fprintf( fd, "#ifndef %s\n", strDefine.c_str() );
+		fprintf( fd, "#define %s\n", strDefine.c_str() );
+	}
 
+	fprintf( fd, "\n" );
 	fprintf( fd, "class %s\n", pszClassName );
 	fprintf( fd, "{\n" );
 	fprintf( fd, "public:\n" );
@@ -120,7 +128,10 @@ bool MakeHeaderFile( const char * pszFileName, const char * pszClassName )
 	fprintf( fd, "};\n" );
 	fprintf( fd, "\n" );
 
-	fprintf( fd, "#endif\n" );
+	if( bUsePragmaOnce == false )
+	{
+		fprintf( fd, "#endif\n" );
+	}
 
 	fclose( fd );
 

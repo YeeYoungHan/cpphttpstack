@@ -27,7 +27,7 @@ int main( int argc, char * argv[] )
 {
 	if( argc < 2 )
 	{
-		printf( "[Usage] %s {class name}\n", argv[0] );
+		printf( "[Usage] %s {class name} {use pragma once}\n", argv[0] );
 		return 0;
 	}
 
@@ -38,6 +38,13 @@ int main( int argc, char * argv[] )
 		return 0;
 	}
 
+	bool bUsePragmaOnce = false;
+
+	if( argc >= 3 )
+	{
+		bUsePragmaOnce = true;
+	}
+
 	const char * pszFileName = pszClassName;
 
 	if( pszClassName[0] == 'C' || pszClassName[0] == 'I' )
@@ -45,7 +52,7 @@ int main( int argc, char * argv[] )
 		pszFileName = pszClassName + 1;
 	}
 
-	if( MakeHeaderFile( pszFileName, pszClassName ) == false ) return 0;
+	if( MakeHeaderFile( pszFileName, pszClassName, bUsePragmaOnce ) == false ) return 0;
 	if( MakeSourceFile( pszFileName, pszClassName ) == false ) return 0;
 
 	return 0;
