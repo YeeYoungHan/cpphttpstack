@@ -54,6 +54,9 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
   * WebSocket 을 이용한 WebRTC 연동 샘플 프로그램
   * 사용법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
 
+* HttpNoCacheProxy
+  * 캐쉬를 사용하지 않는 HTTP Proxy
+
 * doc
   * 본 프로젝트와 관련된 문서 저장 폴더
 
