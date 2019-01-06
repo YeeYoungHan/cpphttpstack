@@ -29,6 +29,10 @@ int TestHttpClientGet( int argc, char * argv[] )
 	{
 		strUrl = argv[2];
 	}
+	else if( argc == 2 )
+	{
+		strUrl = argv[1];
+	}
 
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
