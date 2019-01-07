@@ -16,37 +16,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _STRING_MAP_H_
-#define _STRING_MAP_H_
+#ifndef _TEST_GOOGLE_DOWNLOAD_H_
+#define _TEST_GOOGLE_DOWNLOAD_H_
 
-#include <string>
-#include <map>
-#include "SipMutex.h"
+#include "SipPlatformDefine.h"
+#include "HttpClient.h"
+#include "StringUtility.h"
+#include "FileUtility.h"
+#include "StringMap.h"
+#include "Directory.h"
 
-typedef std::map< std::string, std::string > STRING_MAP;
-
-/**
- * @ingroup SipPlatform
- * @brief 문자열 맵 자료구조 클래스
- */
-class CStringMap
-{
-public:
-	CStringMap();
-	~CStringMap();
-
-	bool Insert( const char * pszKey, const char * pszValue );
-	bool Update( const char * pszKey, const char * pszValue );
-	bool Select( const char * pszKey );
-	bool Select( const char * pszKey, std::string & strValue );
-	bool SelectWithValue( const char * pszValue, STRING_MAP & clsMap );
-	bool Delete( const char * pszKey );
-	int GetCount( );
-	void DeleteAll( );
-
-private:
-	CSipMutex	m_clsMutex;
-	STRING_MAP	m_clsMap;
-};
+bool GetFileName( std::string & strUrl, std::string & strFileName );
 
 #endif

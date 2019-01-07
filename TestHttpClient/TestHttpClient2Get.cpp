@@ -25,7 +25,14 @@ int TestHttpClient2Get( int argc, char * argv[] )
 	std::string strUrl, strBodyType, strBody;
 	CHttpClient2 clsClient;
 
-	strUrl = "https://www.whereisdoc.com";
+	if( argc >= 3 )
+	{
+		strUrl = argv[2];
+	}
+	else if( argc == 2 )
+	{
+		strUrl = argv[1];
+	}
 
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
@@ -33,18 +40,6 @@ int TestHttpClient2Get( int argc, char * argv[] )
 	{
 		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
 		printf( "%s", strBody.c_str() );
-
-		strUrl = "https://www.whereisdoc.com/?q=%EA%B0%80#gsc.tab=0&gsc.ref=results_of_*.pdf_files&gsc.q=%EA%B0%80&gsc.page=1";
-
-		if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
-		{
-			printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
-			printf( "%s", strBody.c_str() );
-		}
-		else
-		{
-			printf( "clsClient.DoGet error\n" );
-		}
 	}
 	else
 	{

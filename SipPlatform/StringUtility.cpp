@@ -19,6 +19,7 @@
 #include "StringUtility.h"
 #include <string.h>
 #include <stdlib.h>
+#include "Log.h"
 #include "MemoryDebug.h"
 
 /**
@@ -354,3 +355,117 @@ void DeQuoteString( std::string & strInput, std::string & strOutput )
 		}
 	}
 }
+
+#ifdef WIN32
+
+/**
+ * @ingroup SipPlatform
+ * @brief UTF8 문자열을 ANSI 문자열로 변환한다.
+ * @param pszUtf8		UTF8 문자열 (input)
+ * @param strOutput ANSI 문자열 (output)
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool Utf8ToAnsi( const char * pszUtf8, std::string & strOutput )
+{
+	BSTR    strWide = NULL;
+	char*   pszAnsi = NULL;
+	int     iLength;
+	int			iUtf8Length = (int)strlen(pszUtf8) + 1;
+	
+	iLength = MultiByteToWideChar( CP_UTF8, 0, pszUtf8, iUtf8Length, NULL, NULL );
+	if( iLength == 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s MultiByteToWideChar error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	strWide = SysAllocStringLen( NULL, iLength );
+	if( strWide == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s SysAllocStringLen error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	MultiByteToWideChar( CP_UTF8, 0, pszUtf8, iUtf8Length, strWide, iLength );
+
+	iLength = WideCharToMultiByte( CP_ACP, 0, strWide, -1, NULL, 0, NULL, NULL );
+	if( iLength == 0 )
+	{
+		SysFreeString( strWide );
+		CLog::Print( LOG_ERROR, "%s WideCharToMultiByte error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	pszAnsi = new char[iLength];
+	if( pszAnsi == NULL )
+	{
+		SysFreeString( strWide );
+		CLog::Print( LOG_ERROR, "%s new error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	WideCharToMultiByte( CP_ACP, 0, strWide, -1, pszAnsi, iLength, NULL, NULL );
+	strOutput = pszAnsi;
+	
+	SysFreeString( strWide );
+	delete [] pszAnsi;
+	
+	return true;
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief ANSI 문자열을 UTF-8 문자열로 변환한다. EUC-KR 문자열을 UTF-8 문자열로 변환한다.
+ * @param pszAnsi		ANSI 문자열
+ * @param strOutput UTF-8 문자열을 저장할 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool AnsiToUtf8( const char * pszAnsi, std::string & strOutput )
+{
+	BSTR    strWide = NULL;
+	char*   pszUtf8 = NULL;
+	int     iLength;
+	int			iAnsiLength = (int)strlen(pszAnsi) + 1;
+	
+	iLength = MultiByteToWideChar( CP_ACP, 0, pszAnsi, iAnsiLength, NULL, NULL );
+	if( iLength == 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s MultiByteToWideChar error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	strWide = SysAllocStringLen( NULL, iLength );
+	if( strWide == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s SysAllocStringLen error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	MultiByteToWideChar( CP_ACP, 0, pszAnsi, iAnsiLength, strWide, iLength );
+
+	iLength = WideCharToMultiByte( CP_UTF8, 0, strWide, -1, NULL, 0, NULL, NULL );
+	if( iLength == 0 )
+	{
+		SysFreeString( strWide );
+		CLog::Print( LOG_ERROR, "%s WideCharToMultiByte error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	pszUtf8 = new char[iLength];
+	if( pszUtf8 == NULL )
+	{
+		SysFreeString( strWide );
+		CLog::Print( LOG_ERROR, "%s new error(%d)", __FUNCTION__, GetLastError() );
+		return false;
+	}
+
+	WideCharToMultiByte( CP_UTF8, 0, strWide, -1, pszUtf8, iLength, NULL, NULL );
+	strOutput = pszUtf8;
+	
+	SysFreeString( strWide );
+	delete [] pszUtf8;
+	
+	return true;
+}
+
+#endif

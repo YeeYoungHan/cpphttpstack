@@ -56,6 +56,33 @@ bool CStringMap::Insert( const char * pszKey, const char * pszValue )
 
 /**
  * @ingroup SipPlatform
+ * @brief 문자열 맵 자료구조에 문자열 키에 대한 값을 수정한다.
+ * @param pszKey		문자열 키
+ * @param pszValue	문자열 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CStringMap::Update( const char * pszKey, const char * pszValue )
+{
+	STRING_MAP::iterator	itMap;
+	bool	bRes = false;
+
+	if( pszKey == NULL ) return false;
+	if( pszValue == NULL ) pszValue = "";
+
+	m_clsMutex.acquire();
+	itMap = m_clsMap.find( pszKey );
+	if( itMap != m_clsMap.end() )
+	{
+		itMap->second = pszValue;
+		bRes = true;
+	}
+	m_clsMutex.release();
+
+	return bRes;
+}
+
+/**
+ * @ingroup SipPlatform
  * @brief 문자열 맵 자료구조에 문자열 키가 존재하는지 검색한다.
  * @param pszKey	문자열 키
  * @returns 문자열 맵 자료구조에 문자열 키가 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
@@ -100,6 +127,36 @@ bool CStringMap::Select( const char * pszKey, std::string & strValue )
 	{
 		strValue = itMap->second;
 		bRes = true;
+	}
+	m_clsMutex.release();
+
+	return bRes;
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief 문자열 맵 자료구조에 문자열 값이 입력된 값과 일치하는 모든 항목을 검색한다.
+ * @param pszValue	문자열 값
+ * @param clsMap		[out] 문자열 맵
+ * @returns 문자열 맵 자료구조에 문자열 값이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CStringMap::SelectWithValue( const char * pszValue, STRING_MAP & clsMap )
+{
+	STRING_MAP::iterator	itMap;
+	bool	bRes = false;
+
+	clsMap.clear();
+	
+	if( pszValue == NULL ) return false;
+
+	m_clsMutex.acquire();
+	for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
+	{
+		if( !strcmp( pszValue, itMap->second.c_str() ) )
+		{
+			clsMap.insert( STRING_MAP::value_type( itMap->first, itMap->second ) );
+			bRes = true;
+		}
 	}
 	m_clsMutex.release();
 

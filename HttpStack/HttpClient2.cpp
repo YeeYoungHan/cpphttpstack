@@ -64,6 +64,7 @@ bool CHttpClient2::DoGet( const char * pszUrl, std::string & strOutputContentTyp
 	CHttpPacket	clsPacket;
 
 	clsRequest.SetRequest( "GET", &clsUri );
+	clsRequest.AddHeader( "Connection", "keep-alive" );
 
 	if( Execute( &clsUri, &clsRequest, &clsPacket ) )
 	{
