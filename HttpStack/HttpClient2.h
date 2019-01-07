@@ -16,41 +16,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpClient.h"
+#ifndef _HTTP_CLIENT2_H_
+#define _HTTP_CLIENT2_H_
+
+#include "HttpPacket.h"
 #include "SipTcp.h"
-#include "Log.h"
-#include "TestHttpClient.h"
-#include "MemoryDebug.h"
+#include "TlsFunction.h"
 
-int main( int argc, char * argv[] )
+class CHttpClient2
 {
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+public:
+	CHttpClient2();
+	~CHttpClient2();
+
+	bool DoGet( const char * pszUrl, std::string & strOutputContentType, std::string & strOutputBody );
+
+	void Close();
+	void SetRecvTimeout( int iRecvTimeout );
+	int GetStatusCode();
+
+private:
+	bool Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttpPacket * pclsPacket );
+
+	int m_iRecvTimeout;
+	int m_iStatusCode;
+
+	std::string m_strHost;
+	int	m_iPort;
+
+	Socket m_hSocket;
+	SSL * m_psttSsl;
+};
+
 #endif
-
-	if( argc >= 2 )
-	{
-		if( !strcmp( argv[1], "soap" ) )
-		{
-			TestHttpClientSoap( argc, argv );
-		}
-		else if( !strcmp( argv[1], "post" ) )
-		{
-			TestHttpClientPost( argc, argv );
-		}
-		else if( !strcmp( argv[1], "upload" ) )
-		{
-			TestHttpClientUpload( argc, argv );
-		}
-		else if( !strcmp( argv[1], "2" ) )
-		{
-			TestHttpClient2Get( argc, argv );
-		}
-		else
-		{
-			TestHttpClientGet( argc, argv );
-		}
-	}
-
-	return 0;
-}

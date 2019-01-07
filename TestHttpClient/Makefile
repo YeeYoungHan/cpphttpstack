@@ -21,7 +21,8 @@ all: TestHttpClient.exe
 
 SRV_OBJ=Main.o \
 	TestHttpClientGet.o TestHttpClientPost.o TestHttpClientSoap.o \
-	TestHttpClientUpload.o
+	TestHttpClientUpload.o \
+	TestHttpClient2Get.o
 
 TestHttpClient.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)

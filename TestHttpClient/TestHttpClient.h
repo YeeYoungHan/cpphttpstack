@@ -16,41 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpClient.h"
-#include "SipTcp.h"
-#include "Log.h"
-#include "TestHttpClient.h"
-#include "MemoryDebug.h"
+#ifndef _TEST_HTTP_CLIENT_H_
+#define _TEST_HTTP_CLIENT_H_
 
-int main( int argc, char * argv[] )
-{
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+int TestHttpClient2Get( int argc, char * argv[] );
+int TestHttpClientGet( int argc, char * argv[] );
+int TestHttpClientPost( int argc, char * argv[] );
+int TestHttpClientSoap( int argc, char * argv[] );
+int TestHttpClientUpload( int argc, char * argv[] );
+
 #endif
-
-	if( argc >= 2 )
-	{
-		if( !strcmp( argv[1], "soap" ) )
-		{
-			TestHttpClientSoap( argc, argv );
-		}
-		else if( !strcmp( argv[1], "post" ) )
-		{
-			TestHttpClientPost( argc, argv );
-		}
-		else if( !strcmp( argv[1], "upload" ) )
-		{
-			TestHttpClientUpload( argc, argv );
-		}
-		else if( !strcmp( argv[1], "2" ) )
-		{
-			TestHttpClient2Get( argc, argv );
-		}
-		else
-		{
-			TestHttpClientGet( argc, argv );
-		}
-	}
-
-	return 0;
-}

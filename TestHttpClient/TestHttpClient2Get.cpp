@@ -16,40 +16,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpClient.h"
-#include "SipTcp.h"
+#include "HttpClient2.h"
 #include "Log.h"
-#include "TestHttpClient.h"
 #include "MemoryDebug.h"
 
-int main( int argc, char * argv[] )
+int TestHttpClient2Get( int argc, char * argv[] )
 {
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
+	std::string strUrl, strBodyType, strBody;
+	CHttpClient2 clsClient;
 
-	if( argc >= 2 )
+	strUrl = "https://www.whereisdoc.com";
+
+	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
+
+	if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
 	{
-		if( !strcmp( argv[1], "soap" ) )
+		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
+		printf( "%s", strBody.c_str() );
+
+		strUrl = "https://www.whereisdoc.com/?q=%EA%B0%80#gsc.tab=0&gsc.ref=results_of_*.pdf_files&gsc.q=%EA%B0%80&gsc.page=1";
+
+		if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
 		{
-			TestHttpClientSoap( argc, argv );
-		}
-		else if( !strcmp( argv[1], "post" ) )
-		{
-			TestHttpClientPost( argc, argv );
-		}
-		else if( !strcmp( argv[1], "upload" ) )
-		{
-			TestHttpClientUpload( argc, argv );
-		}
-		else if( !strcmp( argv[1], "2" ) )
-		{
-			TestHttpClient2Get( argc, argv );
+			printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
+			printf( "%s", strBody.c_str() );
 		}
 		else
 		{
-			TestHttpClientGet( argc, argv );
+			printf( "clsClient.DoGet error\n" );
 		}
+	}
+	else
+	{
+		printf( "clsClient.DoGet error\n" );
 	}
 
 	return 0;
