@@ -102,6 +102,8 @@ bool PrintUrl( const char * pszExt, const char * pszSearch )
 		{
 			break;
 		}
+
+		Sleep(60000);
 	}
 
 	return true;
