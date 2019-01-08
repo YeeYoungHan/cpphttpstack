@@ -356,6 +356,53 @@ void DeQuoteString( std::string & strInput, std::string & strOutput )
 	}
 }
 
+/**
+ * @ingroup SipPlatform
+ * @brief URI 인코딩된 문자열을 디코딩한다.
+ * @param strInput	URI 인코딩된 문자열
+ * @param strOutput [out] 디코딩된 문자열
+ */
+void DecodeUri( std::string & strInput, std::string & strOutput )
+{
+	const char * pszInput = strInput.c_str();
+	int iLen = (int)strInput.length();
+	char szHex[5];
+	int iHexPos = 0, iValue;
+	bool bHex = false;
+
+	strOutput.clear();
+
+	for( int i = 0; i < iLen; ++i )
+	{
+		if( pszInput[i] == '%' )
+		{
+			bHex = true;
+		}
+		else if( bHex )
+		{
+			szHex[iHexPos] = pszInput[i];
+			++iHexPos;
+
+			if( iHexPos == 2 )
+			{
+				if( strncmp( szHex, "25", 2 ) )
+				{
+					szHex[iHexPos] = '\0';
+					sscanf( szHex, "%02x", &iValue );
+					strOutput.push_back( (char)iValue );
+					bHex = false;
+				}
+
+				iHexPos = 0;
+			}
+		}
+		else
+		{
+			strOutput.push_back( pszInput[i] );
+		}
+	}
+}
+
 #ifdef WIN32
 
 /**

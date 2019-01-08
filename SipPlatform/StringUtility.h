@@ -43,6 +43,8 @@ bool HexToString( const char * pszInput, std::string & strOutput );
 bool IsPrintString( const char * pszText, int iTextLen );
 void DeQuoteString( std::string & strInput, std::string & strOutput );
 
+void DecodeUri( std::string & strInput, std::string & strOutput );
+
 #ifdef WIN32
 bool Utf8ToAnsi( const char * pszUtf8, std::string & strOutput );
 bool AnsiToUtf8( const char * pszAnsi, std::string & strOutput );

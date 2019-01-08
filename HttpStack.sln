@@ -123,6 +123,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGoogleDownload", "TestG
 		{FDC90DE9-6824-47BE-B089-2B22CF515D7F} = {FDC90DE9-6824-47BE-B089-2B22CF515D7F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestSipPlatform", "TestSipPlatform\TestSipPlatform.vcproj", "{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59766094-16E8-4602-9621-6C1E5ED9AF5F} = {59766094-16E8-4602-9621-6C1E5ED9AF5F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -255,6 +260,12 @@ Global
 		{77EC2BD7-3D02-4BCD-A919-DA0611F69620}.Release|Win32.ActiveCfg = Release|Win32
 		{77EC2BD7-3D02-4BCD-A919-DA0611F69620}.Release|Win32.Build.0 = Release|Win32
 		{77EC2BD7-3D02-4BCD-A919-DA0611F69620}.Release|x64.ActiveCfg = Release|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Debug|Win32.Build.0 = Debug|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Debug|x64.ActiveCfg = Debug|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Release|Win32.ActiveCfg = Release|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Release|Win32.Build.0 = Release|Win32
+		{E9043F74-A7C7-4E5E-BE63-9E2B70DA7922}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
