@@ -42,12 +42,14 @@ public:
 	bool DoSoap( const char * pszUrl, const char * pszSoapAction, const char * pszInputContentType, const char * pszInputBody, std::string & strOutputBody );
 	bool DoUpload( const char * pszUrl, const char * pszFilePath, const char * pszPostName, POST_NAME_VALUE_MAP & clsPostDataMap, std::string & strOutputContentType, std::string & strOutputBody );
 
+	void SetUserAgent( const char * pszUserAgent );
 	void SetRecvTimeout( int iRecvTimeout );
 	int GetStatusCode();
 
 private:
 	int m_iRecvTimeout;
 	int m_iStatusCode;
+	std::string m_strUserAgent;
 
 	bool Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttpPacket * pclsPacket );
 };

@@ -340,6 +340,16 @@ bool CHttpClient::DoUpload( const char * pszUrl, const char * pszFilePath, const
 
 /**
  * @ingroup HttpStack
+ * @brief User-Agent 헤더에 저장할 문자열을 설정한다.
+ * @param pszUserAgent User-Agent 헤더에 저장할 문자열
+ */
+void CHttpClient::SetUserAgent( const char * pszUserAgent )
+{
+	m_strUserAgent = pszUserAgent;
+}
+
+/**
+ * @ingroup HttpStack
  * @brief HTTP 응답 메시지 수신 timeout 시간을 설정한다.
  * @param iRecvTimeout HTTP 응답 메시지 수신 timeout 시간 (초단위)
  */
@@ -386,6 +396,11 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 	memset( pszBuf, 0, iNewBufLen );
 
 	pclsRequest->m_strHttpVersion = "HTTP/1.1";
+
+	if( m_strUserAgent.empty() == false )
+	{
+		pclsRequest->AddHeader( "User-Agent", m_strUserAgent.c_str() );
+	}
 	
 	iBufLen = pclsRequest->ToString( pszBuf, iNewBufLen );
 	if( iBufLen <= 0 )
