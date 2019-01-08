@@ -18,44 +18,7 @@
 
 #include "TestGoogleDownload.h"
 
-bool ParseBody( const char * pszExt, std::string & strBody, CStringMap & clsUrlMap )
-{
-	const char * pszBody = strBody.c_str();
-	std::string strExt = ".";
-	strExt.append( pszExt );
-
-	while( pszBody )
-	{
-		const char * pszA = strstr( pszBody, "<a href=\"/url?q=" );
-		if( pszA == NULL ) break;
-
-		pszA += 16;
-
-		const char * pszEnd = strstr( pszA, "\">" );
-		if( pszEnd == NULL ) break;
-
-		int iLen = (int)(pszEnd - pszA );
-
-		std::string strUrl;
-
-		strUrl.append( pszA, iLen );
-
-		const char * pszPos = strstr( strUrl.c_str(), strExt.c_str() );
-		if( pszPos )
-		{
-			iLen = (int)(pszPos - strUrl.c_str()) + strExt.length();
-			strUrl.erase( iLen );
-			clsUrlMap.Insert( strUrl.c_str(), "0" );
-
-			printf( "file url(%s)\n", strUrl.c_str() );
-		}
-
-		pszBody = pszEnd + 2;
-	}
-
-	return true;
-}
-
+bool gbStop = false;
 
 bool DownloadFile( const char * pszFolder, CStringMap & clsUrlMap )
 {
@@ -99,61 +62,6 @@ bool DownloadFile( const char * pszFolder, CStringMap & clsUrlMap )
 	return true;
 }
 
-bool Execute( const char * pszExt, const char * pszSearch, const char * pszFolder )
-{
-	std::string strSearch, strUtf8, strContentType, strBody;
-	char szPage[11], szHex[3];
-	CHttpClient clsClient;
-	CStringMap clsUrlMap;
-
-	CDirectory::Create( pszFolder );
-
-	if( AnsiToUtf8( pszSearch, strUtf8 ) == false )
-	{
-		printf( "AnsiToUtf8(%s) error\n", pszSearch );
-		return false;
-	}
-
-	int iLen = (int)strUtf8.length();
-
-	for( int i = 0; i < iLen; ++i )
-	{
-		snprintf( szHex, sizeof(szHex), "%02X", (uint8_t)strUtf8.at(i) );
-		strSearch.append( "%" );
-		strSearch.append( szHex );
-	}
-
-	for( int iPage = 0; iPage <= 200 ; iPage += 10 )
-	{
-		snprintf( szPage, sizeof(szPage), "%d", iPage );
-
-		// https://www.google.com/search?q=%EA%B0%80+filetype:pdf&start=0
-		std::string strUrl = "https://www.google.com/search?q=";
-		strUrl.append( strSearch );
-		strUrl.append( "+filetype:" );
-		strUrl.append( pszExt );
-		strUrl.append( "&start=" );
-		strUrl.append( szPage );
-
-		printf( "url(%s)\n", strUrl.c_str() );
-		
-		if( clsClient.DoGet( strUrl.c_str(), strContentType, strBody ) == false )
-		{
-			printf( "code(%d)\n", clsClient.GetStatusCode() );
-			break;
-		}
-
-		if( ParseBody( pszExt, strBody, clsUrlMap ) == false )
-		{
-			break;
-		}
-
-		DownloadFile( pszFolder, clsUrlMap );
-	}
-
-	return true;
-}
-
 char * garrSearch[] = { "°¡", "³ª", "´Ù", "¶ó", "¸¶", "¹Ù", "»ç", "¾Æ", "ÀÚ", "Â÷", "Ä«", "ÆÄ", "ÇÏ",
 	"°¼", "³Ä", "´ô", "·ª", "¸Ï", "¹ò", "»þ", "¾ß", "Àð", "Ã­", "Ä¼", "ÆÙ", "Çá",
 	"°Å", "³Ê", "´õ", "·¯", "¸Ó", "¹ö", "¼­", "¾î", "Àú", "Ã³", "Ä¿", "ÆÛ", "Çã",
@@ -166,26 +74,45 @@ char * garrSearch[] = { "°¡", "³ª", "´Ù", "¶ó", "¸¶", "¹Ù", "»ç", "¾Æ", "ÀÚ", "Â
 
 int main( int argc, char * argv[] )
 {
-	if( argc != 4 )
+	if( argc < 3 )
 	{
-		printf( "[Usage] %s {file ext} {search text} {download folder}\n", argv[0] );
+		printf( "[Usage] %s url {ext} {search text} {index}\n", argv[0] );
+		printf( "[Usage] %s download {download folder}\n", argv[0] );
 		return 0;
 	}
 
-	const char * pszExt = argv[1];
-	const char * pszSearch = argv[2];
-	const char * pszFolder = argv[3];
+	const char * pszCommand = argv[1];
 
-	if( !strcmp( pszSearch, "ALL" ) )
+	if( !strcmp( pszCommand, "url" ) )
 	{
-		for( int i = 0; garrSearch[i]; ++i )
+		if( argc < 5 )
 		{
-			Execute( pszExt, garrSearch[i], pszFolder );
+			printf( "argc < 5\n" );
+			return 0;
+		}
+
+		const char * pszExt = argv[2];
+		const char * pszSearch = argv[3];
+		const char * pszIndex = argv[4];
+
+		int iIndex = atoi( pszIndex );
+		if( !strcmp( pszSearch, "ALL" ) )
+		{
+			for( int i = iIndex; garrSearch[i]; ++i )
+			{
+				printf( "index(%d)\n", iIndex );
+				PrintUrl( pszExt, garrSearch[i] );
+				if( gbStop ) break;
+			}
+		}
+		else
+		{
+			PrintUrl( pszExt, pszSearch );
 		}
 	}
-	else
+	else if( !strcmp( pszCommand, "download" ) )
 	{
-		Execute( pszExt, pszSearch, pszFolder );
+
 	}
 
 	return 0;

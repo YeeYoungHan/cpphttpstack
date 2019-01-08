@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PrintUrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestGoogleDownload.cpp"
 				>
 			</File>

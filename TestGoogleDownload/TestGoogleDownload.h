@@ -26,6 +26,14 @@
 #include "StringMap.h"
 #include "Directory.h"
 
+#define URL_PRINT_FILEPATH "c:\\temp\\url.txt"
+
+extern bool gbStop;
+
+// GetFileName.cpp
 bool GetFileName( std::string & strUrl, std::string & strFileName );
+
+// PrintUrl.cpp
+bool PrintUrl( const char * pszExt, const char * pszSearch );
 
 #endif
