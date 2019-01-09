@@ -2,7 +2,7 @@
 
 static FILE * gsttFd = NULL;
 
-bool ParseBody( const char * pszExt, std::string & strBody, CStringMap & clsUrlMap )
+bool ParseBody( const char * pszExt, std::string & strBody )
 {
 	const char * pszBody = strBody.c_str();
 	std::string strExt = ".";
@@ -42,6 +42,7 @@ bool ParseBody( const char * pszExt, std::string & strBody, CStringMap & clsUrlM
 			}
 
 			fprintf( gsttFd, "%s\n", strUrl.c_str() );
+			printf( "%s\n", strUrl.c_str() );
 		}
 
 		pszBody = pszEnd + 2;
@@ -98,7 +99,7 @@ bool PrintUrl( const char * pszExt, const char * pszSearch )
 			break;
 		}
 
-		if( ParseBody( pszExt, strBody, clsUrlMap ) == false )
+		if( ParseBody( pszExt, strBody ) == false )
 		{
 			break;
 		}
