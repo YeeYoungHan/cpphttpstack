@@ -77,11 +77,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HttpClient.cpp" />
+    <ClCompile Include="HttpClient2.cpp" />
     <ClCompile Include="HttpStack.cpp" />
     <ClCompile Include="WebSocketPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HttpClient.h" />
+    <ClInclude Include="HttpClient2.h" />
     <ClInclude Include="HttpStack.h" />
     <ClInclude Include="HttpStackCallBack.h" />
     <ClInclude Include="WebSocketPacket.h" />
