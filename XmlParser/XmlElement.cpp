@@ -251,7 +251,7 @@ int CXmlElement::Parse( const char * pszText, int iTextLen )
  */
 int CXmlElement::Parse( std::string & strText )
 {
-	return Parse( strText.c_str(), strText.length() );
+	return Parse( strText.c_str(), (int)strText.length() );
 }
 
 /**
@@ -476,6 +476,26 @@ const char * CXmlElement::SelectAttribute( const char * pszName )
 
 /**
  * @ingroup XmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색한다. 값의 앞, 뒤 공백을 제거한 문자열의 포인터를 리턴한다.
+ * @param pszName 애트리뷰트 이름
+ * @returns 성공하면 애트리뷰트의 값을 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+const char * CXmlElement::SelectAttributeTrim( const char * pszName )
+{
+	XML_ATTRIBUTE_MAP::iterator	itAM;
+
+	itAM = m_clsAttributeMap.find( pszName );
+	if( itAM != m_clsAttributeMap.end() )
+	{
+		TrimString( itAM->second );
+		return itAM->second.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup XmlParser
  * @brief 애트리뷰트에 해당하는 값을 검색한다.
  * @param pszName		애트리뷰트 이름
  * @param strValue	애트리뷰트 값
@@ -530,15 +550,33 @@ bool CXmlElement::SelectAttributeTrim( const char * pszName, std::string & strVa
  */
 bool CXmlElement::SelectAttribute( const char * pszName, int & iValue )
 {
-	XML_ATTRIBUTE_MAP::iterator	itAM;
+	iValue = 0;
 
-	iValue = -1;
-
-	itAM = m_clsAttributeMap.find( pszName );
-	if( itAM != m_clsAttributeMap.end() )
+	const char * pszValue = SelectAttributeTrim( pszName );
+	if( pszValue )
 	{
-		TrimString( itAM->second );
-		iValue = atoi( itAM->second.c_str() );
+		iValue = atoi( pszValue );
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색하여 int64_t 변수에 저장한다.
+ * @param pszName		애트리뷰트 이름
+ * @param iValue		애트리뷰트 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CXmlElement::SelectAttribute( const char * pszName, int64_t & iValue )
+{
+	iValue = 0;
+
+	const char * pszValue = SelectAttributeTrim( pszName );
+	if( pszValue )
+	{
+		iValue = atoll( pszValue );
 		return true;
 	}
 
@@ -554,16 +592,33 @@ bool CXmlElement::SelectAttribute( const char * pszName, int & iValue )
  */
 bool CXmlElement::SelectAttribute( const char * pszName, bool & bValue )
 {
-	XML_ATTRIBUTE_MAP::iterator	itAM;
-
 	bValue = false;
 
-	itAM = m_clsAttributeMap.find( pszName );
-	if( itAM != m_clsAttributeMap.end() )
+	const char * pszValue = SelectAttributeTrim( pszName );
+	if( pszValue )
 	{
-		TrimString( itAM->second );
-		bValue = GetBoolean( itAM->second.c_str() );
+		bValue = GetBoolean( pszValue );
+		return true;
+	}
 
+	return false;
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색하여 double 변수에 저장한다.
+ * @param pszName		애트리뷰트 이름
+ * @param dbValue		애트리뷰트 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CXmlElement::SelectAttribute( const char * pszName, double & dbValue )
+{
+	dbValue = 0.0;
+
+	const char * pszValue = SelectAttributeTrim( pszName );
+	if( pszValue )
+	{
+		dbValue = atof( pszValue );
 		return true;
 	}
 
@@ -654,6 +709,43 @@ bool CXmlElement::SelectElementList( const char * pszName, XML_ELEMENT_LIST & cl
 
 /**
  * @ingroup XmlParser
+ * @brief 하위 Element 의 값 문자열의 포인터를 리턴한다.
+ * @param pszName 하위 Element 이름
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 하위 Element 이름이 존재하면 해당 Element 의 값 문자열의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다. 
+ */
+const char * CXmlElement::GetElementData( const char * pszName, const int iIndex )
+{
+	CXmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		return pclsElement->m_strData.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 의 값 문자열의 포인터를 리턴한다.
+ * @param pszName 하위 Element 이름
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 하위 Element 이름이 존재하면 해당 Element 의 값 문자열의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다. 
+ */
+const char * CXmlElement::GetElementDataTrim( const char * pszName, const int iIndex )
+{
+	CXmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		TrimString( pclsElement->m_strData );
+		return pclsElement->m_strData.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup XmlParser
  * @brief 하위 Element 를 검색하여서 내용을 저장한다.
  * @param pszName		하위 Element 이름
  * @param strData		하위 Elemnet 의 내용을 저장할 변수
@@ -707,12 +799,12 @@ bool CXmlElement::SelectElementTrimData( const char * pszName, std::string & str
  */
 bool CXmlElement::SelectElementData( const char * pszName, int & iData, const int iIndex )
 {
-	CXmlElement * pclsElement = SelectElement( pszName, iIndex );
-	if( pclsElement )
-	{
-		TrimString( pclsElement->m_strData );
-		iData = atoi( pclsElement->m_strData.c_str() );
+	iData = 0;
 
+	const char * pszValue = GetElementDataTrim( pszName, iIndex );
+	if( pszValue )
+	{
+		iData = atoi( pszValue );
 		return true;
 	}
 
@@ -729,12 +821,12 @@ bool CXmlElement::SelectElementData( const char * pszName, int & iData, const in
  */
 bool CXmlElement::SelectElementData( const char * pszName, int64_t & iData, const int iIndex )
 {
-	CXmlElement * pclsElement = SelectElement( pszName, iIndex );
-	if( pclsElement )
-	{
-		TrimString( pclsElement->m_strData );
-		iData = atoll( pclsElement->m_strData.c_str() );
+	iData = 0;
 
+	const char * pszValue = GetElementDataTrim( pszName, iIndex );
+	if( pszValue )
+	{
+		iData = atoll( pszValue );
 		return true;
 	}
 
@@ -746,19 +838,39 @@ bool CXmlElement::SelectElementData( const char * pszName, int64_t & iData, cons
  * @brief 하위 Element 를 검색하여서 bool 내용을 가져온다.
  * @param pszName 하위 Element 이름
  * @param bData		하위 Element 의 값을 저장하는 변수
- * @param iIndex		하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CXmlElement::SelectElementData( const char * pszName, bool & bData, const int iIndex )
 {
 	bData = false;
 
-	CXmlElement * pclsElement = SelectElement( pszName, iIndex );
-	if( pclsElement )
+	const char * pszValue = GetElementDataTrim( pszName, iIndex );
+	if( pszValue )
 	{
-		TrimString( pclsElement->m_strData );
-		bData = GetBoolean( pclsElement->m_strData.c_str() );
+		bData = GetBoolean( pszValue );
+		return true;
+	}
 
+	return false;
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 검색하여서 double 내용을 가져온다.
+ * @param pszName 하위 Element 이름
+ * @param dbData	하위 Element 의 값을 저장하는 변수
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CXmlElement::SelectElementData( const char * pszName, double & dbData, const int iIndex )
+{
+	dbData = 0.0;
+
+	const char * pszValue = GetElementDataTrim( pszName, iIndex );
+	if( pszValue )
+	{
+		dbData = atof( pszValue );
 		return true;
 	}
 
@@ -912,6 +1024,21 @@ void CXmlElement::InsertElementData( const char * pszName, bool bData )
 /**
  * @ingroup XmlParser
  * @brief 하위 Element 를 추가한다.
+ * @param pszName 하위 Element 이름
+ * @param dbData	하위 Element 의 data 값
+ */
+void CXmlElement::InsertElementData( const char * pszName, double dbData )
+{
+	char szData[51];
+
+	snprintf( szData, sizeof(szData), "%f", dbData );
+
+	InsertElementData( pszName, szData );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 하위 Element 를 추가한다.
  * @param pclsElement 하위 Element
  */
 void CXmlElement::InsertElement( CXmlElement * pclsElement )
@@ -1001,6 +1128,23 @@ bool CXmlElement::UpdateElementData( const char * pszName, bool bData, const int
 
 /**
  * @ingroup XmlParser
+ * @brief 하위 Element 에서 입력된 이름과 동일한 Element 의 내용을 수정한다.
+ * @param pszName 하위 Element 이름
+ * @param dbData	하위 Element 의 data 값
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 수정하고 1 을 입력하면 두번째 검색된 하위 Element 를 수정한다.
+ * @returns 하위 Element 내용 수정에 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CXmlElement::UpdateElementData( const char * pszName, double dbData, const int iIndex )
+{
+	char szData[51];
+
+	snprintf( szData, sizeof(szData), "%f", dbData );
+
+	return UpdateElementData( pszName, szData, iIndex );
+}
+
+/**
+ * @ingroup XmlParser
  * @brief 애트리뷰트 이름이 존재하지 않으면 애트리뷰트를 추가하고 애트리뷰트 이름이 존재하면 해당 값을 수정한다.
  * @param pszName		애트리뷰트 이름
  * @param pszValue	애트리뷰트 값
@@ -1070,6 +1214,21 @@ void CXmlElement::InsertAttribute( const char * pszName, int64_t iValue )
 void CXmlElement::InsertAttribute( const char * pszName, bool bValue )
 {
 	InsertAttribute( pszName, bValue ? "true" : "false" );
+}
+
+/**
+ * @ingroup XmlParser
+ * @brief 애트리뷰트를 추가한다.
+ * @param pszName 애트리뷰트 이름
+ * @param dbValue	애트리뷰트 값
+ */
+void CXmlElement::InsertAttribute( const char * pszName, double dbValue )
+{
+	char szValue[51];
+
+	snprintf( szValue, sizeof(szValue), "%f", dbValue );
+
+	InsertAttribute( pszName, szValue );
 }
 
 /**
