@@ -1,0 +1,8 @@
+<Setup>
+	<ReqUriPathList>
+		<ReqUriPath>
+			<ReqUri>/test</ReqUri>
+			<Path>c:\temp\test.json</Path>
+		</ReqUriPath>
+	</ReqUriPathList>
+</Setup>
