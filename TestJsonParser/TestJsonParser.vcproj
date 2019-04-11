@@ -196,6 +196,10 @@
 				RelativePath=".\TestJsonObject.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestJsonObjectNewLine.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

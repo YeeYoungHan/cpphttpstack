@@ -105,30 +105,64 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
  * @ingroup JsonParser
  * @brief 자료구조를 JSON 배열 문자열로 변환한다.
  * @param strText JSON 배열 문자열 저장 변수
+ * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  * @returns JSON 배열 문자열 길이를 리턴한다.
  */
-int CJsonArray::ToString( std::string & strText )
+int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 {
 	JSON_LIST::iterator itJL;
 	std::string strBuf;
 
-	strBuf.append( "[" );
-
-	for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
+	if( m_clsList.empty() )
 	{
-		if( itJL == m_clsList.begin() )
+		strBuf.append( "[ ]" );
+	}
+	else
+	{
+		strBuf.append( "[" );
+
+		if( bUseNewLine ) strBuf.append( "\n" );
+
+		for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
 		{
-			strBuf.append( " " );
+			if( itJL == m_clsList.begin() )
+			{
+				if( bUseNewLine == false ) strBuf.append( " " );
+			}
+			else
+			{
+				if( bUseNewLine ) 
+				{
+					strBuf.append( "," );
+					strBuf.append( "\n" );
+				}
+				else
+				{
+					strBuf.append( ", " );
+				}
+			}
+
+			if( bUseNewLine ) 
+			{
+				CJsonObject::AddTab( strBuf, iDepth + 1 );
+			}
+
+			CJsonObject::JsonToString( *itJL, strBuf, bUseNewLine, iDepth + 1 );
+		}
+
+		if( bUseNewLine )
+		{
+			strBuf.append( "\n" );
+			CJsonObject::AddTab( strBuf, iDepth );
+			strBuf.append( "]" );
 		}
 		else
 		{
-			strBuf.append( ", " );
+			strBuf.append( " ]" );
 		}
-
-		CJsonObject::JsonToString( *itJL, strBuf );
 	}
 
-	strBuf.append( " ]" );
 	strText.append( strBuf );
 
 	return (int)strBuf.length();
@@ -192,13 +226,14 @@ CJsonType * CJsonArray::Copy( )
  * @ingroup JsonParser
  * @brief 자료구조를 JSON array 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
  * @param strText JSON array 문자열 저장 변수
+ * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonArray::MakeString( std::string & strText )
+int CJsonArray::MakeString( std::string & strText, bool bUseNewLine )
 {
 	strText.clear();
 
-	return ToString( strText );
+	return ToString( strText, bUseNewLine );
 }
 
 /**

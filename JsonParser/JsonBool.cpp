@@ -56,9 +56,11 @@ int CJsonBool::Parse( const char * pszText, int iTextLen )
  * @ingroup JsonParser
  * @brief 자료구조를 JSON boolean 문자열로 변환한다.
  * @param strText JSON 문자열 저장 변수
+ * @param bUseNewLine	의미없는 변수
+ * @param iDepth			의미없는 변수
  * @returns JSON boolean 문자열 길이를 리턴한다.
  */
-int CJsonBool::ToString( std::string & strText )
+int CJsonBool::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 {
 	if( m_bValue )
 	{

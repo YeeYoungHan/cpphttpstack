@@ -119,31 +119,67 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
 /**
  * @ingroup JsonParser
  * @brief 자료구조를 JSON object 문자열로 변환한다.
- * @param strText JSON object 문자열 저장 변수
+ * @param strText			JSON object 문자열 저장 변수
+ * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonObject::ToString( std::string & strText )
+int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 {
 	JSON_OBJECT_MAP::iterator itMap;
 	std::string strBuf;
 
-	strBuf.append( "{" );
-
-	for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
+	if( m_clsMap.empty() )
 	{
-		if( itMap != m_clsMap.begin() )
+		strBuf.append( "{ }" );
+	}
+	else
+	{
+		if( bUseNewLine )
 		{
-			strBuf.append( "," );
+			strBuf.append( "{\n" );
+		}
+		else
+		{
+			strBuf.append( "{" );
 		}
 
-		strBuf.append( " \"" );
-		strBuf.append( itMap->first );
-		strBuf.append( "\" : " );
+		for( itMap = m_clsMap.begin(); itMap != m_clsMap.end(); ++itMap )
+		{
+			if( itMap != m_clsMap.begin() )
+			{
+				strBuf.append( "," );
+				if( bUseNewLine ) strBuf.append( "\n" );
+			}
 
-		JsonToString( itMap->second, strBuf );
+			if( bUseNewLine ) 
+			{
+				AddTab( strBuf, iDepth + 1 );
+				strBuf.append( "\"" );
+			}
+			else
+			{
+				strBuf.append( " \"" );
+			}
+			
+			strBuf.append( itMap->first );
+			strBuf.append( "\" : " );
+
+			JsonToString( itMap->second, strBuf, bUseNewLine, iDepth + 1 );
+		}
+
+		if( bUseNewLine ) 
+		{
+			strBuf.append( "\n" );
+			AddTab( strBuf, iDepth );
+			strBuf.append( "}" );
+		}
+		else
+		{
+			strBuf.append( " }" );
+		}
 	}
 
-	strBuf.append( " }" );
 	strText.append( strBuf );
 
 	return (int)strBuf.length();
@@ -151,8 +187,8 @@ int CJsonObject::ToString( std::string & strText )
 
 /**
  * @ingroup JsonParser
- * @brief ToString 메소드로 생성될 문자열 길이를 리턴한다.
- * @returns ToString 메소드로 생성될 문자열 길이를 리턴한다.
+ * @brief ToString 메소드로 new line 없이 생성될 문자열 길이를 리턴한다.
+ * @returns ToString 메소드로 new line 없이 생성될 문자열 길이를 리턴한다.
  */
 int CJsonObject::GetStringLen( )
 {
@@ -215,13 +251,14 @@ int CJsonObject::Parse( std::string & strText )
  * @ingroup JsonParser
  * @brief 자료구조를 JSON object 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
  * @param strText JSON object 문자열 저장 변수
+ * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonObject::MakeString( std::string & strText )
+int CJsonObject::MakeString( std::string & strText, bool bUseNewLine )
 {
 	strText.clear();
 
-	return ToString( strText );
+	return ToString( strText, bUseNewLine );
 }
 
 /**
@@ -1027,8 +1064,10 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
  * @brief CJsonType 을 문자열에 저장한다.
  * @param pclsType	CJsonType 객체
  * @param strText		JSON 문자열 저장 변수
+ * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  */
-void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
+void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText, bool bUseNewLine, int iDepth )
 {
 	switch( pclsType->m_cType )
 	{
@@ -1042,10 +1081,10 @@ void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
 		((CJsonInt *)pclsType)->ToString( strText );
 		break;
 	case JSON_TYPE_OBJECT:
-		((CJsonObject *)pclsType)->ToString( strText );
+		((CJsonObject *)pclsType)->ToString( strText, bUseNewLine, iDepth );
 		break;
 	case JSON_TYPE_ARRAY:
-		((CJsonArray *)pclsType)->ToString( strText );
+		((CJsonArray *)pclsType)->ToString( strText, bUseNewLine, iDepth );
 		break;
 	case JSON_TYPE_BOOL:
 		((CJsonBool *)pclsType)->ToString( strText );
@@ -1053,5 +1092,19 @@ void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText )
 	case JSON_TYPE_NULL:
 		((CJsonNull *)pclsType)->ToString( strText );
 		break;
+	}
+}
+
+/**
+ * @ingroup JsonParser
+ * @brief 항목 깊이에 적합하게 문자열 앞에 탭 문자를 추가한다.
+ * @param strText	문자열
+ * @param iDepth	하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
+ */
+void CJsonObject::AddTab( std::string & strText, int iDepth )
+{
+	for( int i = 0; i < iDepth; ++i )
+	{
+		strText.append( "\t" );
 	}
 }

@@ -19,6 +19,7 @@ all: TestJsonParser.exe
 
 SRV_OBJ=Main.o \
 	TestJsonObject.o TestJsonArray.o \
+	TestJsonObjectNewLine.o \
 	SampleJsonObject.o SampleJsonArray.o
 
 TestJsonParser.exe: $(SRV_OBJ)

@@ -40,11 +40,11 @@ public:
 	virtual ~CJsonArray();
 
 	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText );
+	virtual int ToString( std::string & strText, bool bUseNewLine = false, int iDepth = 0 );
 	virtual int GetStringLen( );
 	virtual CJsonType * Copy( );
 
-	int MakeString( std::string & strText );
+	int MakeString( std::string & strText, bool bUseNewLine = false );
 	void Clear();
 
 	bool SelectData( int iIndex, std::string & strValue );

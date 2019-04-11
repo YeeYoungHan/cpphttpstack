@@ -28,7 +28,7 @@ public:
 	virtual ~CJsonNull();
 
 	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText );
+	virtual int ToString( std::string & strText, bool bUseNewLine = false, int iDepth = 0 );
 	virtual int GetStringLen( );
 	virtual CJsonType * Copy( );
 };

@@ -34,8 +34,9 @@ int main( int argc, char * argv[] )
 		SampleJsonArray();
 	}
 
-	if( TestJsonArray() == false ) goto FUNC_END;
+	if( TestJsonObjectNewLine() == false ) goto FUNC_END;
 	if( TestJsonObject() == false ) goto FUNC_END;
+	if( TestJsonArray() == false ) goto FUNC_END;
 
 	bRes = true;
 

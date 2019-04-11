@@ -22,6 +22,7 @@
 #define Check(x)	if( !(x) ){ printf( "%s %d error\n", __FILE__, __LINE__ ); return false; }
 
 bool TestJsonObject();
+bool TestJsonObjectNewLine( );
 bool TestJsonArray();
 void SampleJsonObject();
 void SampleJsonArray();
