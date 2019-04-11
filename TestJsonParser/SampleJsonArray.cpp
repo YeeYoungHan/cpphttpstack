@@ -38,5 +38,9 @@ void SampleJsonArray()
 		clsArray.MakeString( strJson );
 
 		printf( "#200 [%s]\n", strJson.c_str() );
+
+		clsArray.MakeString( strJson, true );
+
+		printf( "#201 [%s]\n", strJson.c_str() );
 	}
 }
