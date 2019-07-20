@@ -96,6 +96,7 @@
     <ClCompile Include="SampleJsonObject.cpp" />
     <ClCompile Include="TestJsonArray.cpp" />
     <ClCompile Include="TestJsonObject.cpp" />
+    <ClCompile Include="TestJsonObjectNewLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />
