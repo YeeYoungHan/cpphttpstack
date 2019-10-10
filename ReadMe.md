@@ -22,8 +22,17 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 
 ### 폴더 설명
 
+* doc
+  * 본 프로젝트와 관련된 문서 저장 폴더
+
+* HttpNoCacheProxy
+  * HTTP 캐시 기능을 사용하지 않는 HTTP Proxy 서비스
+
 * HttpParser
   * HTTP 프로토콜 파서/생성 라이브러리
+
+* HttpSpeed
+  * 웹서버 성능 테스트 프로그램
 
 * HttpStack
   * HTTP 클라이언트/서버 라이브러리
@@ -31,6 +40,15 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 
 * JsonParser
   * JSON 문자열 파싱 및 생성 라이브러리
+
+* openssl
+  * MS 윈도우용 openssl 라이브러리
+
+* Publish
+  * MS 윈도우용 배포 프로그램 저장 폴더
+
+* SendFirebaseMessage
+  * HTTP stack 기반으로 FirebaseMessage 를 전송하는 예제 프로그램
 
 * SipPlatform
   * C++ SIP stack 에서 사용되는 OS 독립적인 유틸리티 라이브러리
@@ -53,12 +71,6 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * TestWebRtc
   * WebSocket 을 이용한 WebRTC 연동 샘플 프로그램
   * 사용법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
-
-* HttpNoCacheProxy
-  * 캐쉬를 사용하지 않는 HTTP Proxy
-
-* doc
-  * 본 프로젝트와 관련된 문서 저장 폴더
 
 ### HTTP GET 요청/응답 개발 방법
 HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP GET 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
