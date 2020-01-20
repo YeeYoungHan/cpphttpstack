@@ -68,6 +68,9 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
   * HttpStack 을 이용한 간단한 HTTP 서버 샘플 프로그램
   * HttpStack 을 이용한 WebSocket echo 서버 프로그램
 
+* TestHttpStackMfc
+  * MFC 기반으로 HttpStack 을 이용한 간단한 HTTP 서버 샘플 프로그램
+
 * TestWebRtc
   * WebSocket 을 이용한 WebRTC 연동 샘플 프로그램
   * 사용법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
