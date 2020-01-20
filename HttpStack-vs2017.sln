@@ -43,8 +43,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWebRtc", "TestWebRtc\Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHttpStackMfc", "TestHttpStackMfc\TestHttpStackMfc.vcxproj", "{C3148EF9-D42E-4D97-BA8D-4205CAF43ACE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -161,14 +159,6 @@ Global
 		{C3148EF9-D42E-4D97-BA8D-4205CAF43ACE}.Release|Win32.Build.0 = Release|Win32
 		{C3148EF9-D42E-4D97-BA8D-4205CAF43ACE}.Release|x64.ActiveCfg = Release|x64
 		{C3148EF9-D42E-4D97-BA8D-4205CAF43ACE}.Release|x64.Build.0 = Release|x64
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Debug|Win32.Build.0 = Debug|Win32
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Debug|x64.ActiveCfg = Debug|x64
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Debug|x64.Build.0 = Debug|x64
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Release|Win32.ActiveCfg = Release|Win32
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Release|Win32.Build.0 = Release|Win32
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Release|x64.ActiveCfg = Release|x64
-		{3C36B20A-E9E7-4F19-8B43-AB44A1207C47}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
