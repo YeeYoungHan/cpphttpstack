@@ -25,6 +25,9 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * doc
   * 본 프로젝트와 관련된 문서 저장 폴더
 
+* HtmlParser
+  * HTML 문서를 파싱/생성하는 라이브러리
+
 * HttpNoCacheProxy
   * HTTP 캐시 기능을 사용하지 않는 HTTP Proxy 서비스
 
