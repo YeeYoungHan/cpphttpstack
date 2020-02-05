@@ -52,6 +52,26 @@ public:
 
 	void Clear( );
 
+	const char * SelectAttribute( const char * pszName );
+	const char * SelectAttributeTrim( const char * pszName );
+	bool SelectAttribute( const char * pszName, std::string & strValue );
+	bool SelectAttributeTrim( const char * pszName, std::string & strValue );
+	bool SelectAttribute( const char * pszName, int & iValue );
+
+	CHtmlElement * SelectElement( const char * pszName, const int iIndex = 0 );
+	CHtmlElement * SelectElement( const int iIndex );
+	bool SelectElementList( const char * pszName, HTML_ELEMENT_LIST & clsList );
+
+	const char * GetElementData( const char * pszName, const int iIndex = 0 );
+	const char * GetElementDataTrim( const char * pszName, const int iIndex = 0 );
+	bool SelectElementData( const char * pszName, std::string & strData, const int iIndex = 0 );
+	bool SelectElementTrimData( const char * pszName, std::string & strData, const int iIndex = 0 );
+
+	const char * GetName();
+	const char * GetData();
+
+	bool IsDataEmpty();
+
 protected:
 	void SetName( const char * pszText, int iNameLen );
 

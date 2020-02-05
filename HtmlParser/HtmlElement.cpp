@@ -17,6 +17,7 @@
  */
 
 #include "HtmlElement.h"
+#include "StringUtility.h"
 #include "Log.h"
 #include "MemoryDebug.h"
 
@@ -367,6 +368,307 @@ void CHtmlElement::Clear( )
 	m_strData.clear();
 	m_clsAttributeMap.clear();
 	m_clsElementList.clear();
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색한다.
+ * @param pszName 애트리뷰트 이름
+ * @returns 성공하면 애트리뷰트의 값을 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+const char * CHtmlElement::SelectAttribute( const char * pszName )
+{
+	HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+	itAM = m_clsAttributeMap.find( pszName );
+	if( itAM != m_clsAttributeMap.end() )
+	{
+		return itAM->second.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색한다. 값의 앞, 뒤 공백을 제거한 문자열의 포인터를 리턴한다.
+ * @param pszName 애트리뷰트 이름
+ * @returns 성공하면 애트리뷰트의 값을 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+const char * CHtmlElement::SelectAttributeTrim( const char * pszName )
+{
+	HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+	itAM = m_clsAttributeMap.find( pszName );
+	if( itAM != m_clsAttributeMap.end() )
+	{
+		TrimString( itAM->second );
+		return itAM->second.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색한다.
+ * @param pszName		애트리뷰트 이름
+ * @param strValue	애트리뷰트 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectAttribute( const char * pszName, std::string & strValue )
+{
+	HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+	strValue.clear();
+
+	itAM = m_clsAttributeMap.find( pszName );
+	if( itAM != m_clsAttributeMap.end() )
+	{
+		strValue = itAM->second;
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색한다. 검색에 성공하면 값의 왼쪽, 오른쪽 공백을 제거한다.
+ * @param pszName		애트리뷰트 이름
+ * @param strValue	애트리뷰트 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectAttributeTrim( const char * pszName, std::string & strValue )
+{
+	HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+	strValue.clear();
+
+	itAM = m_clsAttributeMap.find( pszName );
+	if( itAM != m_clsAttributeMap.end() )
+	{
+		strValue = itAM->second;
+		TrimString( strValue );
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트에 해당하는 값을 검색하여 int 변수에 저장한다.
+ * @param pszName		애트리뷰트 이름
+ * @param iValue		애트리뷰트 값
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectAttribute( const char * pszName, int & iValue )
+{
+	iValue = 0;
+
+	const char * pszValue = SelectAttributeTrim( pszName );
+	if( pszValue )
+	{
+		iValue = atoi( pszValue );
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 를 검색한다.
+ * @param pszName		하위 Element 이름
+ * @param iIndex		하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 하위 Element 객체의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CHtmlElement * CHtmlElement::SelectElement( const char * pszName, const int iIndex )
+{
+	HTML_ELEMENT_LIST::iterator	itEL;
+	int iCount = 0;
+
+	if( iIndex < 0 ) return NULL;
+
+	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+	{
+		if( !strcmp( pszName, itEL->m_strName.c_str() ) )
+		{
+			if( iCount == iIndex )
+			{
+				return &(*itEL);
+			}
+
+			++iCount;
+		}
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 를 검색한다.
+ * @param iIndex 하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 하위 Element 객체의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+CHtmlElement * CHtmlElement::SelectElement( const int iIndex )
+{
+	HTML_ELEMENT_LIST::iterator	itEL;
+	int iCount = 0;
+
+	if( iIndex < 0 ) return NULL;
+
+	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+	{
+		if( iCount == iIndex )
+		{
+			return &(*itEL);
+		}
+
+		++iCount;
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 를 검색하여서 Element 리스트에 저장한다.
+ * @param pszName		하위 Element 이름
+ * @param clsList		하위 Element 를 저장할 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectElementList( const char * pszName, HTML_ELEMENT_LIST & clsList )
+{
+	HTML_ELEMENT_LIST::iterator	itEL;
+
+	clsList.clear();
+
+	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+	{
+		if( !strcmp( pszName, itEL->m_strName.c_str() ) )
+		{
+			clsList.push_back( *itEL );
+		}
+	}
+
+	if( clsList.empty() == false ) return true;
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 의 값 문자열의 포인터를 리턴한다.
+ * @param pszName 하위 Element 이름
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 하위 Element 이름이 존재하면 해당 Element 의 값 문자열의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다. 
+ */
+const char * CHtmlElement::GetElementData( const char * pszName, const int iIndex )
+{
+	CHtmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		return pclsElement->m_strData.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 의 값 문자열의 포인터를 리턴한다.
+ * @param pszName 하위 Element 이름
+ * @param iIndex	하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 하위 Element 이름이 존재하면 해당 Element 의 값 문자열의 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다. 
+ */
+const char * CHtmlElement::GetElementDataTrim( const char * pszName, const int iIndex )
+{
+	CHtmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		TrimString( pclsElement->m_strData );
+		return pclsElement->m_strData.c_str();
+	}
+
+	return NULL;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 를 검색하여서 내용을 저장한다.
+ * @param pszName		하위 Element 이름
+ * @param strData		하위 Elemnet 의 내용을 저장할 변수
+ * @param iIndex		하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectElementData( const char * pszName, std::string & strData, const int iIndex )
+{
+	strData.clear();
+
+	CHtmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		strData = pclsElement->m_strData;
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief 하위 Element 를 검색하여서 내용을 저장한다. 검색에 성공하면 내용의 왼쪽, 오른쪽 공백을 제거한다.
+ * @param pszName		하위 Element 이름
+ * @param strData		하위 Elemnet 의 내용을 저장할 변수
+ * @param iIndex		하위 Element 인덱스. 0 을 입력하면 첫번째 검색된 하위 Element 를 리턴하고 1 을 입력하면 두번째 검색된 하위 Element 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHtmlElement::SelectElementTrimData( const char * pszName, std::string & strData, const int iIndex )
+{
+	strData.clear();
+
+	CHtmlElement * pclsElement = SelectElement( pszName, iIndex );
+	if( pclsElement )
+	{
+		strData = pclsElement->m_strData;
+		TrimString( strData );
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief Element 이름을 리턴한다.
+ * @returns Element 이름을 리턴한다.
+ */
+const char * CHtmlElement::GetName()
+{
+	return m_strName.c_str();
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief Element 내용을 리턴한다.
+ * @returns Element 내용을 리턴한다.
+ */
+const char * CHtmlElement::GetData()
+{
+	return m_strData.c_str();
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief Element 내용이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ * @returns 
+ */
+bool CHtmlElement::IsDataEmpty()
+{
+	return m_strData.empty();
 }
 
 void CHtmlElement::SetName( const char * pszText, int iNameLen )
