@@ -48,7 +48,7 @@ CHtmlElement::~CHtmlElement()
 int CHtmlElement::Parse( const char * pszText, int iTextLen )
 {
 	int		iPos, iStartPos = -1, iLen;
-	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL;
+	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = '"';
 	std::string	strName, strValue;
 
 	m_bNotParseUntilNameEnd = false;
@@ -182,7 +182,15 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			}
 			else if( pszText[iPos] == '=' && strName.empty() )
 			{
-				if( pszText[iPos+1] != '"' )
+				if( pszText[iPos+1] == '"' )
+				{
+					cAttrSep = '"';
+				}
+				else if( pszText[iPos+1] == '\'' )
+				{
+					cAttrSep = '\'';
+				}
+				else
 				{
 					CLog::Print( LOG_ERROR, "iPos(%d+1) != '\"' : pszText[iPos](%s)", iPos, pszText + iPos );
 					return -1;
@@ -192,7 +200,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 				++iPos;
 				iStartPos = iPos + 1;
 			}
-			else if( pszText[iPos] == '"' )
+			else if( pszText[iPos] == cAttrSep )
 			{
 				strValue.append( pszText + iStartPos, iPos - iStartPos );
 

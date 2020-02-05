@@ -21,6 +21,7 @@
 #include "MemoryDebug.h"
 
 bool TestHtmlElement( );
+bool TestHtmlAttribute( );
 
 int main( int argc, char * argv[] )
 {
@@ -31,6 +32,7 @@ int main( int argc, char * argv[] )
 #endif
 
 	if( TestHtmlElement( ) == false ) goto FUNC_END;
+	if( TestHtmlAttribute( ) == false ) goto FUNC_END;
 
 	bOk = true;
 

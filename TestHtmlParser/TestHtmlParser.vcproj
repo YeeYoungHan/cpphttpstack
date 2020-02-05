@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestHtmlAttribute.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestHtmlElement.cpp"
 				>
 			</File>
