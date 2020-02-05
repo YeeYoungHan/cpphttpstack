@@ -53,11 +53,15 @@ public:
 	void Clear( );
 
 protected:
+	void SetName( const char * pszText, int iNameLen );
+
 	std::string	m_strName;
 	std::string m_strData;
 
 	HTML_ATTRIBUTE_MAP	m_clsAttributeMap;
 	HTML_ELEMENT_LIST		m_clsElementList;
+
+	bool m_bNotParseUntilNameEnd;
 };
 
 #endif

@@ -20,7 +20,7 @@
 #include "HtmlElement.h"
 #include "MemoryDebug.h"
 
-static bool TestHtmlElement( const char * pszInput, const char * pszOutput, int iLine )
+static bool TestHtmlElement( int iLine, const char * pszInput, const char * pszOutput )
 {
 	CHtmlElement clsHtml;
 	std::string strOutput;
@@ -44,6 +44,28 @@ static bool TestHtmlElement( const char * pszInput, const char * pszOutput, int 
 
 bool TestHtmlElement( )
 {
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, " <html> <head> <title>TITLE</title> </head> <body>BODY</body> </html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, " <html>\r\n\r\n<head>\r\n\r\n<title>TITLE</title>\r\n\r\n</head>\r\n\r\n<body>BODY</body>\r\n\r\n</html>\r\n\r\n"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, " <html> <head> <title> TITLE </title> </head> <body> BODY </body> </html>"
+		, "<html>\n<head>\n<title> TITLE </title>\n</head>\n<body> BODY </body>\n</html>\n" ) == false ) return false;
+
+	// script ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title><script>function a(){\n\tif( c > a )\n\t\treturn false;\n\treturn true;\n\t}\n</script></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n<script>function a(){\n\tif( c > a )\n\t\treturn false;\n\treturn true;\n\t}\n</script>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title><script>function a(){\n\tif( c < a )\n\t\treturn false;\n\treturn true;\n\t}\n</script></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n<script>function a(){\n\tif( c < a )\n\t\treturn false;\n\treturn true;\n\t}\n</script>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	// style ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title><style>.div > div { float:left; width: 50% }</style></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n<style>.div > div { float:left; width: 50% }</style>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
 
 	return true;
 }

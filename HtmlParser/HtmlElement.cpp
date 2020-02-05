@@ -20,7 +20,7 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
-CHtmlElement::CHtmlElement()
+CHtmlElement::CHtmlElement() : m_bNotParseUntilNameEnd(false)
 {
 }
 
@@ -50,6 +50,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL;
 	std::string	strName, strValue;
 
+	m_bNotParseUntilNameEnd = false;
 	Clear();
 
 	for( iPos = 0; iPos < iTextLen; ++iPos )
@@ -81,7 +82,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 		{
 			if( cType == HTML_ELEMENT_NAME )
 			{
-				m_strName.append( pszText + iStartPos, iPos - iStartPos );
+				SetName( pszText + iStartPos, iPos - iStartPos );
 				cType = HTML_ELEMENT_ATTR;
 				iStartPos = -1;
 				strName.clear();
@@ -131,7 +132,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 					return -1;
 				}
 			}
-			else
+			else if( m_bNotParseUntilNameEnd == false )
 			{
 				CHtmlElement clsElement;
 
@@ -148,7 +149,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 		{
 			if( cType == HTML_ELEMENT_NAME )
 			{
-				m_strName.append( pszText + iStartPos, iPos - iStartPos );
+				SetName( pszText + iStartPos, iPos - iStartPos );
 			}
 			else if( cType == HTML_ELEMENT_NAME_END )
 			{
@@ -165,9 +166,12 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 				++iPos;
 				break;
 			}
-
-			cType = HTML_ELEMENT_DATA;
-			iStartPos = iPos + 1;
+			
+			if( cType != HTML_ELEMENT_DATA )
+			{
+				cType = HTML_ELEMENT_DATA;
+				iStartPos = iPos + 1;
+			}
 		}
 		else if( cType == HTML_ELEMENT_ATTR )
 		{
@@ -363,4 +367,20 @@ void CHtmlElement::Clear( )
 	m_strData.clear();
 	m_clsAttributeMap.clear();
 	m_clsElementList.clear();
+}
+
+void CHtmlElement::SetName( const char * pszText, int iNameLen )
+{
+	m_strName.append( pszText, iNameLen );
+
+	const char * pszName = m_strName.c_str();
+
+	if( !strcasecmp( pszName, "script" ) || !strcasecmp( pszName, "style" ) )
+	{
+		m_bNotParseUntilNameEnd = true;
+	}
+	else
+	{
+		m_bNotParseUntilNameEnd = false;
+	}
 }
