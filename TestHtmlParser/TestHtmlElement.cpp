@@ -56,6 +56,9 @@ bool TestHtmlElement( )
 	if( TestHtmlElement( __LINE__, " <html> <head> <title> TITLE </title> </head> <body> BODY </body> </html>"
 		, "<html>\n<head>\n<title> TITLE </title>\n</head>\n<body> BODY </body>\n</html>\n" ) == false ) return false;
 
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</Title></HEAD><body>BODY</BOdy></HTML>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
 	// script ÆÄ½Ì Å×½ºÆ®
 	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title><script>function a(){\n\tif( c > a )\n\t\treturn false;\n\treturn true;\n\t}\n</script></head><body>BODY</body></html>"
 		, "<html>\n<head>\n<title>TITLE</title>\n<script>function a(){\n\tif( c > a )\n\t\treturn false;\n\treturn true;\n\t}\n</script>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
