@@ -48,7 +48,7 @@ CHtmlElement::~CHtmlElement()
 int CHtmlElement::Parse( const char * pszText, int iTextLen )
 {
 	int		iPos, iStartPos = -1, iLen;
-	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = '"';
+	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = -1;
 	std::string	strName, strValue;
 
 	m_bNotParseUntilNameEnd = false;
@@ -122,7 +122,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 					return -1;
 				}
 
-				if( !strncmp( pszText + iPos + 2, m_strName.c_str(), iLen ) )
+				if( !strncasecmp( pszText + iPos + 2, m_strName.c_str(), iLen ) )
 				{
 					cType = HTML_ELEMENT_NAME_END;
 					iPos += iLen + 1;
@@ -180,24 +180,18 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			{
 				iStartPos = iPos;
 			}
-			else if( pszText[iPos] == '=' && strName.empty() )
+			else if( strName.empty() )
 			{
-				if( pszText[iPos+1] == '"' )
+				if( pszText[iPos] == '=' )
 				{
-					cAttrSep = '"';
+					strName.append( pszText + iStartPos, iPos - iStartPos );
+					TrimString( strName );
+					cAttrSep = -1;
 				}
-				else if( pszText[iPos+1] == '\'' )
-				{
-					cAttrSep = '\'';
-				}
-				else
-				{
-					CLog::Print( LOG_ERROR, "iPos(%d+1) != '\"' : pszText[iPos](%s)", iPos, pszText + iPos );
-					return -1;
-				}
-
-				strName.append( pszText + iStartPos, iPos - iStartPos );
-				++iPos;
+			}
+			else if( cAttrSep == -1 && ( pszText[iPos] == '"' || pszText[iPos] == '\'' ) )
+			{
+				cAttrSep = pszText[iPos];
 				iStartPos = iPos + 1;
 			}
 			else if( pszText[iPos] == cAttrSep )
@@ -208,6 +202,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 				strName.clear();
 				strValue.clear();
 				iStartPos = -1;
+				cAttrSep = -1;
 			}
 		}
 	}

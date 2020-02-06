@@ -66,6 +66,7 @@ bool TestHtmlClass( const char * pszInput )
 bool TestHtmlClass()
 {
 	if( TestHtmlClass( "<div id='id1' class='class1 class2 class3'></div>" ) == false ) return false;
+	if( TestHtmlClass( "<div id = 'id1' class = 'class1 class2 class3'></div>" ) == false ) return false;
 	if( TestHtmlClass( "<div id=' id1 ' class='\t class1 \t class2 \tclass3 '></div>" ) == false ) return false;
 	if( TestHtmlClass( "<div id='\tid1\t' class='class1 class2 class3'></div>" ) == false ) return false;
 
