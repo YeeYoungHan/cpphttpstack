@@ -71,15 +71,22 @@ public:
 	const char * GetData();
 
 	bool IsDataEmpty();
+	bool IsId( const char * pszId );
+	bool IsClass( const char * pszClass );
 
 protected:
 	void SetName( const char * pszText, int iNameLen );
+	void AddAttribute( std::string & strName, std::string & strValue );
+	void AddClass( const char * pszClass, int iClassLen = -1 );
 
 	std::string	m_strName;
 	std::string m_strData;
 
 	HTML_ATTRIBUTE_MAP	m_clsAttributeMap;
 	HTML_ELEMENT_LIST		m_clsElementList;
+
+	HTML_ATTRIBUTE_MAP	m_clsClassMap;
+	std::string					m_strId;
 
 	bool m_bNotParseUntilNameEnd;
 };

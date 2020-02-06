@@ -203,8 +203,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			else if( pszText[iPos] == cAttrSep )
 			{
 				strValue.append( pszText + iStartPos, iPos - iStartPos );
-
-				m_clsAttributeMap.insert( HTML_ATTRIBUTE_MAP::value_type( strName, strValue ) );
+				AddAttribute( strName, strValue );
 
 				strName.clear();
 				strValue.clear();
@@ -679,6 +678,29 @@ bool CHtmlElement::IsDataEmpty()
 	return m_strData.empty();
 }
 
+bool CHtmlElement::IsId( const char * pszId )
+{
+	if( m_strId.empty() == false && !strcmp( m_strId.c_str(), pszId ) )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool CHtmlElement::IsClass( const char * pszClass )
+{
+	HTML_ATTRIBUTE_MAP::iterator itMap;
+
+	itMap = m_clsClassMap.find( pszClass );
+	if( itMap != m_clsClassMap.end() )
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void CHtmlElement::SetName( const char * pszText, int iNameLen )
 {
 	m_strName.append( pszText, iNameLen );
@@ -692,5 +714,66 @@ void CHtmlElement::SetName( const char * pszText, int iNameLen )
 	else
 	{
 		m_bNotParseUntilNameEnd = false;
+	}
+}
+
+void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue )
+{
+	m_clsAttributeMap.insert( HTML_ATTRIBUTE_MAP::value_type( strName, strValue ) );
+
+	const char * pszName = strName.c_str();
+
+	if( !strcasecmp( pszName, "id" ) )
+	{
+		m_strId = strValue;
+		TrimString( m_strId );
+	}
+	else if( !strcasecmp( pszName, "class" ) )
+	{
+		const char * pszValue = strValue.c_str();
+		int iLen = strValue.length();
+		int iStartPos = -1;
+
+		for( int i = 0; i < iLen; ++i )
+		{
+			if( isspace( pszValue[i] ) )
+			{
+				if( iStartPos != -1 )
+				{
+					AddClass( pszValue + iStartPos, i - iStartPos );
+					iStartPos = -1;
+				}
+			}
+			else if( iStartPos == -1 )
+			{
+				iStartPos = i;
+			}
+		}
+
+		if( iStartPos != -1 )
+		{
+			AddClass( pszValue + iStartPos );
+		}
+	}
+}
+
+void CHtmlElement::AddClass( const char * pszClass, int iClassLen )
+{
+	HTML_ATTRIBUTE_MAP::iterator itMap;
+	std::string strClass;
+
+	if( iClassLen > 0 )
+	{
+		strClass.append( pszClass, iClassLen );
+	}
+	else
+	{
+		strClass.append( pszClass );
+	}
+
+	itMap = m_clsClassMap.find( strClass );
+	if( itMap == m_clsClassMap.end() )
+	{
+		m_clsClassMap.insert( HTML_ATTRIBUTE_MAP::value_type( strClass, "" ) );
 	}
 }
