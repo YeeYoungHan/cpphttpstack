@@ -26,7 +26,7 @@ static bool TestHtmlAttribute( CHtmlElement & clsHtml, int iLine, const char * p
 
 	if( clsHtml.SelectAttribute( pszName, strValue ) == false )
 	{
-		printf( "%s line(%d) name(%s) not found - input(%s)\n", __FUNCTION__, iLine, pszName );
+		printf( "%s line(%d) name(%s) not found\n", __FUNCTION__, iLine, pszName );
 		return false;
 	}
 
@@ -35,21 +35,6 @@ static bool TestHtmlAttribute( CHtmlElement & clsHtml, int iLine, const char * p
 		printf( "%s line(%d) name(%s) value(%s) != want(%s)\n", __FUNCTION__, iLine, pszName, strValue.c_str(), pszValue );
 		return false;
 	}
-
-	return true;
-}
-
-static bool TestHtmlAttribute( int iLine, const char * pszInput )
-{
-	CHtmlElement clsHtml;
-
-	if( clsHtml.Parse( pszInput, strlen(pszInput) ) == -1 )
-	{
-		printf( "%s line(%d) Parse error - input(%s)\n", __FUNCTION__, iLine, pszInput );
-		return false;
-	}
-
-	if( TestHtmlAttribute( clsHtml, iLine, "id", "anId" ) == false ) return false;
 
 	return true;
 }
