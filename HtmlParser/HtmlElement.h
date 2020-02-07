@@ -20,9 +20,8 @@
 #define _HTML_ELEMENT_H_
 
 #include "SipPlatformDefine.h"
-#include <string>
+#include "HtmlAttribute.h"
 #include <list>
-#include <map>
 
 class CHtmlElement;
 
@@ -39,9 +38,9 @@ enum EHtmlElementType
 
 /**
  * @ingroup HtmlParser
- * @brief XML attribute map. key 는 attribute 이름이고 value 는 attribute 값이다.
+ * @brief HTML class map. key 는 class 이름이고 value 은 의미가 없다.
  */
-typedef std::map< std::string, std::string > HTML_ATTRIBUTE_MAP;
+typedef std::map< std::string, char > HTML_CLASS_MAP;
 
 /**
  * @ingroup HtmlParser
@@ -91,7 +90,7 @@ public:
 
 protected:
 	void SetName( const char * pszText, int iNameLen );
-	void AddAttribute( std::string & strName, std::string & strValue );
+	void AddAttribute( std::string & strName, std::string & strValue, char cSep );
 	void AddClass( const char * pszClass, int iClassLen = -1 );
 
 	std::string	m_strName;
@@ -100,7 +99,7 @@ protected:
 	HTML_ATTRIBUTE_MAP	m_clsAttributeMap;
 	HTML_ELEMENT_LIST		m_clsElementList;
 
-	HTML_ATTRIBUTE_MAP	m_clsClassMap;
+	HTML_CLASS_MAP			m_clsClassMap;
 	std::string					m_strId;
 
 	EHtmlElementType		m_eType;

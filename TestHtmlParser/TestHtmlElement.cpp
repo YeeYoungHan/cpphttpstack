@@ -88,5 +88,15 @@ bool TestHtmlElement( )
 	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<br>BODY2<br>BODY3<br></body></html>"
 		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<br>\nBODY2<br>\nBODY3<br>\n</body>\n</html>\n" ) == false ) return false;
 
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<br />BODY2<br />BODY3<br /></body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<br>\nBODY2<br>\nBODY3<br>\n</body>\n</html>\n" ) == false ) return false;
+
+	// hr tag ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<hr>BODY2<hr>BODY3<hr></body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<hr>\nBODY2<hr>\nBODY3<hr>\n</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<hr class='hr1'>BODY2<hr class='hr2'>BODY3<hr class='hr3'></body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<hr class='hr1'>\nBODY2<hr class='hr2'>\nBODY3<hr class='hr3'>\n</body>\n</html>\n" ) == false ) return false;
+
 	return true;
 }

@@ -241,7 +241,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			else if( pszText[iPos] == cAttrSep )
 			{
 				strValue.append( pszText + iStartPos, iPos - iStartPos );
-				AddAttribute( strName, strValue );
+				AddAttribute( strName, strValue, cAttrSep );
 
 				strName.clear();
 				strValue.clear();
@@ -303,7 +303,7 @@ int CHtmlElement::ToString( char * pszText, int iTextSize, bool bUseTab, int iDe
 
 			for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
 			{
-				iLen += snprintf( pszText + iLen, iTextSize - iLen, " %s=\"%s\"", itAM->first.c_str(), itAM->second.c_str() );
+				iLen += snprintf( pszText + iLen, iTextSize - iLen, " %s=%c%s%c", itAM->first.c_str(), itAM->second.m_cSep, itAM->second.m_strValue.c_str(), itAM->second.m_cSep );
 			}
 		}
 
@@ -384,9 +384,10 @@ void CHtmlElement::ToString( std::string & strText, bool bUseTab, int iDepth )
 			{
 				strText.append( " " );
 				strText.append( itAM->first );
-				strText.append( "=\"" );
-				strText.append( itAM->second );
-				strText.append( "\"" );
+				strText.append( "=" );
+				strText.push_back( itAM->second.m_cSep );
+				strText.append( itAM->second.m_strValue );
+				strText.push_back( itAM->second.m_cSep );
 			}
 		}
 
@@ -460,7 +461,7 @@ const char * CHtmlElement::SelectAttribute( const char * pszName )
 	itAM = m_clsAttributeMap.find( pszName );
 	if( itAM != m_clsAttributeMap.end() )
 	{
-		return itAM->second.c_str();
+		return itAM->second.m_strValue.c_str();
 	}
 
 	return NULL;
@@ -479,8 +480,8 @@ const char * CHtmlElement::SelectAttributeTrim( const char * pszName )
 	itAM = m_clsAttributeMap.find( pszName );
 	if( itAM != m_clsAttributeMap.end() )
 	{
-		TrimString( itAM->second );
-		return itAM->second.c_str();
+		TrimString( itAM->second.m_strValue );
+		return itAM->second.m_strValue.c_str();
 	}
 
 	return NULL;
@@ -502,7 +503,7 @@ bool CHtmlElement::SelectAttribute( const char * pszName, std::string & strValue
 	itAM = m_clsAttributeMap.find( pszName );
 	if( itAM != m_clsAttributeMap.end() )
 	{
-		strValue = itAM->second;
+		strValue = itAM->second.m_strValue;
 		return true;
 	}
 
@@ -525,7 +526,7 @@ bool CHtmlElement::SelectAttributeTrim( const char * pszName, std::string & strV
 	itAM = m_clsAttributeMap.find( pszName );
 	if( itAM != m_clsAttributeMap.end() )
 	{
-		strValue = itAM->second;
+		strValue = itAM->second.m_strValue;
 		TrimString( strValue );
 		return true;
 	}
@@ -772,7 +773,7 @@ bool CHtmlElement::IsId( const char * pszId )
  */
 bool CHtmlElement::IsClass( const char * pszClass )
 {
-	HTML_ATTRIBUTE_MAP::iterator itMap;
+	HTML_CLASS_MAP::iterator itMap;
 
 	itMap = m_clsClassMap.find( pszClass );
 	if( itMap != m_clsClassMap.end() )
@@ -814,10 +815,16 @@ void CHtmlElement::SetName( const char * pszText, int iNameLen )
  * @brief 애트리뷰트를 저장한다.
  * @param strName		애트리뷰트 이름
  * @param strValue	애트리뷰트 값
+ * @param cSep			애티리뷰트 값 구분 문자
  */
-void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue )
+void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue, char cSep )
 {
-	m_clsAttributeMap.insert( HTML_ATTRIBUTE_MAP::value_type( strName, strValue ) );
+	CHtmlAttributeValue clsValue;
+
+	clsValue.m_cSep = cSep;
+	clsValue.m_strValue = strValue;
+
+	m_clsAttributeMap.insert( HTML_ATTRIBUTE_MAP::value_type( strName, clsValue ) );
 
 	const char * pszName = strName.c_str();
 
@@ -863,7 +870,7 @@ void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue )
  */
 void CHtmlElement::AddClass( const char * pszClass, int iClassLen )
 {
-	HTML_ATTRIBUTE_MAP::iterator itMap;
+	HTML_CLASS_MAP::iterator itMap;
 	std::string strClass;
 
 	if( iClassLen > 0 )
@@ -878,6 +885,6 @@ void CHtmlElement::AddClass( const char * pszClass, int iClassLen )
 	itMap = m_clsClassMap.find( strClass );
 	if( itMap == m_clsClassMap.end() )
 	{
-		m_clsClassMap.insert( HTML_ATTRIBUTE_MAP::value_type( strClass, "" ) );
+		m_clsClassMap.insert( HTML_CLASS_MAP::value_type( strClass, 'c' ) );
 	}
 }
