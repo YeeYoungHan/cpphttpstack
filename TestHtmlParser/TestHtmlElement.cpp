@@ -74,6 +74,19 @@ bool TestHtmlElement( )
 	if( TestHtmlElement( __LINE__, "<html><head><meta charset=\"utf-8\"><title>TITLE</title></head><body>BODY</body></html>"
 		, "<html>\n<head>\n<meta charset=\"utf-8\">\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
 
+	if( TestHtmlElement( __LINE__, "<html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><title>TITLE</title></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta content=\"IE=edge\" http-equiv=\"X-UA-Compatible\">\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	if( TestHtmlElement( __LINE__, "<html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>TITLE</title></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta content=\"IE=edge\" http-equiv=\"X-UA-Compatible\">\n<meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	// link tag ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><link href=\"test.css\" rel=\"stylesheet\"><title>TITLE</title></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<link href=\"test.css\" rel=\"stylesheet\">\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+	// br tag ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<br>BODY2<br>BODY3<br></body></html>"
+		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<br>\nBODY2<br>\nBODY3<br>\n</body>\n</html>\n" ) == false ) return false;
 
 	return true;
 }

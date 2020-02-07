@@ -110,7 +110,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			{
 				if( cType == HTML_ELEMENT_DATA )
 				{
-					m_strData.append( pszText + iStartPos, iPos - iStartPos );		
+					m_strData.append( pszText + iStartPos, iPos - iStartPos );
 				}
 
 				iLen = (int)m_strName.length();
@@ -138,15 +138,50 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 			}
 			else if( m_eType != E_HET_SCRIPT )
 			{
+				if( cType == HTML_ELEMENT_DATA )
+				{
+					std::string strData;
+
+					strData.append( pszText + iStartPos, iPos - iStartPos );
+					TrimString( strData );
+
+					const char * pszData = strData.c_str();
+					int iDataLen = strData.length();
+					bool bFound = false;
+
+					for( int i = 0; i < iDataLen; ++i )
+					{
+						if( isspace( pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
+
+						bFound = true;
+						break;
+					}
+
+					if( bFound )
+					{
+						CHtmlElement clsElement;
+
+						clsElement.m_strData = strData;
+						m_clsElementList.push_back( clsElement );
+					}
+				}
+
 				CHtmlElement clsElement;
 
 				iLen = clsElement.Parse( pszText + iPos, iTextLen - iPos );
 				if( iLen == -1 ) return -1;
 
 				m_clsElementList.push_back( clsElement );
-
-				cType = HTML_ELEMENT_DATA_PARSE;
 				iPos += iLen - 1;
+
+				if( clsElement.m_eType == E_HET_NOT_CLOSED )
+				{
+					iStartPos = iPos + 1;
+				}
+				else
+				{
+					cType = HTML_ELEMENT_DATA_PARSE;
+				}
 			}
 		}
 		else if( pszText[iPos] == '>' )
@@ -166,6 +201,12 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 				return -1;
 			}
 			else if( pszText[iPos-1] == '/' )
+			{
+				++iPos;
+				break;
+			}
+
+			if( m_eType == E_HET_NOT_CLOSED )
 			{
 				++iPos;
 				break;
@@ -245,52 +286,62 @@ int CHtmlElement::ToString( char * pszText, int iTextSize, bool bUseTab, int iDe
 		}
 	}
 
-	iLen += snprintf( pszText + iLen, iTextSize, "<%s", m_strName.c_str() );
-
-	if( m_clsAttributeMap.empty() == false )
+	if( m_strName.empty() )
 	{
-		HTML_ATTRIBUTE_MAP::iterator	itAM;
-
-		for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
+		if( m_strData.empty() == false )
 		{
-			iLen += snprintf( pszText + iLen, iTextSize - iLen, " %s=\"%s\"", itAM->first.c_str(), itAM->second.c_str() );
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, "%s", m_strData.c_str() );
 		}
-	}
-
-	if( m_strData.empty() == false )
-	{
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, ">%s</%s>\n", m_strData.c_str(), m_strName.c_str() );
-	}
-	else if( m_clsElementList.empty() == false )
-	{
-		HTML_ELEMENT_LIST::iterator	itEL;
-
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, ">\n" );
-
-		for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
-		{
-			n = itEL->ToString( pszText + iLen, iTextSize - iLen, bUseTab, iDepth + 1 );
-			if( n == -1 ) return -1;
-			iLen += n;
-		}
-
-		if( bUseTab )
-		{
-			for( int i = 0; i < iDepth; ++i )
-			{
-				iLen += snprintf( pszText + iLen, iTextSize, "\t" );
-			}
-		}
-
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, "</%s>\n", m_strName.c_str() );
-	}
-	else if( m_eType == E_HET_NOT_CLOSED )
-	{
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, ">\n" );
 	}
 	else
 	{
-		iLen += snprintf( pszText + iLen, iTextSize - iLen, "/>\n" );
+		iLen += snprintf( pszText + iLen, iTextSize, "<%s", m_strName.c_str() );
+
+		if( m_clsAttributeMap.empty() == false )
+		{
+			HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+			for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
+			{
+				iLen += snprintf( pszText + iLen, iTextSize - iLen, " %s=\"%s\"", itAM->first.c_str(), itAM->second.c_str() );
+			}
+		}
+
+		if( m_strData.empty() == false )
+		{
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, ">%s</%s>\n", m_strData.c_str(), m_strName.c_str() );
+		}
+		else if( m_clsElementList.empty() == false )
+		{
+			HTML_ELEMENT_LIST::iterator	itEL;
+
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, ">\n" );
+
+			for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+			{
+				n = itEL->ToString( pszText + iLen, iTextSize - iLen, bUseTab, iDepth + 1 );
+				if( n == -1 ) return -1;
+				iLen += n;
+			}
+
+			if( bUseTab )
+			{
+				for( int i = 0; i < iDepth; ++i )
+				{
+					iLen += snprintf( pszText + iLen, iTextSize, "\t" );
+				}
+			}
+
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, "</%s>\n", m_strName.c_str() );
+		}
+		else if( m_eType == E_HET_NOT_CLOSED )
+		{
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, ">\n" );
+		}
+		else
+		{
+			iLen += snprintf( pszText + iLen, iTextSize - iLen, "/>\n" );
+		}
 	}
 
 	return iLen;
@@ -313,61 +364,71 @@ void CHtmlElement::ToString( std::string & strText, bool bUseTab, int iDepth )
 		}
 	}
 
-	strText.append( "<" );
-	strText.append( m_strName );
-
-	if( m_clsAttributeMap.empty() == false )
+	if( m_strName.empty() )
 	{
-		HTML_ATTRIBUTE_MAP::iterator	itAM;
-
-		for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
+		if( m_strData.empty() == false )
 		{
-			strText.append( " " );
-			strText.append( itAM->first );
-			strText.append( "=\"" );
-			strText.append( itAM->second );
-			strText.append( "\"" );
+			strText.append( m_strData );
 		}
-	}
-
-	if( m_strData.empty() == false )
-	{
-		strText.append( ">" );
-		strText.append( m_strData );
-		strText.append( "</" );
-		strText.append( m_strName );
-		strText.append( ">\n" );
-	}
-	else if( m_clsElementList.empty() == false )
-	{
-		HTML_ELEMENT_LIST::iterator	itEL;
-
-		strText.append( ">\n" );
-
-		for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
-		{
-			itEL->ToString( strText, bUseTab, iDepth + 1 );
-		}
-
-		if( bUseTab )
-		{
-			for( int i = 0; i < iDepth; ++i )
-			{
-				strText.append( "\t" );
-			}
-		}
-
-		strText.append( "</" );
-		strText.append( m_strName );
-		strText.append( ">\n" );
-	}
-	else if( m_eType == E_HET_NOT_CLOSED )
-	{
-		strText.append( ">\n" );
 	}
 	else
 	{
-		strText.append( "/>\n" );
+		strText.append( "<" );
+		strText.append( m_strName );
+
+		if( m_clsAttributeMap.empty() == false )
+		{
+			HTML_ATTRIBUTE_MAP::iterator	itAM;
+
+			for( itAM = m_clsAttributeMap.begin(); itAM != m_clsAttributeMap.end(); ++itAM )
+			{
+				strText.append( " " );
+				strText.append( itAM->first );
+				strText.append( "=\"" );
+				strText.append( itAM->second );
+				strText.append( "\"" );
+			}
+		}
+
+		if( m_strData.empty() == false )
+		{
+			strText.append( ">" );
+			strText.append( m_strData );
+			strText.append( "</" );
+			strText.append( m_strName );
+			strText.append( ">\n" );
+		}
+		else if( m_clsElementList.empty() == false )
+		{
+			HTML_ELEMENT_LIST::iterator	itEL;
+
+			strText.append( ">\n" );
+
+			for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+			{
+				itEL->ToString( strText, bUseTab, iDepth + 1 );
+			}
+
+			if( bUseTab )
+			{
+				for( int i = 0; i < iDepth; ++i )
+				{
+					strText.append( "\t" );
+				}
+			}
+
+			strText.append( "</" );
+			strText.append( m_strName );
+			strText.append( ">\n" );
+		}
+		else if( m_eType == E_HET_NOT_CLOSED )
+		{
+			strText.append( ">\n" );
+		}
+		else
+		{
+			strText.append( "/>\n" );
+		}
 	}
 }
 
