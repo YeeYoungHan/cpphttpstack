@@ -19,6 +19,7 @@
 #include "HtmlElement.h"
 #include "StringUtility.h"
 #include "Log.h"
+#include <stdlib.h>
 #include "MemoryDebug.h"
 
 CHtmlElement::CHtmlElement() : m_eType(E_HET_NULL)
