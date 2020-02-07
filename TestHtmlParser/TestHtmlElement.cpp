@@ -70,5 +70,10 @@ bool TestHtmlElement( )
 	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title><style>.div > div { float:left; width: 50% }</style></head><body>BODY</body></html>"
 		, "<html>\n<head>\n<title>TITLE</title>\n<style>.div > div { float:left; width: 50% }</style>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
 
+	// meta tag ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<html><head><meta charset=\"utf-8\"><title>TITLE</title></head><body>BODY</body></html>"
+		, "<html>\n<head>\n<meta charset=\"utf-8\">\n<title>TITLE</title>\n</head>\n<body>BODY</body>\n</html>\n" ) == false ) return false;
+
+
 	return true;
 }

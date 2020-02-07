@@ -21,7 +21,7 @@
 #include "Log.h"
 #include "MemoryDebug.h"
 
-CHtmlElement::CHtmlElement() : m_bNotParseUntilNameEnd(false)
+CHtmlElement::CHtmlElement() : m_eType(E_HET_NULL)
 {
 }
 
@@ -51,7 +51,6 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = -1;
 	std::string	strName, strValue;
 
-	m_bNotParseUntilNameEnd = false;
 	Clear();
 
 	for( iPos = 0; iPos < iTextLen; ++iPos )
@@ -133,7 +132,11 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 					return -1;
 				}
 			}
-			else if( m_bNotParseUntilNameEnd == false )
+			else if( m_eType == E_HET_NOT_CLOSED )
+			{
+				break;
+			}
+			else if( m_eType != E_HET_SCRIPT )
 			{
 				CHtmlElement clsElement;
 
@@ -281,6 +284,10 @@ int CHtmlElement::ToString( char * pszText, int iTextSize, bool bUseTab, int iDe
 
 		iLen += snprintf( pszText + iLen, iTextSize - iLen, "</%s>\n", m_strName.c_str() );
 	}
+	else if( m_eType == E_HET_NOT_CLOSED )
+	{
+		iLen += snprintf( pszText + iLen, iTextSize - iLen, ">\n" );
+	}
 	else
 	{
 		iLen += snprintf( pszText + iLen, iTextSize - iLen, "/>\n" );
@@ -354,6 +361,10 @@ void CHtmlElement::ToString( std::string & strText, bool bUseTab, int iDepth )
 		strText.append( m_strName );
 		strText.append( ">\n" );
 	}
+	else if( m_eType == E_HET_NOT_CLOSED )
+	{
+		strText.append( ">\n" );
+	}
 	else
 	{
 		strText.append( "/>\n" );
@@ -370,6 +381,9 @@ void CHtmlElement::Clear( )
 	m_strData.clear();
 	m_clsAttributeMap.clear();
 	m_clsElementList.clear();
+	m_clsClassMap.clear();
+	m_strId.clear();
+	m_eType = E_HET_NULL;
 }
 
 /**
@@ -666,13 +680,19 @@ const char * CHtmlElement::GetData()
 /**
  * @ingroup HtmlParser
  * @brief Element 내용이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
- * @returns 
+ * @returns Element 내용이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
 bool CHtmlElement::IsDataEmpty()
 {
 	return m_strData.empty();
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief id 인지 검사한다.
+ * @param pszId id
+ * @returns 입력된 id 와 일치하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHtmlElement::IsId( const char * pszId )
 {
 	if( m_strId.empty() == false && !strcmp( m_strId.c_str(), pszId ) )
@@ -683,6 +703,12 @@ bool CHtmlElement::IsId( const char * pszId )
 	return false;
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief class 인지 검사한다.
+ * @param pszClass class
+ * @returns 입력된 class 와 일치하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHtmlElement::IsClass( const char * pszClass )
 {
 	HTML_ATTRIBUTE_MAP::iterator itMap;
@@ -696,6 +722,12 @@ bool CHtmlElement::IsClass( const char * pszClass )
 	return false;
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief TAG 이름을 저장한다.
+ * @param pszText  TAG 이름
+ * @param iNameLen TAG 이름 길이
+ */
 void CHtmlElement::SetName( const char * pszText, int iNameLen )
 {
 	m_strName.append( pszText, iNameLen );
@@ -704,14 +736,24 @@ void CHtmlElement::SetName( const char * pszText, int iNameLen )
 
 	if( !strcasecmp( pszName, "script" ) || !strcasecmp( pszName, "style" ) )
 	{
-		m_bNotParseUntilNameEnd = true;
+		m_eType = E_HET_SCRIPT;
+	}
+	else if( !strcasecmp( pszName, "br" ) || !strcasecmp( pszName, "hr" ) || !strcasecmp( pszName, "img" )  || !strcasecmp( pszName, "input" ) || !strcasecmp( pszName, "link" ) || !strcasecmp( pszName, "meta" ) )
+	{
+		m_eType = E_HET_NOT_CLOSED;
 	}
 	else
 	{
-		m_bNotParseUntilNameEnd = false;
+		m_eType = E_HET_NULL;
 	}
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief 애트리뷰트를 저장한다.
+ * @param strName		애트리뷰트 이름
+ * @param strValue	애트리뷰트 값
+ */
 void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue )
 {
 	m_clsAttributeMap.insert( HTML_ATTRIBUTE_MAP::value_type( strName, strValue ) );
@@ -752,6 +794,12 @@ void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue )
 	}
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief class 를 저장한다.
+ * @param pszClass	class 문자열
+ * @param iClassLen class 문자열 길이
+ */
 void CHtmlElement::AddClass( const char * pszClass, int iClassLen )
 {
 	HTML_ATTRIBUTE_MAP::iterator itMap;

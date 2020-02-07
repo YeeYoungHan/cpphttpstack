@@ -28,16 +28,31 @@ class CHtmlElement;
 
 /**
  * @ingroup HtmlParser
+ * @brief HTML element 의 종류
+ */
+enum EHtmlElementType
+{
+	E_HET_NULL,
+	E_HET_SCRIPT,
+	E_HET_NOT_CLOSED
+};
+
+/**
+ * @ingroup HtmlParser
  * @brief XML attribute map. key 는 attribute 이름이고 value 는 attribute 값이다.
  */
 typedef std::map< std::string, std::string > HTML_ATTRIBUTE_MAP;
 
 /**
  * @ingroup HtmlParser
- * @brief CXmlElement 객체 리스트
+ * @brief CHtmlElement 객체 리스트
  */
 typedef std::list< CHtmlElement > HTML_ELEMENT_LIST;
 
+/**
+ * @ingroup HtmlParser
+ * @brief HTML element 문자열을 파싱하여서 저장하는 클래스
+ */
 class CHtmlElement
 {
 public:
@@ -88,7 +103,7 @@ protected:
 	HTML_ATTRIBUTE_MAP	m_clsClassMap;
 	std::string					m_strId;
 
-	bool m_bNotParseUntilNameEnd;
+	EHtmlElementType		m_eType;
 };
 
 #endif
