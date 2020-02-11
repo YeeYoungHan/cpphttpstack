@@ -23,6 +23,7 @@
 bool TestHtmlAttribute( );
 bool TestHtmlClass();
 bool TestHtmlElement( );
+bool TestHtmlGetText();
 
 int main( int argc, char * argv[] )
 {
@@ -32,6 +33,7 @@ int main( int argc, char * argv[] )
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
 
+	if( TestHtmlGetText() == false ) goto FUNC_END;
 	if( TestHtmlElement() == false ) goto FUNC_END;
 	if( TestHtmlAttribute() == false ) goto FUNC_END;
 	if( TestHtmlClass() == false ) goto FUNC_END;

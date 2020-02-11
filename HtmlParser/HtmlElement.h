@@ -64,6 +64,8 @@ public:
 	int ToString( char * pszText, int iTextSize, bool bUseTab = false, int iDepth = 0 );
 	void ToString( std::string & strText, bool bUseTab = false, int iDepth = 0 );
 
+	void GetText( std::string & strText );
+
 	void Clear( );
 
 	const char * SelectAttribute( const char * pszName );

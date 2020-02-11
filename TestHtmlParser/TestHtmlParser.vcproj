@@ -188,6 +188,10 @@
 				RelativePath=".\TestHtmlElement.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHtmlGetText.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

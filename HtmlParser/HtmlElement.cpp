@@ -436,6 +436,27 @@ void CHtmlElement::ToString( std::string & strText, bool bUseTab, int iDepth )
 
 /**
  * @ingroup HtmlParser
+ * @brief TAG 를 제외한 텍스트만 가져온다.
+ * @param strText [out] TAG 를 제외한 텍스트를 저장할 변수
+ */
+void CHtmlElement::GetText( std::string & strText )
+{
+	if( m_strData.empty() == false )
+	{
+		if( strText.empty() == false ) strText.append( " " );
+		strText.append( m_strData );
+	}
+
+	HTML_ELEMENT_LIST::iterator	itEL;
+
+	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
+	{
+		itEL->GetText( strText );
+	}
+}
+
+/**
+ * @ingroup HtmlParser
  * @brief 멤버 변수를 초기화시킨다.
  */
 void CHtmlElement::Clear( )
