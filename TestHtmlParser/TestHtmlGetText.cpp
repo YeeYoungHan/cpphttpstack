@@ -42,11 +42,45 @@ static bool TestHtmlGetText( int iLine, const char * pszInput, const char * pszO
 	return true;
 }
 
+static bool Allow( CHtmlElement * pclsElement )
+{
+	const char * pszName = pclsElement->GetName();
+
+	if( !strcmp( pszName, "p" ) ) return true;
+
+	return false;
+}
+
+static bool TestHtmlGetTextAllow( int iLine, const char * pszInput, const char * pszOutput )
+{
+	CHtmlElement clsHtml;
+	std::string strOutput;
+
+	if( clsHtml.Parse( pszInput, strlen(pszInput) ) == -1 )
+	{
+		printf( "%s line(%d) Parse error - input(%s)\n", __FUNCTION__, iLine, pszInput );
+		return false;
+	}
+
+	clsHtml.GetText( strOutput, Allow );
+
+	if( strcmp( pszOutput, strOutput.c_str() ) )
+	{
+		printf( "%s line(%d) Parse error - input(%s) output(%s) != result(%s)\n", __FUNCTION__, iLine, pszInput, pszOutput, strOutput.c_str() );
+		return false;
+	}
+
+	return true;
+}
+
 bool TestHtmlGetText()
 {
 	if( TestHtmlGetText( __LINE__, "<html><body>1234</body></html>", "1234" ) == false ) return false;
 	if( TestHtmlGetText( __LINE__, "<html><body><div>1234</div><div>5678</div></body></html>", "1234 5678" ) == false ) return false;
 	if( TestHtmlGetText( __LINE__, "<html><body><div>1234<div>abcd</div></div><div>5678</div></body></html>", "1234 abcd 5678" ) == false ) return false;
+
+	if( TestHtmlGetTextAllow( __LINE__, "<html><body><div>1234<p>abcd</p></div><div>5678</div></body></html>", "abcd" ) == false ) return false;
+	if( TestHtmlGetTextAllow( __LINE__, "<html><body><div>1234<p>abcd</p></div><div>5678</div><p>QUIT</p></body></html>", "abcd QUIT" ) == false ) return false;
 
 	return true;
 }

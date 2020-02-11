@@ -65,6 +65,7 @@ public:
 	void ToString( std::string & strText, bool bUseTab = false, int iDepth = 0 );
 
 	void GetText( std::string & strText );
+	void GetText( std::string & strText, bool (*Allow)( CHtmlElement * pclsElement ) );
 
 	void Clear( );
 
