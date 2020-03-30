@@ -51,7 +51,7 @@ bool CHttpPacket::AddPacket( const char * pszPacket, int iPacketLen )
 		const char * pszHeaderEnd = strstr( pszBuf, "\r\n\r\n" );
 		if( pszHeaderEnd )
 		{
-			int iHeaderLen = pszHeaderEnd + 4 - pszBuf;
+			int iHeaderLen = (int)(pszHeaderEnd + 4 - pszBuf);
 
 			if( m_clsMessage.ParseHeader( pszBuf, iHeaderLen ) != iHeaderLen )
 			{
@@ -82,8 +82,8 @@ bool CHttpPacket::AddPacket( const char * pszPacket, int iPacketLen )
 		}
 		else if( m_clsMessage.m_iContentLength > 0 )
 		{
-			int iBufLen = m_strBuf.length();
-			int iBodyLen = m_clsMessage.m_strBody.length();
+			int iBufLen = (int)m_strBuf.length();
+			int iBodyLen = (int)m_clsMessage.m_strBody.length();
 
 			if( iBufLen >= ( m_clsMessage.m_iContentLength - iBodyLen ) )
 			{
@@ -155,7 +155,7 @@ CHttpMessage * CHttpPacket::GetHttpMessage( )
 bool CHttpPacket::ParseChunkedHeader( )
 {
 	const char * pszBuf = m_strBuf.c_str();
-	int iBufLen = m_strBuf.length();
+	int iBufLen = (int)m_strBuf.length();
 
 	if( iBufLen < 3 ) return false;
 
@@ -202,7 +202,7 @@ bool CHttpPacket::ParseChunkedHeader( )
 bool CHttpPacket::ParseChunkedBody( )
 {
 	const char * pszBuf = m_strBuf.c_str();
-	int iBufLen = m_strBuf.length();
+	int iBufLen = (int)m_strBuf.length();
 
 	if( iBufLen >= m_iChunkedLen )
 	{
