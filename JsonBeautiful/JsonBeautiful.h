@@ -16,33 +16,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include "JsonType.h"
-#include "MemoryDebug.h"
+#pragma once
 
-std::string CJsonType::m_strNewLine = "\n";
+#ifndef __AFXWIN_H__
+	#error "include 'stdafx.h' before including this file for PCH"
+#endif
 
-CJsonType::CJsonType()
+#include "resource.h"		// main symbols
+
+
+// CJsonBeautifulApp:
+// See JsonBeautiful.cpp for the implementation of this class
+//
+
+class CJsonBeautifulApp : public CWinAppEx
 {
-}
+public:
+	CJsonBeautifulApp();
 
-CJsonType::~CJsonType()
-{
-}
+// Overrides
+	public:
+	virtual BOOL InitInstance();
 
-const char * CJsonType::GetTypeString()
-{
-	switch( m_cType )
-	{
-	case JSON_TYPE_STRING: return "string";
-	case JSON_TYPE_NUMBER: return "number";
-	case JSON_TYPE_INT   : return "int";
-	case JSON_TYPE_DOUBLE: return "double";
-	case JSON_TYPE_OBJECT: return "object";
-	case JSON_TYPE_ARRAY : return "array";
-	case JSON_TYPE_BOOL  : return "bool";
-	case JSON_TYPE_NULL  : return "null";
-	}
+// Implementation
 
-	return "";
-}
+	DECLARE_MESSAGE_MAP()
+};
+
+extern CJsonBeautifulApp theApp;

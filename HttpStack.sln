@@ -148,6 +148,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHtmlParser", "TestHtmlP
 		{59766094-16E8-4602-9621-6C1E5ED9AF5F} = {59766094-16E8-4602-9621-6C1E5ED9AF5F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonBeautiful", "JsonBeautiful\JsonBeautiful.vcproj", "{29220B07-D1C9-4DBF-BCD5-56B3759B1629}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F90ACA2E-E87F-457C-8F59-38EC95B956AB} = {F90ACA2E-E87F-457C-8F59-38EC95B956AB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -304,6 +309,12 @@ Global
 		{8D509E8F-F24B-4278-9511-C847981B63D9}.Release|Win32.ActiveCfg = Release|Win32
 		{8D509E8F-F24B-4278-9511-C847981B63D9}.Release|Win32.Build.0 = Release|Win32
 		{8D509E8F-F24B-4278-9511-C847981B63D9}.Release|x64.ActiveCfg = Release|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Debug|Win32.ActiveCfg = Debug|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Debug|Win32.Build.0 = Debug|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Debug|x64.ActiveCfg = Debug|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|Win32.ActiveCfg = Release|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|Win32.Build.0 = Release|Win32
+		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

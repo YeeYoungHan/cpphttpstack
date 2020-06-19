@@ -38,25 +38,25 @@ CJsonString::~CJsonString()
  */
 int CJsonString::Parse( const char * pszText, int iTextLen )
 {
-	uint8_t cType = 0;
+	char cSep = '\0';
 	int iPos = 0;
 
 	m_strValue.clear();
 
 	for( int i = 0; i < iTextLen; ++i )
 	{
-		if( pszText[i] == '"' )
+		if( cSep == '\0' )
 		{
-			if( cType == 0 )
+			if( pszText[i] == '"' || pszText[i] == '\'' )
 			{
+				cSep = pszText[i];
 				iPos = i + 1;
-				++cType;
 			}
-			else
-			{
-				m_strValue.append( pszText + iPos, i - iPos );
-				return i + 1;
-			}
+		}
+		else if( pszText[i] == cSep )
+		{
+			m_strValue.append( pszText + iPos, i - iPos );
+			return i + 1;
 		}
 	}
 

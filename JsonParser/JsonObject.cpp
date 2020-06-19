@@ -149,7 +149,7 @@ int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 			if( itMap != m_clsMap.begin() )
 			{
 				strBuf.append( "," );
-				if( bUseNewLine ) strBuf.append( "\n" );
+				if( bUseNewLine ) strBuf.append( m_strNewLine );
 			}
 
 			if( bUseNewLine ) 
@@ -170,7 +170,7 @@ int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 
 		if( bUseNewLine ) 
 		{
-			strBuf.append( "\n" );
+			strBuf.append( m_strNewLine );
 			AddTab( strBuf, iDepth );
 			strBuf.append( "}" );
 		}
@@ -980,7 +980,7 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 {
 	CJsonType * pclsType = NULL;
 
-	if( pszText[iPos] == '"' )
+	if( pszText[iPos] == '"' || pszText[iPos] == '\'' )
 	{
 		pclsType = new CJsonString();
 		if( pclsType == NULL )
@@ -1007,7 +1007,7 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
 			return NULL;
 		}
 	}
-	else if( isdigit(pszText[iPos]) || ( pszText[iPos] == '-' && isdigit(pszText[iPos+1]) ) )
+	else if( isdigit((uint8_t)pszText[iPos]) || ( pszText[iPos] == '-' && isdigit(pszText[iPos+1]) ) )
 	{
 		CJsonNumber clsNumber;
 

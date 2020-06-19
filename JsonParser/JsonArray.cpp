@@ -122,7 +122,7 @@ int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 	{
 		strBuf.append( "[" );
 
-		if( bUseNewLine ) strBuf.append( "\n" );
+		if( bUseNewLine ) strBuf.append( m_strNewLine );
 
 		for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
 		{
@@ -135,7 +135,7 @@ int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 				if( bUseNewLine ) 
 				{
 					strBuf.append( "," );
-					strBuf.append( "\n" );
+					strBuf.append( m_strNewLine );
 				}
 				else
 				{
@@ -153,7 +153,7 @@ int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 
 		if( bUseNewLine )
 		{
-			strBuf.append( "\n" );
+			strBuf.append( m_strNewLine );
 			CJsonObject::AddTab( strBuf, iDepth );
 			strBuf.append( "]" );
 		}

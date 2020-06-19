@@ -49,6 +49,8 @@ public:
 	const char * GetTypeString();
 
 	uint8_t		m_cType;
+
+	static std::string	m_strNewLine;
 };
 
 #endif

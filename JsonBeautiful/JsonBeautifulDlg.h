@@ -16,33 +16,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include "JsonType.h"
-#include "MemoryDebug.h"
+#pragma once
 
-std::string CJsonType::m_strNewLine = "\n";
 
-CJsonType::CJsonType()
+// CJsonBeautifulDlg dialog
+class CJsonBeautifulDlg : public CDialog
 {
-}
+// Construction
+public:
+	CJsonBeautifulDlg(CWnd* pParent = NULL);	// standard constructor
 
-CJsonType::~CJsonType()
-{
-}
+// Dialog Data
+	enum { IDD = IDD_JSONBEAUTIFUL_DIALOG };
 
-const char * CJsonType::GetTypeString()
-{
-	switch( m_cType )
-	{
-	case JSON_TYPE_STRING: return "string";
-	case JSON_TYPE_NUMBER: return "number";
-	case JSON_TYPE_INT   : return "int";
-	case JSON_TYPE_DOUBLE: return "double";
-	case JSON_TYPE_OBJECT: return "object";
-	case JSON_TYPE_ARRAY : return "array";
-	case JSON_TYPE_BOOL  : return "bool";
-	case JSON_TYPE_NULL  : return "null";
-	}
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-	return "";
-}
+
+// Implementation
+protected:
+	HICON m_hIcon;
+
+	// Generated message map functions
+	virtual BOOL OnInitDialog();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnPaint();
+	afx_msg HCURSOR OnQueryDragIcon();
+	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedOk();
+	CString m_strInput;
+	CString m_strOutput;
+	afx_msg void OnEnChangeInput();
+};
