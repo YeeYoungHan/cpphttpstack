@@ -120,11 +120,11 @@ int CJsonObject::Parse( const char * pszText, int iTextLen )
  * @ingroup JsonParser
  * @brief 자료구조를 JSON object 문자열로 변환한다.
  * @param strText			JSON object 문자열 저장 변수
- * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param eNewLine		new line 을 입력하는 방법에 대한 설정값
  * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
+int CJsonObject::ToString( std::string & strText, EJsonNewLine eNewLine, int iDepth )
 {
 	JSON_OBJECT_MAP::iterator itMap;
 	std::string strBuf;
@@ -135,7 +135,7 @@ int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 	}
 	else
 	{
-		if( bUseNewLine )
+		if( eNewLine != E_JNL_NULL )
 		{
 			strBuf.append( "{\n" );
 		}
@@ -149,10 +149,10 @@ int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 			if( itMap != m_clsMap.begin() )
 			{
 				strBuf.append( "," );
-				if( bUseNewLine ) strBuf.append( m_strNewLine );
+				if( eNewLine == E_JNL_ALL ) strBuf.append( m_strNewLine );
 			}
 
-			if( bUseNewLine ) 
+			if( eNewLine == E_JNL_ALL ) 
 			{
 				AddTab( strBuf, iDepth + 1 );
 				strBuf.append( "\"" );
@@ -165,10 +165,10 @@ int CJsonObject::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 			strBuf.append( itMap->first );
 			strBuf.append( "\" : " );
 
-			JsonToString( itMap->second, strBuf, bUseNewLine, iDepth + 1 );
+			JsonToString( itMap->second, strBuf, eNewLine == E_JNL_TOP ? E_JNL_NULL : eNewLine, iDepth + 1 );
 		}
 
-		if( bUseNewLine ) 
+		if( eNewLine != E_JNL_NULL ) 
 		{
 			strBuf.append( m_strNewLine );
 			AddTab( strBuf, iDepth );
@@ -250,15 +250,15 @@ int CJsonObject::Parse( std::string & strText )
 /**
  * @ingroup JsonParser
  * @brief 자료구조를 JSON object 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
- * @param strText JSON object 문자열 저장 변수
- * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param strText		JSON object 문자열 저장 변수
+ * @param eNewLine	new line 을 입력하는 방법에 대한 설정값
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonObject::MakeString( std::string & strText, bool bUseNewLine )
+int CJsonObject::MakeString( std::string & strText, EJsonNewLine eNewLine )
 {
 	strText.clear();
 
-	return ToString( strText, bUseNewLine );
+	return ToString( strText, eNewLine );
 }
 
 /**
@@ -1064,10 +1064,10 @@ CJsonType * CJsonObject::GetJsonType( const char * pszText, int iTextLen, int iP
  * @brief CJsonType 을 문자열에 저장한다.
  * @param pclsType	CJsonType 객체
  * @param strText		JSON 문자열 저장 변수
- * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
- * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
+ * @param eNewLine	new line 을 입력하는 방법에 대한 설정값
+ * @param	iDepth		하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  */
-void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText, bool bUseNewLine, int iDepth )
+void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText, EJsonNewLine eNewLine, int iDepth )
 {
 	switch( pclsType->m_cType )
 	{
@@ -1081,10 +1081,10 @@ void CJsonObject::JsonToString( CJsonType * pclsType, std::string & strText, boo
 		((CJsonInt *)pclsType)->ToString( strText );
 		break;
 	case JSON_TYPE_OBJECT:
-		((CJsonObject *)pclsType)->ToString( strText, bUseNewLine, iDepth );
+		((CJsonObject *)pclsType)->ToString( strText, eNewLine, iDepth );
 		break;
 	case JSON_TYPE_ARRAY:
-		((CJsonArray *)pclsType)->ToString( strText, bUseNewLine, iDepth );
+		((CJsonArray *)pclsType)->ToString( strText, eNewLine, iDepth );
 		break;
 	case JSON_TYPE_BOOL:
 		((CJsonBool *)pclsType)->ToString( strText );

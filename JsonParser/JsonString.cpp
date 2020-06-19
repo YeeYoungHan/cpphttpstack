@@ -66,12 +66,12 @@ int CJsonString::Parse( const char * pszText, int iTextLen )
 /**
  * @ingroup JsonParser
  * @brief 자료구조를 JSON 문자열로 저장한다.
- * @param strText JSON 문자열 저장 변수
- * @param bUseNewLine	의미없는 변수
- * @param iDepth			의미없는 변수
+ * @param strText		JSON 문자열 저장 변수
+ * @param eNewLine	의미없는 변수
+ * @param iDepth		의미없는 변수
  * @returns JSON 문자열 길이를 리턴한다.
  */
-int CJsonString::ToString( std::string & strText, bool bUseNewLine, int iDepth )
+int CJsonString::ToString( std::string & strText, EJsonNewLine eNewLine, int iDepth )
 {
 	strText.append( "\"" );
 	strText.append( m_strValue );

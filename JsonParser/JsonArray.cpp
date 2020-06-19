@@ -104,12 +104,12 @@ int CJsonArray::Parse( const char * pszText, int iTextLen )
 /**
  * @ingroup JsonParser
  * @brief 자료구조를 JSON 배열 문자열로 변환한다.
- * @param strText JSON 배열 문자열 저장 변수
- * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
- * @param	iDepth			하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
+ * @param strText		JSON 배열 문자열 저장 변수
+ * @param eNewLine	new line 을 입력하는 방법에 대한 설정값
+ * @param	iDepth		하위 항목의 깊이. 맨 위의 항목은 0 이고 그 하위 항목은 1 이다.
  * @returns JSON 배열 문자열 길이를 리턴한다.
  */
-int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
+int CJsonArray::ToString( std::string & strText, EJsonNewLine eNewLine, int iDepth )
 {
 	JSON_LIST::iterator itJL;
 	std::string strBuf;
@@ -122,17 +122,17 @@ int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 	{
 		strBuf.append( "[" );
 
-		if( bUseNewLine ) strBuf.append( m_strNewLine );
+		if( eNewLine != E_JNL_NULL ) strBuf.append( m_strNewLine );
 
 		for( itJL = m_clsList.begin(); itJL != m_clsList.end(); ++itJL )
 		{
 			if( itJL == m_clsList.begin() )
 			{
-				if( bUseNewLine == false ) strBuf.append( " " );
+				if( eNewLine == E_JNL_NULL ) strBuf.append( " " );
 			}
 			else
 			{
-				if( bUseNewLine ) 
+				if( eNewLine != E_JNL_NULL ) 
 				{
 					strBuf.append( "," );
 					strBuf.append( m_strNewLine );
@@ -143,15 +143,15 @@ int CJsonArray::ToString( std::string & strText, bool bUseNewLine, int iDepth )
 				}
 			}
 
-			if( bUseNewLine ) 
+			if( eNewLine != E_JNL_NULL ) 
 			{
 				CJsonObject::AddTab( strBuf, iDepth + 1 );
 			}
 
-			CJsonObject::JsonToString( *itJL, strBuf, bUseNewLine, iDepth + 1 );
+			CJsonObject::JsonToString( *itJL, strBuf, eNewLine == E_JNL_TOP ? E_JNL_NULL : eNewLine, iDepth + 1 );
 		}
 
-		if( bUseNewLine )
+		if( eNewLine != E_JNL_NULL )
 		{
 			strBuf.append( m_strNewLine );
 			CJsonObject::AddTab( strBuf, iDepth );
@@ -225,15 +225,15 @@ CJsonType * CJsonArray::Copy( )
 /**
  * @ingroup JsonParser
  * @brief 자료구조를 JSON array 문자열로 변환한다. 본 메소드는 입력된 strText 를 초기화시킨 후, ToString 메소드를 호출한다.
- * @param strText JSON array 문자열 저장 변수
- * @param bUseNewLine	JSON object 에 포함된 각 항목별로 new line 에 출력하는 경우 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @param strText		JSON array 문자열 저장 변수
+ * @param eNewLine	new line 을 입력하는 방법에 대한 설정값
  * @returns JSON object 문자열 길이를 리턴한다.
  */
-int CJsonArray::MakeString( std::string & strText, bool bUseNewLine )
+int CJsonArray::MakeString( std::string & strText, EJsonNewLine eNewLine )
 {
 	strText.clear();
 
-	return ToString( strText, bUseNewLine );
+	return ToString( strText, eNewLine );
 }
 
 /**

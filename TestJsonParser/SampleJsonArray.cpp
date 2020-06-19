@@ -39,7 +39,7 @@ void SampleJsonArray()
 
 		printf( "#200 [%s]\n", strJson.c_str() );
 
-		clsArray.MakeString( strJson, true );
+		clsArray.MakeString( strJson, E_JNL_ALL );
 
 		printf( "#201 [%s]\n", strJson.c_str() );
 	}

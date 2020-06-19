@@ -31,6 +31,13 @@
 #define JSON_TYPE_BOOL		0x05
 #define JSON_TYPE_NULL		0x00
 
+enum EJsonNewLine
+{
+	E_JNL_NULL = 0,
+	E_JNL_ALL,
+	E_JNL_TOP
+};
+
 /**
  * @ingroup JsonParser
  * @brief JSON 변수 추상 클래스
@@ -42,7 +49,7 @@ public:
 	virtual ~CJsonType();
 
 	virtual int Parse( const char * pszText, int iTextLen ) = 0;
-	virtual int ToString( std::string & strText, bool bUseNewLine = false, int iDepth = 0 ) = 0;
+	virtual int ToString( std::string & strText, EJsonNewLine eNewLine = E_JNL_NULL, int iDepth = 0 ) = 0;
 	virtual int GetStringLen( ) = 0;
 	virtual CJsonType * Copy( ) = 0;
 

@@ -188,7 +188,7 @@ void CJsonBeautifulDlg::OnEnChangeInput()
 	{
 		std::string strOutput;
 
-		clsJsonArray.ToString( strOutput, true );
+		clsJsonArray.ToString( strOutput, E_JNL_TOP );
 		m_strOutput = strOutput.c_str();
 
 		UpdateData(FALSE);

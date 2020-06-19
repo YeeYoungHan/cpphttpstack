@@ -42,12 +42,12 @@ public:
 	virtual ~CJsonObject();
 
 	virtual int Parse( const char * pszText, int iTextLen );
-	virtual int ToString( std::string & strText, bool bUseNewLine = false, int iDepth = 0 );
+	virtual int ToString( std::string & strText, EJsonNewLine eNewLine = E_JNL_NULL, int iDepth = 0 );
 	virtual int GetStringLen( );
 	virtual CJsonType * Copy( );
 
 	int Parse( std::string & strText );
-	int MakeString( std::string & strText, bool bUseNewLine = false );
+	int MakeString( std::string & strText, EJsonNewLine eNewLine = E_JNL_NULL );
 	void Clear();
 
 	bool SelectStringData( const char * pszName, std::string & strValue );
@@ -85,7 +85,7 @@ public:
 	bool Exist( const char * pszName );
 
 	static CJsonType * GetJsonType( const char * pszText, int iTextLen, int iPos );
-	static void JsonToString( CJsonType * pclsType, std::string & strText, bool bUseNewLine = false, int iDepth = 0 );
+	static void JsonToString( CJsonType * pclsType, std::string & strText, EJsonNewLine eNewLine = E_JNL_NULL, int iDepth = 0 );
 	static void AddTab( std::string & strText, int iDepth );
 
 	JSON_OBJECT_MAP m_clsMap;
