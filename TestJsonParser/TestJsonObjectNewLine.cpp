@@ -31,7 +31,6 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 	}
 
 	clsObject.ToString( strOutput, E_JNL_ALL );
-	int iOutputLen = clsObject.GetStringLen();
 
 	if( strcmp( strOutput.c_str(), pszOutput ) )
 	{
