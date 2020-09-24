@@ -18,7 +18,7 @@ LIB=-L../HtmlParser -lhtmlparser \
 all: TestHtmlParser.exe
 
 SRV_OBJ=Main.o \
-	TestHtmlAttribute.o TestHtmlClass.o TestHtmlElement.o
+	TestHtmlAttribute.o TestHtmlClass.o TestHtmlElement.o TestHtmlGetText.o
 
 TestHtmlParser.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)
