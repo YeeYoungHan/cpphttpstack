@@ -20,6 +20,10 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * 윈도우 : Visual C++ 2008
 * 리눅스 : g++
 
+### API 문서
+
+* https://yeeyounghan.github.io/doc/CppHttpStack/html/index.html
+
 ### 폴더 설명
 
 * doc
