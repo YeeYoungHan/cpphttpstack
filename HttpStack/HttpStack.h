@@ -25,6 +25,11 @@
 #include "HttpStackCallBack.h"
 
 /**
+ * @defgroup HttpStack HttpStack
+ * HTTP 통신 라이브러리
+ */
+
+/**
  * @ingroup HttpStack
  * @brief HTTP 서버의 각 세션 정보를 저장하는 클래스
  */

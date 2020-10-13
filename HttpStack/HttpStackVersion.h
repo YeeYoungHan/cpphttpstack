@@ -16,41 +16,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _WSDL_MESSAGE_H_
-#define _WSDL_MESSAGE_H_
+#ifndef _HTTP_STACK_VERSION_H_
+#define _HTTP_STACK_VERSION_H_
 
-#include "XmlElement.h"
-#include "SoapClass.h"
+/* 버전 정보
 
-/**
- * @defgroup WsdlParser WsdlParser
- * WSDL 파서 라이브러리
- */
+= 버전 0.10 ( 2020년 10월 13일 ) =
+ * API 문서 제작함
 
-/**
- * @ingroup WsdlParser
- * @brief WSDL 메시지 저장 클래스
- */
-class CWsdlMessage
-{
-public:
-	CWsdlMessage();
-	~CWsdlMessage();
-
-	bool Parse( const char * pszText, int iTextLen );
-	bool Parse( std::string & strText );
-
-	bool ParseFile( const char * pszFileName );
-
-	CSoapClass * GetSoap( );
-
-private:
-	CXmlElement m_clsRoot;
-	CSoapClass	m_clsSoap;
-
-	bool ParseXml( );
-	bool GetMessageArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
-	bool GetTypeArgList( const char * pszName, SOAP_ARG_LIST & clsArgList );
-};
+*/
 
 #endif
+
+/**
+@mainpage C++ HTTP Stack
+@section intro 소개
+	- C++ STL 라이브러리를 이용한 HTTP 클라이언트 및 서버 라이브러리 개발
+	- 프로젝트 홈페이지 : https://github.com/YeeYoungHan/cpphttpstack
+@section  CREATEINFO 작성정보
+  - 작성자 : 이영한
+	- 홈페이지 : http://blog.naver.com/websearch
+*/

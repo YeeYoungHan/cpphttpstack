@@ -132,7 +132,6 @@ static void SSLPrintError( )
  * @ingroup TcpStack
  * @brief SSL 서버 라이브러리를 시작한다.
  * @param szCertFile		서버 인증서 및 개인키 파일
- * @param szCaCertFile	CA 인증서 파일
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool SSLServerStart( const char * szCertFile )

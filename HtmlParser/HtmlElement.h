@@ -26,6 +26,11 @@
 class CHtmlElement;
 
 /**
+ * @defgroup HtmlParser HtmlParser
+ * HTML 문서 파서/생성 라이브러리
+ */
+
+/**
  * @ingroup HtmlParser
  * @brief HTML element 의 종류
  */

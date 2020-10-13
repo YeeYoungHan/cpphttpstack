@@ -25,6 +25,11 @@
 #include "HttpUri.h"
 
 /**
+ * @defgroup HttpParser HttpParser
+ * HTTP 메시지 파서/생성 라이브러리
+ */
+
+/**
  * @ingroup HttpParser
  * @brief HTTP 메시지 클래스
  */

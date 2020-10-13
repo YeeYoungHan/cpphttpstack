@@ -162,6 +162,10 @@
 				RelativePath=".\HttpStack.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\HttpStackVersion.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"

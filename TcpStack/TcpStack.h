@@ -27,6 +27,11 @@
 #include "TcpStackSetup.h"
 
 /**
+ * @defgroup TcpStack TcpStack
+ * TCP 통신 라이브러리
+ */
+
+/**
  * @ingroup TcpStack
  * @brief TCP listen / connect 및 수신/전송 클래스
  */
