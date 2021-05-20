@@ -316,6 +316,80 @@ bool HexToString( const char * pszInput, std::string & strOutput )
 
 /**
  * @ingroup SipPlatform
+ * @brief HEX 만 저장된 문자열을 숫자로 변환한 문자열을 생성한다.
+ * @param pszInput		HEX 만 저장된 문자열
+ * @param iInputSize	HEX 만 저장된 문자열의 길이
+ * @param strOutput 숫자로 변환된 문자열 저장용 변수
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool HexToString( const char * pszInput, int iInputSize, std::string & strOutput )
+{
+	int iValue;
+
+	strOutput.clear();
+
+	if( iInputSize >= 2 )
+	{
+		if( pszInput[0] == '0' && pszInput[1] == 'x' )
+		{
+			pszInput += 2;
+			iInputSize -= 2;
+		}
+	}
+
+	if( iInputSize == 0 || iInputSize % 2 == 1 ) return false;
+
+	for( int i = 0; i < iInputSize; i += 2 )
+	{
+		sscanf( pszInput + i, "%02x", &iValue );
+		strOutput.push_back( (char)iValue );
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief 입력 문자열을 HEX 만 저장된 문자열로 변환한다.
+ * @param strInput	입력 문자열
+ * @param strOutput HEX 만 저장된 문자열 저장용 변수
+ */
+void StringToHex( std::string & strInput, std::string & strOutput )
+{
+	char szHex[3];
+	int iLen = (int)strInput.length();
+
+	strOutput.clear();
+
+	for( int i = 0; i < iLen; ++i )
+	{
+		snprintf( szHex, sizeof(szHex), "%02x", (uint8_t)strInput.at(i) );
+		strOutput.append( szHex );
+	}
+}
+
+/**
+ * @ingroup SipPlatform
+ * @brief 입력 문자열을 HEX 만 저장된 문자열로 변환한다.
+ * @param pszInput		입력 문자열
+ * @param iInputSize	입력 문자열의 길이
+ * @param strOutput		HEX 만 저장된 문자열 저장용 변수
+ */
+void StringToHex( const char * pszInput, int iInputSize, std::string & strOutput )
+{
+	char szHex[3];
+
+	strOutput.clear();
+
+	for( int i = 0; i < iInputSize; ++i )
+	{
+		snprintf( szHex, sizeof(szHex), "%02x", (uint8_t)pszInput[i] );
+		strOutput.append( szHex );
+	}
+}
+
+/**
+ * @ingroup SipPlatform
  * @brief 문자열이 출력 가능한지 검사한다.
  * @param pszText		문자열
  * @param iTextLen	문자열 길이
