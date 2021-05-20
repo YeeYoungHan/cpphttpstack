@@ -188,6 +188,10 @@
 				RelativePath=".\TestHttpParameter.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHuffmanCode.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

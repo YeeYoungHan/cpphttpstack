@@ -16,40 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#ifndef _HTTP_HUFFMAN_CODE_H_
+#define _HTTP_HUFFMAN_CODE_H_
+
 #include "SipPlatformDefine.h"
-#include <stdio.h>
-#include "MemoryDebug.h"
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
-bool TestHttpMultipart( );
-bool TestHuffmanCode( );
+int HuffmanCodeEncode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * pszOutput, uint32_t iOutputSize );
 
-int main( int argc, char * argv[] )
-{
-	bool bOk = false;
-
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
-
-	if( TestHuffmanCode( ) == false ) goto FUNC_END;
-	if( TestHttpMultipart( ) == false ) goto FUNC_END;
-	if( TestHttpParameterList( ) == false ) goto FUNC_END;
-	if( TestHttpPacket( ) == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
-	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
-	}
-
-	return 0;
-}
