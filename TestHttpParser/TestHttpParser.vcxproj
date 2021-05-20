@@ -95,6 +95,7 @@
     <ClCompile Include="TestHttpMultipart.cpp" />
     <ClCompile Include="TestHttpPacket.cpp" />
     <ClCompile Include="TestHttpParameter.cpp" />
+    <ClCompile Include="TestHuffmanCode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">
