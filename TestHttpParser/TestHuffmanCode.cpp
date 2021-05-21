@@ -23,7 +23,7 @@
 
 bool _TestHuffmanCodeEncode( const char * pszInput, const char * pszOutputHex )
 {
-	uint8_t szOutput[4000];
+	uint8_t szOutput[1000], szResult[1000];
 	int n;
 	std::string strHex;
 	
@@ -39,6 +39,20 @@ bool _TestHuffmanCodeEncode( const char * pszInput, const char * pszOutputHex )
 	if( strcmp( pszOutputHex, strHex.c_str() ) )
 	{
 		printf( "HuffmanCodeEncode(%s) output [%s] != want [%s]\n", pszInput, strHex.c_str(), pszOutputHex );
+		return false;
+	}
+
+	memset( szResult, 0, sizeof(szResult) );
+	n = HuffmanCodeDecode( szOutput, n, szResult, sizeof(szResult) );
+	if( n == -1 )
+	{
+		printf( "HuffmanCodeDecode(%s) error\n", pszInput );
+		return false;
+	}
+
+	if( strcmp( pszInput, (char *)szResult ) )
+	{
+		printf( "HuffmanCodeDecode output [%s] != want [%s]\n", szResult, pszInput );
 		return false;
 	}
 
@@ -174,7 +188,7 @@ bool _TestHuffmanCodeDecode( const char * pszInputHex, const char * pszOutput )
 
 bool TestHuffmanCodeDecode( )
 {
-	if( _TestHuffmanCodeDecode( "27", "c" ) == false ) return false;
+	//if( _TestHuffmanCodeDecode( "27", "c" ) == false ) return false;
 
 	return true;
 }

@@ -71,71 +71,108 @@ int HuffmanCodeEncode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 	return iOutputPos;
 }
 
-#define HUFFMAN_SEARCH( arrBuf, iMax, iTest, iBit ) for( i = 0; i < iMax; ++i ) \
-			{ \
-				if( arrBuf[i].iCode == iTest ) \
-				{ \
-					pszOutput[iOutputPos++] = arrBuf[i].cChar; \
-					iCode <<= iBit; \
-					iBitPos -= iBit; \
-					bFound = true; \
-					break; \
-				} \
-			}
+#define SET_CODE_INPUT( cChar, iInputBitRemain ) switch( iInputBitRemain ) \
+{ \
+	case 1: iCodeInput = cChar & 0x01; break; \
+	case 2: iCodeInput = cChar & 0x03; break; \
+	case 3: iCodeInput = cChar & 0x07; break; \
+	case 4: iCodeInput = cChar & 0x0F; break; \
+	case 5: iCodeInput = cChar & 0x1F; break; \
+	case 6: iCodeInput = cChar & 0x3F; break; \
+	case 7: iCodeInput = cChar & 0x7F; break; \
+}
+
+#include <stdio.h>
+
+static void Print( const char * pszName, uint32_t iCode, int iBitPos, int iBitRemain, uint8_t cInput, int iInputBitRemain )
+{
+	printf( "%s code[", pszName );
+
+	for( int i = 0; i < iBitPos; ++i )
+	{
+		printf( "%d", ( iCode >> ( 32 - i - 1 ) ) & 0x01 );
+	}
+
+	printf( "] pos[%d] remain[%d] input[", iBitPos, iBitRemain );
+
+	for( int i = 0; i < 8; ++i )
+	{
+		printf( "%d", ( cInput >> ( 8 - i - 1 ) ) & 0x01 );
+	}
+	
+	printf( "] input remain[%d]\n", iInputBitRemain );
+}
 
 int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * pszOutput, uint32_t iOutputSize )
 {
-	uint32_t iInputPos = 0, iInputBitPos = 0;
-	uint32_t iOutputPos = 0;
-	uint32_t iCode = 0, iBitPos = 0, iBitRemain, iTest;
-	uint32_t iDecode, i;
+	int iInputPos = 0, iInputBitRemain = 0;
+	int iOutputPos = 0;
+	int iBitPos = 0, iBitRemain, iTest, iDecode, i;
+	uint32_t iCode = 0, iCodeInput;
+	uint8_t	cTemp;
 	bool bFound;
 
-	while( iInputPos < iInputLen || iBitPos >= 5 )
+	while( iInputPos < (int)iInputLen || iBitPos >= 5 )
 	{
 		if( iBitPos < 32 )
 		{
 			iBitRemain = 32 - iBitPos;
 
-			if( iInputBitPos )
+			if( iInputBitRemain )
 			{
-				if( iBitRemain >= iInputBitPos )
+				if( iBitRemain >= iInputBitRemain )
 				{
-					iCode <<= iInputBitPos;
-					iCode |= pszInput[iInputPos++] >> ( 8 - iInputBitPos );
-					iBitPos += iInputBitPos;
-					iBitRemain -= iInputBitPos;
-					iInputBitPos = 0;
+					SET_CODE_INPUT( pszInput[iInputPos], iInputBitRemain );
+					iCode |= iCodeInput << ( iBitRemain - iInputBitRemain );
+					iBitPos += iInputBitRemain;
+					iBitRemain -= iInputBitRemain;
+					iInputBitRemain = 0;
+					++iInputPos;
+
+					Print( "#1", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 				else
 				{
-					iCode <<= iBitRemain;
-					iCode |= pszInput[iInputPos++] >> ( 8 - iBitRemain );
+					cTemp = pszInput[iInputPos] >> ( iInputBitRemain - iBitRemain );
+					SET_CODE_INPUT( cTemp, iBitRemain );
+					iCode |= iCodeInput;
 					iBitPos += iBitRemain;
-					iInputBitPos += iBitRemain;
+					iInputBitRemain -= iBitRemain;
 					iBitRemain = 0;
+
+					Print( "#2", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 			}
 
-			for( ; iBitRemain > 0 && iInputPos < iInputLen; iBitRemain -= 8 )
+			for( ; iBitRemain > 0 && iInputPos < (int)iInputLen; iBitRemain -= 8 )
 			{
 				if( iBitRemain >= 8 )
 				{
-					iCode <<= 8;
-					iCode |= pszInput[iInputPos++];
+					iCode |= pszInput[iInputPos++] << ( iBitRemain - 8 );
 					iBitPos += 8;
+					Print( "#3", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 				else
 				{
-					iCode <<= iBitRemain;
-					iCode |= pszInput[iInputPos++] >> iBitPos;
+					cTemp = pszInput[iInputPos] >> ( 8 - iBitRemain );
+					SET_CODE_INPUT( cTemp, iBitRemain );
+					iCode |= iCodeInput;
 					iBitPos += iBitRemain;
-					iInputBitPos = iBitRemain;
+					iInputBitRemain = 8 - iBitRemain;
+					Print( "#4", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 			}
 		}
 
-		if( iBitPos < 5 ) break;
+		if( iBitPos < 5 ) 
+		{
+			break;
+		}
+
+		if( !strcmp( (char *)pszOutput, "www.example" ) )
+		{
+			printf( "###\n" );
+		}
 
 		bFound = false;
 
@@ -143,7 +180,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 		{
 			if( iBitPos < garrHuffmanDecodeInfo[iDecode].iBit ) break;
 
-			iTest = iCode >> ( iBitPos - garrHuffmanDecodeInfo[iDecode].iBit );
+			iTest = iCode >> ( 32 - garrHuffmanDecodeInfo[iDecode].iBit );
 
 			for( i = 0; i < garrHuffmanDecodeInfo[iDecode].iCount; ++i )
 			{
@@ -153,6 +190,10 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 					iCode <<= garrHuffmanDecodeInfo[iDecode].iBit;
 					iBitPos -= garrHuffmanDecodeInfo[iDecode].iBit;
 					bFound = true;
+
+					Print( "#5", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
+					printf( "output[%s] bit[%d]\n", pszOutput, garrHuffmanDecodeInfo[iDecode].iBit );
+
 					break;
 				}
 			}
@@ -160,7 +201,15 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 			if( bFound ) break;
 		}
 
-		if( bFound == false ) break;
+		if( bFound == false )
+		{
+			break;
+		}
+
+		if( iOutputPos >= (int)iOutputSize )
+		{
+			return -1;
+		}
 	}
 
 	return iOutputPos;

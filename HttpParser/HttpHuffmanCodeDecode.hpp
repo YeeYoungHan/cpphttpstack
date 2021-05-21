@@ -366,8 +366,8 @@ static HuffmanDecode garrHuffmanDecode30[] =
 typedef struct 
 {
 	HuffmanDecode * psttDecode;
-	uint32_t	iBit;
-	uint32_t	iCount;
+	int		iBit;
+	int		iCount;
 } HuffmanDecodeInfo;
 
 #define HUFFMAN_DECODE_INFO( arrBuf ) { arrBuf, arrBuf[0].iBit, sizeof(arrBuf) / sizeof(HuffmanDecode) }
