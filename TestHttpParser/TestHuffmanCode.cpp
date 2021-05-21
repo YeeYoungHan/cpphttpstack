@@ -186,9 +186,54 @@ bool _TestHuffmanCodeDecode( const char * pszInputHex, const char * pszOutput )
 	return true;
 };
 
+bool _TestHuffmanCodeEncodeDecode( const char * pszInput )
+{
+	uint8_t szOutput[1000], szResult[1000];
+	int n;
+	
+	n = HuffmanCodeEncode( (uint8_t *)pszInput, strlen(pszInput), szOutput, sizeof(szOutput) );
+	if( n == -1 )
+	{
+		printf( "HuffmanCodeEncode(%s) error\n", pszInput );
+		return false;
+	}
+	
+	memset( szResult, 0, sizeof(szResult) );
+	n = HuffmanCodeDecode( szOutput, n, szResult, sizeof(szResult) );
+	if( n == -1 )
+	{
+		printf( "HuffmanCodeDecode(%s) error\n", pszInput );
+		return false;
+	}
+
+	if( strcmp( pszInput, (char *)szResult ) )
+	{
+		printf( "HuffmanCodeDecode output [%s] != want [%s]\n", szResult, pszInput );
+		return false;
+	}
+
+	return true;
+}
+
 bool TestHuffmanCodeDecode( )
 {
-	//if( _TestHuffmanCodeDecode( "27", "c" ) == false ) return false;
+	if( _TestHuffmanCodeDecode( "27", "c" ) == false ) return false;
+
+	char szInput[1000];
+
+	for( uint8_t c = 1; c < 255; ++c )
+	{
+		sprintf( szInput, "%c", c );
+		if( _TestHuffmanCodeEncodeDecode( szInput ) == false ) return false;
+	}
+
+	memset( szInput, 0, sizeof(szInput) );
+
+	for( uint8_t c = 1; c < 255; ++c )
+	{
+		sprintf( szInput + c - 1, "%c", c );
+		if( _TestHuffmanCodeEncodeDecode( szInput ) == false ) return false;
+	}
 
 	return true;
 }
