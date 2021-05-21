@@ -22,6 +22,15 @@
 #include "HttpHuffmanCodeEncode.hpp"
 #include "HttpHuffmanCodeDecode.hpp"
 
+/**
+ * @ingroup HttpParser
+ * @brief Huffman code 인코딩 함수
+ * @param pszInput		[in] 평문
+ * @param iInputLen		[in] pszInput 변수의 길이
+ * @param pszOutput		[out] Huffman code 인코딩된 데이터를 저장할 버퍼
+ * @param iOutputSize [in] pszOutput 변수의 크기
+ * @returns 성공하면 Huffman code 인코딩된 데이터의 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int HuffmanCodeEncode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * pszOutput, uint32_t iOutputSize )
 {
 	HuffmanEncode * psttCode;
@@ -91,6 +100,15 @@ static void PrintDebug( const char * pszName, uint32_t iCode, int iBitPos, int i
 	printf( "] input remain[%d]\n", iInputBitRemain );
 }
 
+/**
+ * @ingroup HttpParser
+ * @brief Huffman code 디코더 함수
+ * @param pszInput		[in] Huffman code 로 인코딩된 데이터를 저장하는 버퍼
+ * @param iInputLen		[in] pszInput 변수의 길이
+ * @param pszOutput		[out] Huffman code 로 디코딩된 문자열을 저장할 버퍼
+ * @param iOutputSize [in] pszOutput 변수의 크기
+ * @returns 성공하면 Huffman code 로 디코딩된 문자열의 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
+ */
 int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * pszOutput, uint32_t iOutputSize )
 {
 	int iInputPos = 0, iInputBitRemain = 0;
@@ -107,6 +125,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 
 			if( iInputBitRemain )
 			{
+				// 입력 문자에서 남은 값만 변수에 저장한다.
 				switch( iInputBitRemain )
 				{
 				case 1: iCodeInput = pszInput[iInputPos] & 0x01; break;
@@ -120,6 +139,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 
 				if( iBitRemain >= iInputBitRemain )
 				{
+					// 남은 값을 모두 저장한다.
 					iCode |= iCodeInput << ( iBitRemain - iInputBitRemain );
 					iBitPos += iInputBitRemain;
 					iBitRemain -= iInputBitRemain;
@@ -128,6 +148,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 				}
 				else
 				{
+					// 남은 값의 일부만 저장한다.
 					iCode |= iCodeInput >> ( iInputBitRemain - iBitRemain );
 					iBitPos += iBitRemain;
 					iInputBitRemain -= iBitRemain;
@@ -139,11 +160,13 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 			{
 				if( iBitRemain >= 8 )
 				{
+					// 8bit 저장한다.
 					iCode |= pszInput[iInputPos++] << ( iBitRemain - 8 );
 					iBitPos += 8;
 				}
 				else
 				{
+					// 일부만 저장한다.
 					iCode |= pszInput[iInputPos] >> ( 8 - iBitRemain );
 					iBitPos += iBitRemain;
 					iInputBitRemain = 8 - iBitRemain;
@@ -158,6 +181,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 
 		bFound = false;
 
+		// 코드 테이블에서 검색한다.
 		for( iDecode = 0; garrHuffmanDecodeInfo[iDecode].psttDecode; ++iDecode )
 		{
 			if( iBitPos < garrHuffmanDecodeInfo[iDecode].iBit ) break;
