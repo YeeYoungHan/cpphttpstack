@@ -147,8 +147,41 @@ bool TestHuffmanCodeEncode( )
 	return true;
 }
 
+bool _TestHuffmanCodeDecode( const char * pszInputHex, const char * pszOutput )
+{
+	std::string strInput;
+	uint8_t	szOutput[4000];
+
+	memset( szOutput, 0, sizeof(szOutput) );
+
+	HexToString( pszInputHex, strInput );
+
+	int n = HuffmanCodeDecode( (uint8_t *)strInput.c_str(), strInput.length(), szOutput, sizeof(szOutput) );
+	if( n == -1 )
+	{
+		printf( "HuffmanCodeDecode(%s) error\n", pszInputHex );
+		return false;
+	}
+
+	if( strcmp( (char *)szOutput, pszOutput ) )
+	{
+		printf( "HuffmanCodeDecode(%s) output [%s] != want [%s]\n", pszInputHex, szOutput, pszOutput );
+		return false;
+	}
+
+	return true;
+};
+
+bool TestHuffmanCodeDecode( )
+{
+	if( _TestHuffmanCodeDecode( "27", "c" ) == false ) return false;
+
+	return true;
+}
+
 bool TestHuffmanCode( )
 {
+	if( TestHuffmanCodeDecode() == false ) return false;
 	if( TestHuffmanCodeEncode() == false ) return false;
 
 	return true;

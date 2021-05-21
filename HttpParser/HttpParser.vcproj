@@ -159,7 +159,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\HttpHuffmanCode.hpp"
+				RelativePath=".\HttpHuffmanCodeDecode.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpHuffmanCodeEncode.hpp"
 				>
 			</File>
 			<File
