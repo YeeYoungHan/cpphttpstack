@@ -84,7 +84,7 @@ int HuffmanCodeEncode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 
 #include <stdio.h>
 
-static void Print( const char * pszName, uint32_t iCode, int iBitPos, int iBitRemain, uint8_t cInput, int iInputBitRemain )
+static void PrintDebug( const char * pszName, uint32_t iCode, int iBitPos, int iBitRemain, uint8_t cInput, int iInputBitRemain )
 {
 	printf( "%s code[", pszName );
 
@@ -128,8 +128,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 					iBitRemain -= iInputBitRemain;
 					iInputBitRemain = 0;
 					++iInputPos;
-
-					Print( "#1", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 				else
 				{
@@ -139,8 +137,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 					iBitPos += iBitRemain;
 					iInputBitRemain -= iBitRemain;
 					iBitRemain = 0;
-
-					Print( "#2", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 			}
 
@@ -150,7 +146,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 				{
 					iCode |= pszInput[iInputPos++] << ( iBitRemain - 8 );
 					iBitPos += 8;
-					Print( "#3", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 				else
 				{
@@ -159,7 +154,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 					iCode |= iCodeInput;
 					iBitPos += iBitRemain;
 					iInputBitRemain = 8 - iBitRemain;
-					Print( "#4", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
 				}
 			}
 		}
@@ -167,11 +161,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 		if( iBitPos < 5 ) 
 		{
 			break;
-		}
-
-		if( !strcmp( (char *)pszOutput, "www.example" ) )
-		{
-			printf( "###\n" );
 		}
 
 		bFound = false;
@@ -190,10 +179,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 					iCode <<= garrHuffmanDecodeInfo[iDecode].iBit;
 					iBitPos -= garrHuffmanDecodeInfo[iDecode].iBit;
 					bFound = true;
-
-					Print( "#5", iCode, iBitPos, iBitRemain, pszInput[iInputPos], iInputBitRemain );
-					printf( "output[%s] bit[%d]\n", pszOutput, garrHuffmanDecodeInfo[iDecode].iBit );
-
 					break;
 				}
 			}
