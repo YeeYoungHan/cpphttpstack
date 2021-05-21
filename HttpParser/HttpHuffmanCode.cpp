@@ -17,6 +17,7 @@
  */
 
 #include "HttpHuffmanCode.h"
+#include <stdio.h>
 
 #include "HttpHuffmanCodeEncode.hpp"
 #include "HttpHuffmanCodeDecode.hpp"
@@ -71,19 +72,6 @@ int HuffmanCodeEncode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 	return iOutputPos;
 }
 
-#define SET_CODE_INPUT( cChar, iInputBitRemain ) switch( iInputBitRemain ) \
-{ \
-	case 1: iCodeInput = cChar & 0x01; break; \
-	case 2: iCodeInput = cChar & 0x03; break; \
-	case 3: iCodeInput = cChar & 0x07; break; \
-	case 4: iCodeInput = cChar & 0x0F; break; \
-	case 5: iCodeInput = cChar & 0x1F; break; \
-	case 6: iCodeInput = cChar & 0x3F; break; \
-	case 7: iCodeInput = cChar & 0x7F; break; \
-}
-
-#include <stdio.h>
-
 static void PrintDebug( const char * pszName, uint32_t iCode, int iBitPos, int iBitRemain, uint8_t cInput, int iInputBitRemain )
 {
 	printf( "%s code[", pszName );
@@ -109,7 +97,6 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 	int iOutputPos = 0;
 	int iBitPos = 0, iBitRemain, iTest, iDecode, i;
 	uint32_t iCode = 0, iCodeInput;
-	uint8_t	cTemp;
 	bool bFound;
 
 	while( iInputPos < (int)iInputLen || iBitPos >= 5 )
@@ -120,9 +107,19 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 
 			if( iInputBitRemain )
 			{
+				switch( iInputBitRemain )
+				{
+				case 1: iCodeInput = pszInput[iInputPos] & 0x01; break;
+				case 2: iCodeInput = pszInput[iInputPos] & 0x03; break;
+				case 3: iCodeInput = pszInput[iInputPos] & 0x07; break;
+				case 4: iCodeInput = pszInput[iInputPos] & 0x0F; break;
+				case 5: iCodeInput = pszInput[iInputPos] & 0x1F; break;
+				case 6: iCodeInput = pszInput[iInputPos] & 0x3F; break;
+				case 7: iCodeInput = pszInput[iInputPos] & 0x7F; break;
+				}
+
 				if( iBitRemain >= iInputBitRemain )
 				{
-					SET_CODE_INPUT( pszInput[iInputPos], iInputBitRemain );
 					iCode |= iCodeInput << ( iBitRemain - iInputBitRemain );
 					iBitPos += iInputBitRemain;
 					iBitRemain -= iInputBitRemain;
@@ -131,9 +128,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 				}
 				else
 				{
-					cTemp = pszInput[iInputPos] >> ( iInputBitRemain - iBitRemain );
-					SET_CODE_INPUT( cTemp, iBitRemain );
-					iCode |= iCodeInput;
+					iCode |= iCodeInput >> ( iInputBitRemain - iBitRemain );
 					iBitPos += iBitRemain;
 					iInputBitRemain -= iBitRemain;
 					iBitRemain = 0;
@@ -149,9 +144,7 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 				}
 				else
 				{
-					cTemp = pszInput[iInputPos] >> ( 8 - iBitRemain );
-					SET_CODE_INPUT( cTemp, iBitRemain );
-					iCode |= iCodeInput;
+					iCode |= pszInput[iInputPos] >> ( 8 - iBitRemain );
 					iBitPos += iBitRemain;
 					iInputBitRemain = 8 - iBitRemain;
 				}
