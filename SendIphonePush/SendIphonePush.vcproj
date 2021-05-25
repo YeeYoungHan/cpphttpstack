@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="HttpStack"
-	ProjectGUID="{4E8CF57C-470C-4445-9382-6C3A2A3648D6}"
-	RootNamespace="HttpStack"
+	Name="SendIphonePush"
+	ProjectGUID="{4C308F7E-A98F-4046-9109-E8FEAD3E0F8F}"
+	RootNamespace="SendIphonePush"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,10 +60,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,6 +82,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -82,7 +92,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -105,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -123,10 +133,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,6 +155,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -151,61 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Http2Client.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient2.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStack.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackVersion.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="헤더 파일"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\Http2Client.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStack.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackCallBack.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="WebSocket"
-			>
-			<File
-				RelativePath=".\WebSocketPacket.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebSocketPacket.h"
+				RelativePath=".\SendIphonePush.cpp"
 				>
 			</File>
 		</Filter>
