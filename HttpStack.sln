@@ -153,6 +153,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonBeautiful", "JsonBeauti
 		{F90ACA2E-E87F-457C-8F59-38EC95B956AB} = {F90ACA2E-E87F-457C-8F59-38EC95B956AB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Http2Parser", "Http2Parser\Http2Parser.vcproj", "{A977B675-C94D-4B57-A368-20FFB07DD660}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -315,6 +317,12 @@ Global
 		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|Win32.ActiveCfg = Release|Win32
 		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|Win32.Build.0 = Release|Win32
 		{29220B07-D1C9-4DBF-BCD5-56B3759B1629}.Release|x64.ActiveCfg = Release|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Debug|Win32.Build.0 = Debug|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Debug|x64.ActiveCfg = Debug|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|Win32.ActiveCfg = Release|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|Win32.Build.0 = Release|Win32
+		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

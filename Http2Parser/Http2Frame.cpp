@@ -1,0 +1,74 @@
+/* 
+ * Copyright (C) 2021 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ */
+
+#include "Http2Frame.h"
+#include "SipTcp.h"
+#include "Log.h"
+
+CHttp2Frame::CHttp2Frame() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
+{
+}
+
+CHttp2Frame::~CHttp2Frame()
+{
+	Clear();
+}
+
+bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier, uint8_t * pszBody, int iBodyLen )
+{
+	if( ( 9 + iBodyLen ) > m_iPacketSize )
+	{
+		Clear();
+	}
+
+	if( m_pszPacket == NULL )
+	{
+		m_iPacketSize = 9 + iBodyLen;
+		m_iPacketLen = m_iPacketSize;
+
+		m_pszPacket = (uint8_t *)malloc( m_iPacketSize );
+		if( m_pszPacket == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s malloc(%d) error(%d)", __FUNCTION__, m_iPacketSize, GetError() );
+			return false;
+		}
+	}
+
+	int iTemp = htonl( iBodyLen );
+	memcpy( m_pszPacket, (char *)&iTemp + 1, 3 );
+	m_pszPacket[3] = cType;
+	m_pszPacket[4] = cFlag;
+
+	iTemp = htonl( iStreamIdentifier );
+	memcpy( m_pszPacket + 5, &iTemp, 4 );
+	memcpy( m_pszPacket + 9, pszBody, iBodyLen );
+
+	return true;
+}
+
+void CHttp2Frame::Clear()
+{
+	if( m_pszPacket )
+	{
+		free( m_pszPacket );
+		m_pszPacket = NULL;
+	}
+
+	m_iPacketSize = 0;
+	m_iPacketLen = 0;
+}
