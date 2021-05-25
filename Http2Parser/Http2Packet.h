@@ -16,32 +16,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_FRAME_H_
-#define _HTTP2_FRAME_H_
+#ifndef _HTTP2_PACKET_H_
+#define _HTTP2_PACKET_H_
 
-#include "SipPlatformDefine.h"
+#include <string>
 
-class CHttp2Frame
+class CHttp2Packet
 {
 public:
-	CHttp2Frame();
-	~CHttp2Frame();
+	CHttp2Packet();
+	~CHttp2Packet();
 
-	bool Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier, uint8_t * pszBody, int iBodyLen );
-
-	uint8_t GetType();
-	uint8_t GetFlags();
-	uint32_t GetStreamIdentifier();
-	uint8_t * GetBody();
-	int GetBodyLen();
-
-	uint8_t	* m_pszPacket;
-	int m_iPacketLen;
+	bool AddPacket( const char * pszPacket, int iPacketLen );
+	bool IsCompleted( );
 
 private:
-	void Clear();
-
-	int m_iPacketSize;
+	std::string m_strBuf;
 };
 
 #endif

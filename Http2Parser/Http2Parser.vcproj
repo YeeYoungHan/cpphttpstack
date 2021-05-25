@@ -154,6 +154,10 @@
 				RelativePath=".\Http2Frame.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Http2Packet.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -166,6 +170,10 @@
 			</File>
 			<File
 				RelativePath=".\Http2Frame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2Packet.h"
 				>
 			</File>
 		</Filter>
