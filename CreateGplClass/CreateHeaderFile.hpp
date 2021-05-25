@@ -24,7 +24,7 @@
 void PrintGPL( FILE * fd )
 {
 	fprintf( fd, "/* \n"
-	" * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)\n"
+	" * Copyright (C) 2021 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)\n"
 	" *\n"
 	" * This program is free software; you can redistribute it and/or modify\n"
 	" * it under the terms of the GNU General Public License as published by\n"
