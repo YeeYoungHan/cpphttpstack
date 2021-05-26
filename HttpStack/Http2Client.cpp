@@ -19,7 +19,7 @@
 #include "Http2Client.h"
 #include "Log.h"
 
-CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0)
+CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0), m_iPort(0)
 {
 	InitNetwork();
 }
@@ -78,6 +78,9 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 	}
 
 	CLog::Print( LOG_NETWORK, "SSLConnect(%s:%d) success", pszIp, iPort );
+
+	m_strIp = pszIp;
+	m_iPort = iPort;
 
 	return true;
 }
@@ -168,7 +171,31 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		m_iStreamIdentifier += 2;
 	}
 
+	if( m_clsSendConversion.MakeFrameList( *pclsRequest, m_clsFrameList ) == false )
+	{
+		return false;
+	}
 
+	HTTP2_FRAME_LIST::iterator itFL;
+	int n;
+	char szPacket[8192];
+	CHttp2Packet clsPacket;
+
+	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
+	{
+		n = SSLSend( m_psttSsl, (char *)((*itFL)->m_pszPacket), (*itFL)->m_iPacketLen );
+		if( n != (*itFL)->m_iPacketLen )
+		{
+			CLog::Print( LOG_ERROR, "SSLSend(%s:%d) error(%d)", m_strIp.c_str(), m_iPort, n );
+			return false;
+		}
+	}
+
+	while( 1 )
+	{
+		n = SSLRecv( psttSsl, szPacket, sizeof(szPacket) );
+		if( n <= 0 ) break;
+	}
 
 	return true;
 }

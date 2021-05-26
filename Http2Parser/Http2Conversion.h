@@ -20,6 +20,7 @@
 #define _HTTP2_CONVERSION_H_
 
 #include "HttpMessage.h"
+#include "Http2Header.h"
 #include "Http2FrameList.h"
 
 class CHttp2Conversion
@@ -30,6 +31,15 @@ public:
 
 	bool MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList );
 	bool MakeMessage( CHttp2FrameList & clsFrameList, CHttpMessage & clsMessage );
+
+private:
+	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
+	bool AddNameValue( const char * pszName, const char * pszValue );
+
+	CHttpMessage * m_pclsMessage;
+	CHttp2FrameList * m_pclsFrameList;
+	CHttp2Header	m_clsHeader;
+	int						m_iHeaderFrameCount;
 };
 
 #endif

@@ -16,13 +16,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
 #include "HttpStatusCode.h"
 #include "HttpMessage.h"
 #include <stdlib.h>
 #include "MemoryDebug.h"
 
-CHttpMessage::CHttpMessage() : m_iStatusCode(-1), m_iContentLength(-1), m_bChunked(false)
+CHttpMessage::CHttpMessage() : m_iStatusCode(-1), m_iContentLength(-1), m_bChunked(false), m_iStreamIdentifier(0)
 {
 }
 

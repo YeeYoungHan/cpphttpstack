@@ -22,6 +22,8 @@
 #include "HttpMessage.h"
 #include "SipTcp.h"
 #include "TlsFunction.h"
+#include "Http2Conversion.h"
+#include "Http2FrameList.h"
 
 class CHttp2Client
 {
@@ -41,6 +43,13 @@ private:
 	SSL			* m_psttSsl;
 	SSL_CTX * m_psttCtx;
 	uint32_t	m_iStreamIdentifier;
+
+	CHttp2Conversion	m_clsSendConversion;
+	CHttp2Conversion	m_clsRecvConversion;
+	CHttp2FrameList		m_clsFrameList;
+
+	std::string	m_strIp;
+	int					m_iPort;
 };
 
 #endif

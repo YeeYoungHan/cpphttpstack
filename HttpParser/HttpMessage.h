@@ -19,6 +19,8 @@
 #ifndef _HTTP_MESSAGE_H_
 #define _HTTP_MESSAGE_H_
 
+#include "SipPlatformDefine.h"
+
 #define HTTP_VERSION	"HTTP/1.1"
 
 #include "HttpHeader.h"
@@ -84,6 +86,9 @@ public:
 
 	/** HTTP body */
 	std::string			m_strBody;
+
+	/** HTTP/2 stream identifier */
+	uint32_t				m_iStreamIdentifier;
 
 private:
 	int ParseStatusLine( const char * pszText, int iTextLen );
