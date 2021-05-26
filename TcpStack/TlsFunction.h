@@ -27,6 +27,12 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 
+enum ETlsVersion
+{
+	E_TLS_1_0 = 0,
+	E_TLS_1_2
+};
+
 bool SSLServerStart( const char * szCertFile );
 bool SSLServerStop( );
 void SSLFinal();
@@ -34,7 +40,10 @@ void SSLFinal();
 bool SSLClientStart( );
 bool SSLClientStop( );
 
+SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion );
+
 bool SSLConnect( Socket iFd, SSL ** ppsttSsl );
+bool SSLConnect( SSL_CTX * pCtx, Socket iFd, SSL ** ppsttSsl );
 bool SSLAccept( Socket iFd, SSL ** ppsttSsl, bool bCheckClientCert, int iVerifyDepth, int iAcceptTimeout );
 int SSLSend( SSL * ssl, const char * szBuf, int iBufLen );
 int SSLRecv( SSL * ssl, char * szBuf, int iBufLen );

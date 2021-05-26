@@ -277,6 +277,65 @@ bool SSLClientStop( )
 }
 
 /**
+ * @ingroup SipStack
+ * @brief SSL 클라이언트 CTX 를 생성한다.
+ * @param szCertFile	개인키 & 인증서 PEM 파일 full path
+ * @param eTlsVersion TLS 버전
+ * @returns 성공하면 SSL_CTX 를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
+SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion )
+{
+	if( SSLStart() == false ) return NULL;
+
+	const SSL_METHOD * psttClientMeth;
+	SSL_CTX * pCtx;
+	int n;
+
+#ifdef USE_TLS_1_2
+	if( eTlsVersion == E_TLS_1_2 )
+	{
+		psttClientMeth = TLSv1_2_client_method();
+	}
+	else
+#endif
+	{
+		psttClientMeth = TLSv1_client_method();
+	}
+
+	if( (pCtx = SSL_CTX_new( psttClientMeth )) == NULL )
+	{
+		CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
+		return NULL;
+	}
+
+	if( SSL_CTX_use_certificate_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
+		SSLPrintError( );
+		SSL_CTX_free( pCtx );
+		return NULL;
+	}
+
+	if( ( n = SSL_CTX_use_PrivateKey_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) ) <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d) - client", n );
+		SSLPrintError( );
+		SSL_CTX_free( pCtx );
+		return NULL;
+	}
+
+	if( !SSL_CTX_check_private_key( pCtx ) )
+	{
+		CLog::Print( LOG_ERROR, "[SSL] Private key does not match the certificate public key");
+		SSL_CTX_free( pCtx );
+		return NULL;
+	}
+
+	return pCtx;
+}
+
+
+/**
  * @ingroup TcpStack
  * @brief 프로세스가 종료될 때에 최종적으로 실행하여서 openssl 메모리 누수를 출력하지 않는다. 
  */
@@ -317,6 +376,45 @@ bool SSLConnect( Socket iFd, SSL ** ppsttSsl )
 		SSL_set_fd( psttSsl, (int)iFd );
 		if( SSL_connect( psttSsl ) == -1 )
 		{
+			SSL_free( psttSsl );
+			return false;
+		}
+	}
+	catch( ... )
+	{
+		CLog::Print( LOG_ERROR, "[SSL] SSLConnect() undefined error" );
+		SSL_free( psttSsl );
+		return false;
+	}
+
+	*ppsttSsl = psttSsl;
+
+	return true;
+}
+
+/**
+ * @ingroup SipStack
+ * @brief SSL 세션을 연결한다.
+ * @param pCtx			TLS CTX
+ * @param iFd				클라이언트 TCP 소켓 핸들
+ * @param ppsttSsl	SSL 구조체
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool SSLConnect( SSL_CTX * pCtx, Socket iFd, SSL ** ppsttSsl )
+{
+	SSL * psttSsl;
+
+	if( (psttSsl = SSL_new(pCtx)) == NULL )
+	{
+		return false;
+	}
+	
+	try
+	{
+		SSL_set_fd( psttSsl, (int)iFd );
+		if( SSL_connect(psttSsl) == -1 )
+		{
+			SSLPrintError( );
 			SSL_free( psttSsl );
 			return false;
 		}
