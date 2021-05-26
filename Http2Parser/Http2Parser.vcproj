@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SipPlatform"
+				AdditionalIncludeDirectories="../HttpParser;../SipPlatform"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -105,7 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../SipPlatform"
+				AdditionalIncludeDirectories="../HttpParser;../SipPlatform"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -151,7 +151,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Http2Conversion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Http2Frame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2FrameList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2Header.cpp"
 				>
 			</File>
 			<File
@@ -165,11 +177,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Http2Conversion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Http2Define.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Http2Frame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2FrameList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2Header.h"
 				>
 			</File>
 			<File

@@ -16,31 +16,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_CLIENT_H_
-#define _HTTP2_CLIENT_H_
+#ifndef _HTTP2_FRAME_LIST_H_
+#define _HTTP2_FRAME_LIST_H_
 
-#include "HttpMessage.h"
-#include "SipTcp.h"
-#include "TlsFunction.h"
+#include "Http2Frame.h"
+#include <list>
 
-class CHttp2Client
+typedef std::list< CHttp2Frame * > HTTP2_FRAME_LIST;
+
+class CHttp2FrameList
 {
 public:
-	CHttp2Client();
-	~CHttp2Client();
+	CHttp2FrameList();
+	~CHttp2FrameList();
 
-	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName );
-	bool Close();
+	CHttp2Frame * CreateFrame();
+	void Clear();
+	void DeleteAll();
 
-	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
-
-	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
+	HTTP2_FRAME_LIST m_clsList;
 
 private:
-	Socket		m_hSocket;
-	SSL			* m_psttSsl;
-	SSL_CTX * m_psttCtx;
-	uint32_t	m_iStreamIdentifier;
+	HTTP2_FRAME_LIST m_clsNotUseList;
 };
 
 #endif

@@ -26,14 +26,14 @@ CHttp2Frame::CHttp2Frame() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0
 
 CHttp2Frame::~CHttp2Frame()
 {
-	Clear();
+	Delete();
 }
 
 bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier, uint8_t * pszBody, int iBodyLen )
 {
 	if( ( 9 + iBodyLen ) > m_iPacketSize )
 	{
-		Clear();
+		Delete();
 	}
 
 	if( m_pszPacket == NULL )
@@ -45,7 +45,7 @@ bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier,
 		if( m_pszPacket == NULL )
 		{
 			CLog::Print( LOG_ERROR, "%s malloc(%d) error(%d)", __FUNCTION__, m_iPacketSize, GetError() );
-			Clear();
+			Delete();
 			return false;
 		}
 	}
@@ -100,6 +100,11 @@ int CHttp2Frame::GetBodyLen()
 }
 
 void CHttp2Frame::Clear()
+{
+	m_iPacketLen = 0;
+}
+
+void CHttp2Frame::Delete()
 {
 	if( m_pszPacket )
 	{

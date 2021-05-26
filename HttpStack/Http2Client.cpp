@@ -19,7 +19,7 @@
 #include "Http2Client.h"
 #include "Log.h"
 
-CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL)
+CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0)
 {
 	InitNetwork();
 }
@@ -107,5 +107,68 @@ bool CHttp2Client::Close()
 
 bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody )
 {
+	strOutputContentType.clear();
+	strOutputBody.clear();
+
+	if( pszPath == NULL || pszInputContentType == NULL || pszInputBody == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s pszPath or input content type or input body is null", __FUNCTION__ );
+		return false;
+	}
+
+	int iContentLength = 0;
+
+	if( iInputBodyLen > 0 )
+	{
+		iContentLength = iInputBodyLen;
+	}
+	else
+	{
+		iContentLength = strlen( pszInputBody );
+	}
+
+	if( iContentLength <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s pszInputBody's length(%d) error", __FUNCTION__, iContentLength );
+		return false;
+	}
+
+	CHttpMessage clsRequest, clsResponse;
+
+	clsRequest.m_strHttpMethod = "POST";
+	clsRequest.m_strReqUri = pszPath;
+	clsRequest.m_strContentType = pszInputContentType;
+	clsRequest.m_iContentLength = iContentLength;
+	clsRequest.m_strBody.append( pszInputBody, iContentLength );
+
+	if( pclsHeaderList )
+	{
+		clsRequest.m_clsHeaderList.insert( clsRequest.m_clsHeaderList.end(), pclsHeaderList->begin(), pclsHeaderList->end() );
+	}
+
+	if( Execute( &clsRequest, &clsResponse ) == false )
+	{
+		return false;
+	}
+
+	strOutputContentType = clsResponse.m_strContentType;
+	strOutputBody = clsResponse.m_strBody;
+
+	return false;
+}
+
+bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
+{
+	if( m_iStreamIdentifier == 0 )
+	{
+		m_iStreamIdentifier = 1;
+	}
+	else
+	{
+		m_iStreamIdentifier += 2;
+	}
+
+
+
 	return true;
 }

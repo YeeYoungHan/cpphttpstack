@@ -16,31 +16,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_CLIENT_H_
-#define _HTTP2_CLIENT_H_
+#include "Http2Conversion.h"
+#include "Log.h"
 
-#include "HttpMessage.h"
-#include "SipTcp.h"
-#include "TlsFunction.h"
-
-class CHttp2Client
+CHttp2Conversion::CHttp2Conversion()
 {
-public:
-	CHttp2Client();
-	~CHttp2Client();
+}
 
-	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName );
-	bool Close();
+CHttp2Conversion::~CHttp2Conversion()
+{
+}
 
-	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
+bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList )
+{
+	CHttp2Frame * pclsFrame;
 
-	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
+	pclsFrame = clsFrameList.CreateFrame();
+	if( pclsFrame == NULL )
+	{
+		return false;
+	}
 
-private:
-	Socket		m_hSocket;
-	SSL			* m_psttSsl;
-	SSL_CTX * m_psttCtx;
-	uint32_t	m_iStreamIdentifier;
-};
+	if( clsMessage.m_strHttpMethod.empty() == false )
+	{
+		const char * pszMethod = clsMessage.m_strHttpMethod.c_str();
+		if( !strcasecmp( pszMethod, "GET" ) )
+		{
+			
+		}
+		else if( !strcasecmp( pszMethod, "POST" ) )
+		{
 
-#endif
+		}
+	}
+
+	return true;
+}
+
+bool CHttp2Conversion::MakeMessage( CHttp2FrameList & clsFrameList, CHttpMessage & clsMessage )
+{
+
+	return true;
+}

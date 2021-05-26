@@ -16,31 +16,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_CLIENT_H_
-#define _HTTP2_CLIENT_H_
+#ifndef _HTTP2_CONVERSION_H_
+#define _HTTP2_CONVERSION_H_
 
 #include "HttpMessage.h"
-#include "SipTcp.h"
-#include "TlsFunction.h"
+#include "Http2FrameList.h"
 
-class CHttp2Client
+class CHttp2Conversion
 {
 public:
-	CHttp2Client();
-	~CHttp2Client();
+	CHttp2Conversion();
+	~CHttp2Conversion();
 
-	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName );
-	bool Close();
-
-	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
-
-	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
-
-private:
-	Socket		m_hSocket;
-	SSL			* m_psttSsl;
-	SSL_CTX * m_psttCtx;
-	uint32_t	m_iStreamIdentifier;
+	bool MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList );
+	bool MakeMessage( CHttp2FrameList & clsFrameList, CHttpMessage & clsMessage );
 };
 
 #endif
