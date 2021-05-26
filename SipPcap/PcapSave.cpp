@@ -79,16 +79,16 @@ bool CPcapSave::Write( const struct pcap_pkthdr * psttHeader, const u_char * pst
  * @param iFromPort source 포트 번호
  * @param pszToIp		destination IP 주소
  * @param iToPort		destination 포트 번호
- * @param pszData		SIP 메시지
+ * @param pszData		UDP body
+ * @param iDataLen	UDP body 길이
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CPcapSave::WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData )
+bool CPcapSave::WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen )
 {
 	char	szPacket[2000];
 	struct pcap_pkthdr sttHeader;
 	IpHeader	* psttIpHeader = (IpHeader *)(szPacket + 14);
 	UdpHeader	* psttUdpHeader = (UdpHeader *)(szPacket + 14 + sizeof(IpHeader));
-	int		iDataLen = strlen(pszData);
 
 	memset( szPacket, 0, sizeof(szPacket) );
 	szPacket[12] = 0x08;
@@ -119,13 +119,12 @@ bool CPcapSave::WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_s
 	return Write( &sttHeader, (u_char *)szPacket );
 }
 
-bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData )
+bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen )
 {
 	char	szPacket[2000];
 	struct pcap_pkthdr sttHeader;
 	IpHeader	* psttIpHeader = (IpHeader *)(szPacket + 14);
 	TcpHeader	* psttTcpHeader = (TcpHeader *)(szPacket + 14 + sizeof(IpHeader));
-	int		iDataLen = strlen(pszData);
 
 	memset( szPacket, 0, sizeof(szPacket) );
 	szPacket[12] = 0x08;

@@ -33,8 +33,8 @@ public:
 
 	bool Open( const char * pszFileName, int iSnapLen );
 	bool Write( const struct pcap_pkthdr * psttHeader, const u_char * psttPacketData );
-	bool WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData );
-	bool WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData );
+	bool WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen );
+	bool WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen );
 	void Close( );
 	bool IsOpen();
 
