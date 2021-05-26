@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "Http2Define.h"
 #include "Http2Client.h"
 #include "Log.h"
 
@@ -179,7 +180,23 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	HTTP2_FRAME_LIST::iterator itFL;
 	int n;
 	char szPacket[8192];
-	CHttp2Packet clsPacket;
+	//CHttp2Packet clsPacket;
+
+	n = SSLRecv( m_psttSsl, szPacket, sizeof(szPacket) );
+	if( n >= 9 && szPacket[3] == HTTP2_FRAME_TYPE_SETTINGS )
+	{
+		SSLSend( m_psttSsl, szPacket, n );
+
+		CHttp2Frame clsFrame;
+
+		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+		n = SSLSend( m_psttSsl, (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+		if( n != clsFrame.m_iPacketLen )
+		{
+			CLog::Print( LOG_ERROR, "SSLSend(%s:%d) error(%d)", m_strIp.c_str(), m_iPort, n );
+			return false;
+		}
+	}
 
 	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
 	{
@@ -193,7 +210,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 
 	while( 1 )
 	{
-		n = SSLRecv( psttSsl, szPacket, sizeof(szPacket) );
+		n = SSLRecv( m_psttSsl, szPacket, sizeof(szPacket) );
 		if( n <= 0 ) break;
 	}
 

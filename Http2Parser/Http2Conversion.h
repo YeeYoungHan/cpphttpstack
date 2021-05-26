@@ -36,7 +36,7 @@ private:
 	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
 	bool AddNameValue( const char * pszName, const char * pszValue );
 
-	CHttpMessage * m_pclsMessage;
+	CHttpMessage		* m_pclsMessage;
 	CHttp2FrameList * m_pclsFrameList;
 	CHttp2Header	m_clsHeader;
 	int						m_iHeaderFrameCount;

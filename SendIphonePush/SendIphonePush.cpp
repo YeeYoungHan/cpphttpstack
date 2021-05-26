@@ -35,11 +35,26 @@ int main( int argc, char * argv[] )
 	const char * pszDeviceId = argv[2];
 	const char * pszApnsTopic = argv[3];
 
-	CHttp2Client clsClient;
+	CHttp2Client	clsClient;
+	CHttpHeader		clsHeader;
+	HTTP_HEADER_LIST clsHeaderList;
+
+	std::string strOutputContentType, strOutputBody;
+	char szPath[255];
+	char szInputBody[255];
+
+	snprintf( szPath, sizeof(szPath), "/3/device/%s", pszDeviceId );
+	snprintf( szInputBody, sizeof(szInputBody), "{ \"aps\" : { \"alert\" : \"Hello\" } }" );
+
+	clsHeader.Set( "apns-topic", pszApnsTopic );
+	clsHeaderList.push_back( clsHeader );
+
+	clsHeader.Set( "apns-push-type", "alert" );
+	clsHeaderList.push_back( clsHeader );
 
 	clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath );
 
-	sleep(5);
+	clsClient.DoPost( szPath, &clsHeaderList, "application/json", szInputBody, strlen(szInputBody), strOutputContentType, strOutputBody );
 
 	clsClient.Close();
 

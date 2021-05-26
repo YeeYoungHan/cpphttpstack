@@ -33,6 +33,9 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 {
 	CHttp2Frame * pclsFrame;
 
+	m_pclsMessage = &clsMessage;
+	m_pclsFrameList = &clsFrameList;
+
 	clsFrameList.Clear();
 	m_clsHeader.Clear();
 
@@ -156,6 +159,12 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 
 		while( iBodyLen > 0 )
 		{
+			pclsFrame = clsFrameList.CreateFrame();
+			if( pclsFrame == NULL )
+			{
+				return false;
+			}
+
 			++iBodyFrameCount;
 
 			cType = HTTP2_FRAME_TYPE_DATA;
