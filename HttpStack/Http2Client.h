@@ -35,8 +35,9 @@ public:
 	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
 
 private:
-	Socket	m_hSocket;
-	SSL		* m_psttSsl;
+	Socket		m_hSocket;
+	SSL			* m_psttSsl;
+	SSL_CTX * m_psttCtx;
 };
 
 #endif

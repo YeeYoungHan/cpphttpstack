@@ -17,7 +17,7 @@
  */
 
 #include "SipTcp.h"
-#include "HttpClient.h"
+#include "Http2Client.h"
 #include "Log.h"
 
 int main( int argc, char * argv[] )
@@ -35,7 +35,13 @@ int main( int argc, char * argv[] )
 	const char * pszDeviceId = argv[2];
 	const char * pszApnsTopic = argv[3];
 
+	CHttp2Client clsClient;
 
+	clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath );
+
+	sleep(5);
+
+	clsClient.Close();
 
 	return 0;
 }

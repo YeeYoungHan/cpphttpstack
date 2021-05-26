@@ -291,13 +291,11 @@ SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion )
 	SSL_CTX * pCtx;
 	int n;
 
-#ifdef USE_TLS_1_2
 	if( eTlsVersion == E_TLS_1_2 )
 	{
 		psttClientMeth = TLSv1_2_client_method();
 	}
 	else
-#endif
 	{
 		psttClientMeth = TLSv1_client_method();
 	}

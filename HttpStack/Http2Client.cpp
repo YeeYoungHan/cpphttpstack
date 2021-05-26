@@ -19,8 +19,9 @@
 #include "Http2Client.h"
 #include "Log.h"
 
-CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL)
+CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL)
 {
+	InitNetwork();
 }
 
 CHttp2Client::~CHttp2Client()
@@ -30,6 +31,12 @@ CHttp2Client::~CHttp2Client()
 
 bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClientPemFileName )
 {
+	if( m_hSocket != INVALID_SOCKET )
+	{
+		CLog::Print( LOG_ERROR, "%s m_hSocket != INVALID_SOCKET", __FUNCTION__ );
+		return false;
+	}
+
 	m_hSocket = TcpConnect( pszIp, iPort );
 	if( m_hSocket == INVALID_SOCKET )
 	{
@@ -39,11 +46,35 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	CLog::Print( LOG_NETWORK, "TcpConnect(%s:%d) success", pszIp, iPort );
 
-	if( SSLConnect( m_hSocket, &m_psttSsl ) == false )
+	if( pszClientPemFileName )
 	{
-		CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, pszIp, iPort );
-		Close();
-		return false;
+		m_psttCtx = SSLClientStart( pszClientPemFileName, E_TLS_1_2 );
+		if( m_psttCtx == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s SSLClientStart(%s) error", __FUNCTION__, pszClientPemFileName );
+			Close();
+			return false;
+		}
+
+		uint8_t szProto[] = { 2, 'h', '2' };
+
+		SSL_CTX_set_alpn_protos( m_psttCtx, szProto, sizeof(szProto) );
+
+		if( SSLConnect( m_psttCtx, m_hSocket, &m_psttSsl ) == false )
+		{
+			CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, pszIp, iPort );
+			Close();
+			return false;
+		}
+	}
+	else
+	{
+		if( SSLConnect( m_hSocket, &m_psttSsl ) == false )
+		{
+			CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, pszIp, iPort );
+			Close();
+			return false;
+		}
 	}
 
 	CLog::Print( LOG_NETWORK, "SSLConnect(%s:%d) success", pszIp, iPort );
@@ -63,6 +94,12 @@ bool CHttp2Client::Close()
 	{
 		closesocket( m_hSocket );
 		m_hSocket = INVALID_SOCKET;
+	}
+
+	if( m_psttCtx )
+	{
+		SSL_CTX_free( m_psttCtx );
+		m_psttCtx = NULL;
 	}
 
 	return true;
