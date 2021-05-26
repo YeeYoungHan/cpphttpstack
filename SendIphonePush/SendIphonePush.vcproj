@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPcap;../SipPlatform;../openssl/window/32bit/include;../WpdPack/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="wpcap.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib;../WpdPack/32bit"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -116,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPcap;../SipPlatform;../openssl/window/32bit/include;../WpdPack/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -135,8 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="wpcap.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib;../WpdPack/32bit"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

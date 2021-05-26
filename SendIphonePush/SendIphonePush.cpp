@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "SipPlatformDefine.h"
 #include "SipTcp.h"
 #include "Http2Client.h"
 #include "Log.h"
@@ -52,7 +53,7 @@ int main( int argc, char * argv[] )
 	clsHeader.Set( "apns-push-type", "alert" );
 	clsHeaderList.push_back( clsHeader );
 
-	clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath );
+	clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath, "c:\\temp\\h2.pcap" );
 
 	clsClient.DoPost( szPath, &clsHeaderList, "application/json", szInputBody, strlen(szInputBody), strOutputContentType, strOutputBody );
 

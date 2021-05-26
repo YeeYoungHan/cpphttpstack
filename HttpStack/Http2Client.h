@@ -24,6 +24,7 @@
 #include "TlsFunction.h"
 #include "Http2Conversion.h"
 #include "Http2FrameList.h"
+#include "PcapSave.h"
 
 class CHttp2Client
 {
@@ -31,7 +32,7 @@ public:
 	CHttp2Client();
 	~CHttp2Client();
 
-	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName );
+	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName = NULL, const char * pszPcapFileName = NULL );
 	bool Close();
 
 	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
@@ -39,6 +40,9 @@ public:
 	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
 
 private:
+	int Send( char * pszPacket, int iPacketLen );
+	int Recv( char * pszPacket, int iPacketSize );
+
 	Socket		m_hSocket;
 	SSL			* m_psttSsl;
 	SSL_CTX * m_psttCtx;
@@ -48,8 +52,13 @@ private:
 	CHttp2Conversion	m_clsRecvConversion;
 	CHttp2FrameList		m_clsFrameList;
 
-	std::string	m_strIp;
-	int					m_iPort;
+	std::string	m_strServerIp;
+	int					m_iServerPort;
+
+	std::string	m_strClientIp;
+	int					m_iClientPort;
+
+	CPcapSave		m_clsPcap;
 };
 
 #endif
