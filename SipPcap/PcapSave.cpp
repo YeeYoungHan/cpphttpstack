@@ -129,7 +129,7 @@ bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_s
 	memset( szPacket, 0, sizeof(szPacket) );
 	szPacket[12] = 0x08;
 
-	sttHeader.caplen = 14 + sizeof(IpHeader) + sizeof(UdpHeader) + iDataLen;
+	sttHeader.caplen = 14 + sizeof(IpHeader) + sizeof(TcpHeader) + iDataLen;
 	sttHeader.len = sttHeader.caplen;
 	memcpy( &sttHeader.ts, psttTime, sizeof(sttHeader.ts) );
 
@@ -150,7 +150,7 @@ bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_s
 	psttTcpHeader->dport = htons( iToPort );
 	psttTcpHeader->seqnum = 1;
 	psttTcpHeader->acknum = 1;
-	psttTcpHeader->hlen = 0x80;
+	psttTcpHeader->hlen = 0x50;
 	psttTcpHeader->flags = 0;
 	psttTcpHeader->win = htons( 8000 );
 	psttTcpHeader->crc = 0;
