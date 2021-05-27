@@ -53,7 +53,6 @@ u_short GetIpHeaderCheckSum( u_short sIpHeaderLen, u_char * pszIpHeader )
 	u_int sum = 0;
 	u_short i, sBuf1, sBuf2;
     
-	// make 16 bit words out of every two adjacent 8 bit words in the packet and add them up
 	for( i = 0; i < sIpHeaderLen; i = i + 2 )
 	{
 		if( i == 10 )
@@ -71,11 +70,9 @@ u_short GetIpHeaderCheckSum( u_short sIpHeaderLen, u_char * pszIpHeader )
 		sum = sum + ( u_int )word16;	
 	}
 	
-	// take only 16 bits out of the 32 bit sum and add up the carries
 	while( sum >> 16 )
 	  sum = ( sum & 0xFFFF ) + ( sum >> 16 );
 
-	// one's complement the result
 	sum = ~sum;
 	
 	return ((u_short) sum);

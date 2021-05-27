@@ -49,23 +49,24 @@ typedef struct _IpHeader_
 /* UDP header*/
 typedef struct _UdpHeader_
 {
-	u_short sport;			// Source port
-	u_short dport;			// Destination port
+	u_short sport;		// Source port
+	u_short dport;		// Destination port
 	u_short len;			// Datagram length
 	u_short crc;			// Checksum
 } UdpHeader;
 
+/* TCP header */
 typedef struct _TcpHeader_ 
 {
-	u_short sport;	// Source port
-	u_short dport;	// Destination port
-	u_int seqnum; // Sequence Number
-	u_int acknum; // Acknowledgement number
-	u_char	 hlen;		// Header length - 상위 4bit 만 header 길이이다.
-	u_char	 flags;	// packet flags
-	u_short win;		// Window size
-	u_short crc;		// Header Checksum
-	u_short urgptr; // Urgent pointer...still don't know what this is...
+	u_short sport;		// Source port
+	u_short dport;		// Destination port
+	u_int		seqnum;		// Sequence Number
+	u_int		acknum;		// Acknowledgement number
+	u_char	hlen;			// Header length - 상위 4bit 만 header 길이이다.
+	u_char	flags;		// packet flags
+	u_short win;			// Window size
+	u_short crc;			// Header Checksum
+	u_short urgptr;		// Urgent pointer
 } TcpHeader;
 
 bool StringToIpAddress( const char * pszIp, IpAddress & sttIpAddress );
