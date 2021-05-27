@@ -61,35 +61,23 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	CLog::Print( LOG_NETWORK, "TcpConnect(%s:%d) success", szIp, iPort );
 
-	if( pszClientPemFileName )
+	m_psttCtx = SSLClientStart( pszClientPemFileName, E_TLS_1_2 );
+	if( m_psttCtx == NULL )
 	{
-		m_psttCtx = SSLClientStart( pszClientPemFileName, E_TLS_1_2 );
-		if( m_psttCtx == NULL )
-		{
-			CLog::Print( LOG_ERROR, "%s SSLClientStart(%s) error", __FUNCTION__, pszClientPemFileName );
-			Close();
-			return false;
-		}
-
-		uint8_t szProto[] = { 2, 'h', '2' };
-
-		SSL_CTX_set_alpn_protos( m_psttCtx, szProto, sizeof(szProto) );
-
-		if( SSLConnect( m_psttCtx, m_hSocket, &m_psttSsl ) == false )
-		{
-			CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, szIp, iPort );
-			Close();
-			return false;
-		}
+		CLog::Print( LOG_ERROR, "%s SSLClientStart(%s) error", __FUNCTION__, pszClientPemFileName );
+		Close();
+		return false;
 	}
-	else
+
+	uint8_t szProto[] = { 2, 'h', '2' };
+
+	SSL_CTX_set_alpn_protos( m_psttCtx, szProto, sizeof(szProto) );
+
+	if( SSLConnect( m_psttCtx, m_hSocket, &m_psttSsl ) == false )
 	{
-		if( SSLConnect( m_hSocket, &m_psttSsl ) == false )
-		{
-			CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, szIp, iPort );
-			Close();
-			return false;
-		}
+		CLog::Print( LOG_ERROR, "%s SSLConnect(%s:%d) error", __FUNCTION__, szIp, iPort );
+		Close();
+		return false;
 	}
 
 	CLog::Print( LOG_NETWORK, "SSLConnect(%s:%d) success", szIp, iPort );
@@ -104,8 +92,12 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
 	}
 
-	int n;
+	int n, iLen;
 	char szPacket[8192];
+
+	iLen = snprintf( szPacket, sizeof(szPacket), "PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n" );
+
+	n = Send( szPacket, iLen );
 
 	n = Recv( szPacket, sizeof(szPacket) );
 	if( n >= 9 && szPacket[3] == HTTP2_FRAME_TYPE_SETTINGS )
@@ -125,7 +117,6 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 			return false;
 		}
 
-		/*
 		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
 		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
 		if( n != clsFrame.m_iPacketLen )
@@ -133,7 +124,6 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
 			return false;
 		}
-		*/
 	}
 
 	return true;
@@ -237,7 +227,6 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	char szPacket[8192];
 	//CHttp2Packet clsPacket;
 
-	/*
 	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
 	{
 		n = Send( (char *)((*itFL)->m_pszPacket), (*itFL)->m_iPacketLen );
@@ -247,7 +236,6 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 			return false;
 		}
 	}
-	*/
 
 	while( 1 )
 	{
