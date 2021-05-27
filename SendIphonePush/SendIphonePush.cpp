@@ -53,11 +53,11 @@ int main( int argc, char * argv[] )
 	clsHeader.Set( "apns-push-type", "alert" );
 	clsHeaderList.push_back( clsHeader );
 
-	clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath, "c:\\temp\\h2.pcap" );
-
-	clsClient.DoPost( szPath, &clsHeaderList, "application/json", szInputBody, strlen(szInputBody), strOutputContentType, strOutputBody );
-
-	clsClient.Close();
+	if( clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath, "c:\\temp\\h2.pcap" ) )
+	{
+		clsClient.DoPost( szPath, &clsHeaderList, "application/json", szInputBody, strlen(szInputBody), strOutputContentType, strOutputBody );
+		clsClient.Close();
+	}
 
 	return 0;
 }

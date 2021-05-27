@@ -17,6 +17,7 @@
  */
 
 #include "Http2Settings.h"
+#include "Log.h"
 
 CHttp2Settings::CHttp2Settings() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {
@@ -64,4 +65,16 @@ void CHttp2Settings::Delete()
 
 	m_iPacketSize = 0;
 	m_iPacketLen = 0;
+}
+
+void CHttp2Settings::PrintLog( const char * pszIp, int iPort, bool bSend, int iError )
+{
+	if( iError )
+	{
+		
+	}
+	else if( CLog::IsPrintLogLevel( LOG_NETWORK ) )
+	{
+		
+	}
 }

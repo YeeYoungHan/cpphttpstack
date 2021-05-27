@@ -30,6 +30,7 @@ public:
 	bool Add( uint16_t iName, uint32_t iValue );
 	void Clear();
 	void Delete();
+	void PrintLog( const char * pszIp, int iPort, bool bSend, int iError );
 
 	uint8_t	* m_pszPacket;
 	int m_iPacketLen;

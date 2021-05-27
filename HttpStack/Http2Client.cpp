@@ -98,32 +98,38 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 	iLen = snprintf( szPacket, sizeof(szPacket), "PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n" );
 
 	n = Send( szPacket, iLen );
-
-	n = Recv( szPacket, sizeof(szPacket) );
-	if( n >= 9 && szPacket[3] == HTTP2_FRAME_TYPE_SETTINGS )
+	if( n != iLen )
 	{
-		CHttp2Settings clsSettings;
+		CLog::Print( LOG_ERROR, "Send(%s:%d) [%s] error(%d)", m_strServerIp.c_str(), m_iServerPort, szPacket, n );
+		Close();
+		return false;
+	}
 
-		clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 100 );
-		clsSettings.Add( HTTP2_SETTINGS_INITIAL_WINDOW_SIZE, 65535 );
+	CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, szPacket );
 
-		CHttp2Frame clsFrame;
+	CHttp2Settings clsSettings;
 
-		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
-		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
-		if( n != clsFrame.m_iPacketLen )
-		{
-			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
-			return false;
-		}
+	clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 100 );
+	clsSettings.Add( HTTP2_SETTINGS_INITIAL_WINDOW_SIZE, 65535 );
 
-		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
-		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
-		if( n != clsFrame.m_iPacketLen )
-		{
-			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
-			return false;
-		}
+	CHttp2Frame clsFrame;
+
+	clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
+	n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+	if( n != clsFrame.m_iPacketLen )
+	{
+		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+		Close();
+		return false;
+	}
+
+	clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+	n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+	if( n != clsFrame.m_iPacketLen )
+	{
+		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+		Close();
+		return false;
 	}
 
 	return true;
