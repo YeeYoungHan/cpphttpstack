@@ -19,7 +19,7 @@
 #include "PcapSave.h"
 #include "PacketHeader.h"
 
-CPcapSave::CPcapSave() : m_pPcap(NULL), m_pPcapDump(NULL)
+CPcapSave::CPcapSave() : m_pPcap(NULL), m_pPcapDump(NULL), m_pszPacket(NULL), m_iPacketSize(0)
 {
 }
 
@@ -31,16 +31,22 @@ CPcapSave::~CPcapSave()
 /**
  * @brief SIP 메시지를 저장할 pcap 파일을 연다.
  * @param pszFileName pcap 파일 이름 ( full path )
- * @param iSnapLen		snap len
+ * @param iSnapLen		하나의 패킷 길이
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
 bool CPcapSave::Open( const char * pszFileName, int iSnapLen )
 {
 	if( m_pPcapDump ) return false;
+	if( iSnapLen > 1000000000 ) return false;
 
 	char	szError[1024];
 
 	memset( szError, 0, sizeof(szError) );
+
+	m_pszPacket = (uint8_t *)malloc( iSnapLen );
+	if( m_pszPacket == NULL ) return false;
+
+	m_iPacketSize = iSnapLen;
 
 	m_pPcap = pcap_open_dead( DLT_EN10MB, iSnapLen );
 	if( m_pPcap == NULL ) return false;
@@ -85,15 +91,16 @@ bool CPcapSave::Write( const struct pcap_pkthdr * psttHeader, const u_char * pst
  */
 bool CPcapSave::WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen )
 {
-	char	szPacket[2000];
 	struct pcap_pkthdr sttHeader;
-	IpHeader	* psttIpHeader = (IpHeader *)(szPacket + 14);
-	UdpHeader	* psttUdpHeader = (UdpHeader *)(szPacket + 14 + sizeof(IpHeader));
+	IpHeader	* psttIpHeader = (IpHeader *)(m_pszPacket + 14);
+	UdpHeader	* psttUdpHeader = (UdpHeader *)(m_pszPacket + 14 + sizeof(IpHeader));
 
-	memset( szPacket, 0, sizeof(szPacket) );
-	szPacket[12] = 0x08;
+	memset( m_pszPacket, 0, sizeof(m_pszPacket) );
+	m_pszPacket[12] = 0x08;
 
 	sttHeader.caplen = 14 + sizeof(IpHeader) + sizeof(UdpHeader) + iDataLen;
+	if( (int)sttHeader.caplen > m_iPacketSize ) return false;
+
 	sttHeader.len = sttHeader.caplen;
 	memcpy( &sttHeader.ts, psttTime, sizeof(sttHeader.ts) );
 
@@ -107,29 +114,30 @@ bool CPcapSave::WriteUdp( struct timeval * psttTime, const char * pszFromIp, u_s
 
 	psttIpHeader->crc = htons( GetIpHeaderCheckSum( 20, (u_char *)psttIpHeader ) );
 
-	memcpy( szPacket + 8, &psttIpHeader->saddr, 4 );
-	memcpy( szPacket + 2, &psttIpHeader->daddr, 4 );
+	memcpy( m_pszPacket + 8, &psttIpHeader->saddr, 4 );
+	memcpy( m_pszPacket + 2, &psttIpHeader->daddr, 4 );
 
 	psttUdpHeader->sport = htons( iFromPort );
 	psttUdpHeader->dport = htons( iToPort );
 	psttUdpHeader->len = htons( sttHeader.caplen - 14 - sizeof(IpHeader) );
 
-	memcpy( szPacket + 14 + sizeof(IpHeader) + sizeof(UdpHeader), pszData, iDataLen );
+	memcpy( m_pszPacket + 14 + sizeof(IpHeader) + sizeof(UdpHeader), pszData, iDataLen );
 
-	return Write( &sttHeader, (u_char *)szPacket );
+	return Write( &sttHeader, (u_char *)m_pszPacket );
 }
 
 bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, const char * pszData, int iDataLen )
 {
-	char	szPacket[2000];
 	struct pcap_pkthdr sttHeader;
-	IpHeader	* psttIpHeader = (IpHeader *)(szPacket + 14);
-	TcpHeader	* psttTcpHeader = (TcpHeader *)(szPacket + 14 + sizeof(IpHeader));
+	IpHeader	* psttIpHeader = (IpHeader *)(m_pszPacket + 14);
+	TcpHeader	* psttTcpHeader = (TcpHeader *)(m_pszPacket + 14 + sizeof(IpHeader));
 
-	memset( szPacket, 0, sizeof(szPacket) );
-	szPacket[12] = 0x08;
+	memset( m_pszPacket, 0, sizeof(m_pszPacket) );
+	m_pszPacket[12] = 0x08;
 
 	sttHeader.caplen = 14 + sizeof(IpHeader) + sizeof(TcpHeader) + iDataLen;
+	if( (int)sttHeader.caplen > m_iPacketSize ) return false;
+
 	sttHeader.len = sttHeader.caplen;
 	memcpy( &sttHeader.ts, psttTime, sizeof(sttHeader.ts) );
 
@@ -143,8 +151,8 @@ bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_s
 
 	psttIpHeader->crc = htons( GetIpHeaderCheckSum( 20, (u_char *)psttIpHeader ) );
 
-	memcpy( szPacket + 8, &psttIpHeader->saddr, 4 );
-	memcpy( szPacket + 2, &psttIpHeader->daddr, 4 );
+	memcpy( m_pszPacket + 8, &psttIpHeader->saddr, 4 );
+	memcpy( m_pszPacket + 2, &psttIpHeader->daddr, 4 );
 
 	psttTcpHeader->sport = htons( iFromPort );
 	psttTcpHeader->dport = htons( iToPort );
@@ -156,9 +164,9 @@ bool CPcapSave::WriteTcp( struct timeval * psttTime, const char * pszFromIp, u_s
 	psttTcpHeader->crc = 0;
 	psttTcpHeader->urgptr = 0;
 
-	memcpy( szPacket + 14 + sizeof(IpHeader) + sizeof(TcpHeader), pszData, iDataLen );
+	memcpy( m_pszPacket + 14 + sizeof(IpHeader) + sizeof(TcpHeader), pszData, iDataLen );
 
-	return Write( &sttHeader, (u_char *)szPacket );
+	return Write( &sttHeader, (u_char *)m_pszPacket );
 }
 
 /**
@@ -177,6 +185,14 @@ void CPcapSave::Close( )
 		pcap_close( m_pPcap );
 		m_pPcap = NULL;
 	}
+
+	if( m_pszPacket )
+	{
+		free( m_pszPacket );
+		m_pszPacket = NULL;
+	}
+
+	m_iPacketSize = 0;
 }
 
 bool CPcapSave::IsOpen()

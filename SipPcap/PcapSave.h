@@ -19,6 +19,7 @@
 #ifndef _PCAP_SAVE_H_
 #define _PCAP_SAVE_H_
 
+#include "SipPlatformDefine.h"
 #include <pcap.h>
 #include <string>
 
@@ -41,6 +42,8 @@ public:
 private:
 	pcap_t				* m_pPcap;
 	pcap_dumper_t * m_pPcapDump;
+	uint8_t				* m_pszPacket;
+	int							m_iPacketSize;
 };
 
 #endif
