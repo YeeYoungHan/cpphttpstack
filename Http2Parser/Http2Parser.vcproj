@@ -170,6 +170,10 @@
 				RelativePath=".\Http2Packet.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Http2Settings.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -198,6 +202,10 @@
 			</File>
 			<File
 				RelativePath=".\Http2Packet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2Settings.h"
 				>
 			</File>
 		</Filter>

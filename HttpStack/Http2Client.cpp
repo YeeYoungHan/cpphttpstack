@@ -103,6 +103,8 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
 	}
 
+
+
 	return true;
 }
 
