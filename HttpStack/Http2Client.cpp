@@ -18,6 +18,7 @@
 
 #include "Http2Define.h"
 #include "Http2Client.h"
+#include "Http2Settings.h"
 #include "TimeUtility.h"
 #include "Log.h"
 
@@ -103,7 +104,37 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
 	}
 
+	int n;
+	char szPacket[8192];
 
+	n = Recv( szPacket, sizeof(szPacket) );
+	if( n >= 9 && szPacket[3] == HTTP2_FRAME_TYPE_SETTINGS )
+	{
+		CHttp2Settings clsSettings;
+
+		clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 100 );
+		clsSettings.Add( HTTP2_SETTINGS_INITIAL_WINDOW_SIZE, 65535 );
+
+		CHttp2Frame clsFrame;
+
+		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
+		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+		if( n != clsFrame.m_iPacketLen )
+		{
+			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+			return false;
+		}
+
+		/*
+		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+		if( n != clsFrame.m_iPacketLen )
+		{
+			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+			return false;
+		}
+		*/
+	}
 
 	return true;
 }
@@ -206,22 +237,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	char szPacket[8192];
 	//CHttp2Packet clsPacket;
 
-	n = Recv( szPacket, sizeof(szPacket) );
-	if( n >= 9 && szPacket[3] == HTTP2_FRAME_TYPE_SETTINGS )
-	{
-		Send( szPacket, n );
-
-		CHttp2Frame clsFrame;
-
-		clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
-		n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
-		if( n != clsFrame.m_iPacketLen )
-		{
-			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
-			return false;
-		}
-	}
-
+	/*
 	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
 	{
 		n = Send( (char *)((*itFL)->m_pszPacket), (*itFL)->m_iPacketLen );
@@ -231,6 +247,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 			return false;
 		}
 	}
+	*/
 
 	while( 1 )
 	{

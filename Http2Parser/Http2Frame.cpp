@@ -63,6 +63,8 @@ bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier,
 		memcpy( m_pszPacket + 9, pszBody, iBodyLen );
 	}
 
+	m_iPacketLen = 9 + iBodyLen;
+
 	return true;
 }
 

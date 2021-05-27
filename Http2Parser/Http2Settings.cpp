@@ -33,6 +33,8 @@ bool CHttp2Settings::Add( uint16_t iName, uint32_t iValue )
 	{
 		m_pszPacket = (uint8_t *)malloc( 6 * 10 );
 		if( m_pszPacket == NULL ) return false;
+
+		m_iPacketSize = 60;
 	}
 
 	if( m_iPacketLen + 6 > m_iPacketSize ) return false;

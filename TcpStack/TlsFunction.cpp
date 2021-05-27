@@ -306,27 +306,30 @@ SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion )
 		return NULL;
 	}
 
-	if( SSL_CTX_use_certificate_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) <= 0 )
+	if( szCertFile )
 	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
-		SSLPrintError( );
-		SSL_CTX_free( pCtx );
-		return NULL;
-	}
+		if( SSL_CTX_use_certificate_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) <= 0 )
+		{
+			CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
+			SSLPrintError( );
+			SSL_CTX_free( pCtx );
+			return NULL;
+		}
 
-	if( ( n = SSL_CTX_use_PrivateKey_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) ) <= 0 )
-	{
-		CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d) - client", n );
-		SSLPrintError( );
-		SSL_CTX_free( pCtx );
-		return NULL;
-	}
+		if( ( n = SSL_CTX_use_PrivateKey_file( pCtx, szCertFile, SSL_FILETYPE_PEM ) ) <= 0 )
+		{
+			CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d) - client", n );
+			SSLPrintError( );
+			SSL_CTX_free( pCtx );
+			return NULL;
+		}
 
-	if( !SSL_CTX_check_private_key( pCtx ) )
-	{
-		CLog::Print( LOG_ERROR, "[SSL] Private key does not match the certificate public key");
-		SSL_CTX_free( pCtx );
-		return NULL;
+		if( !SSL_CTX_check_private_key( pCtx ) )
+		{
+			CLog::Print( LOG_ERROR, "[SSL] Private key does not match the certificate public key");
+			SSL_CTX_free( pCtx );
+			return NULL;
+		}
 	}
 
 	return pCtx;
