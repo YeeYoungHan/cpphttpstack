@@ -19,57 +19,59 @@
 #ifndef _PACKET_HEADER_H_
 #define _PACKET_HEADER_H_
 
+#include "SipPlatformDefine.h"
+
 #define IP_PROTO_TCP	6
 #define IP_PROTO_UDP	17
 
 /* 4 bytes IP address */
 typedef struct _IpAddress_
 {
-	u_char byte1;
-	u_char byte2;
-	u_char byte3;
-	u_char byte4;
+	uint8_t byte1;
+	uint8_t byte2;
+	uint8_t byte3;
+	uint8_t byte4;
 } IpAddress;
 
 /* IPv4 header */
 typedef struct _IpHeader_
 {
-	u_char	ver_ihl;				// Version (4 bits) + Internet header length (4 bits)
-	u_char	tos;						// Type of service 
-	u_short tlen;						// Total length 
-	u_short identification; // Identification
-	u_short flags_fo;				// Flags (3 bits) + Fragment offset (13 bits)
-	u_char	ttl;						// Time to live
-	u_char	proto;					// Protocol
-	u_short crc;						// Header checksum
-	IpAddress	saddr;				// Source address
-	IpAddress	daddr;				// Destination address
+	uint8_t		ver_ihl;				// Version (4 bits) + Internet header length (4 bits)
+	uint8_t		tos;						// Type of service 
+	uint16_t	tlen;						// Total length 
+	uint16_t	identification; // Identification
+	uint16_t	flags_fo;				// Flags (3 bits) + Fragment offset (13 bits)
+	uint8_t		ttl;						// Time to live
+	uint8_t		proto;					// Protocol
+	uint16_t	crc;						// Header checksum
+	IpAddress	saddr;					// Source address
+	IpAddress	daddr;					// Destination address
 } IpHeader;
 
 /* UDP header*/
 typedef struct _UdpHeader_
 {
-	u_short sport;		// Source port
-	u_short dport;		// Destination port
-	u_short len;			// Datagram length
-	u_short crc;			// Checksum
+	uint16_t sport;		// Source port
+	uint16_t dport;		// Destination port
+	uint16_t len;			// Datagram length
+	uint16_t crc;			// Checksum
 } UdpHeader;
 
 /* TCP header */
 typedef struct _TcpHeader_ 
 {
-	u_short sport;		// Source port
-	u_short dport;		// Destination port
-	u_int		seqnum;		// Sequence Number
-	u_int		acknum;		// Acknowledgement number
-	u_char	hlen;			// Header length - 상위 4bit 만 header 길이이다.
-	u_char	flags;		// packet flags
-	u_short win;			// Window size
-	u_short crc;			// Header Checksum
-	u_short urgptr;		// Urgent pointer
+	uint16_t	sport;		// Source port
+	uint16_t	dport;		// Destination port
+	uint32_t	seqnum;		// Sequence Number
+	uint32_t	acknum;		// Acknowledgement number
+	uint8_t		hlen;			// Header length - 상위 4bit 만 header 길이이다.
+	uint8_t		flags;		// packet flags
+	uint16_t	win;			// Window size
+	uint16_t	crc;			// Header Checksum
+	uint16_t	urgptr;		// Urgent pointer
 } TcpHeader;
 
 bool StringToIpAddress( const char * pszIp, IpAddress & sttIpAddress );
-u_short GetIpHeaderCheckSum( u_short sIpHeaderLen, u_char * pszIpHeader );
+uint16_t GetIpHeaderCheckSum( uint16_t sIpHeaderLen, uint8_t * pszIpHeader );
 
 #endif

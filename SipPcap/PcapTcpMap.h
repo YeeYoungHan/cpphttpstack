@@ -16,35 +16,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _PCAP_SAVE_H_
-#define _PCAP_SAVE_H_
+#ifndef _PCAP_TCP_MAP_H_
+#define _PCAP_TCP_MAP_H_
 
 #include "SipPlatformDefine.h"
-#include "PcapTcpMap.h"
-#include <pcap.h>
+#include <map>
+#include <string>
 
-/**
- * @brief SIP 메시지를 pcap 파일로 저장하는 클래스
- */
-class CPcapSave
+class CPcapTcpInfo
 {
 public:
-	CPcapSave();
-	~CPcapSave();
+	CPcapTcpInfo();
 
-	bool Open( const char * pszFileName, int iSnapLen );
-	bool Write( const struct pcap_pkthdr * psttHeader, const u_char * psttPacketData );
-	bool WriteUdp( struct timeval * psttTime, const char * pszFromIp, uint16_t sFromPort, const char * pszToIp, uint16_t sToPort, const char * pszData, int iDataLen );
-	bool WriteTcp( struct timeval * psttTime, const char * pszFromIp, uint16_t sFromPort, const char * pszToIp, uint16_t sToPort, const char * pszData, int iDataLen );
-	void Close( );
-	bool IsOpen();
+	uint32_t	m_iSeqNum;
+};
+
+typedef std::map< std::string, CPcapTcpInfo > PCAP_TCP_MAP;
+
+class CPcapTcpMap
+{
+public:
+	CPcapTcpMap();
+	~CPcapTcpMap();
+
+	bool Select( const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, CPcapTcpInfo ** ppclsInfo );
 
 private:
-	pcap_t				* m_pPcap;
-	pcap_dumper_t * m_pPcapDump;
-	uint8_t				* m_pszPacket;
-	int							m_iPacketSize;
-	CPcapTcpMap			m_clsTcpMap;
+	void GetKey( const char * pszFromIp, u_short iFromPort, const char * pszToIp, u_short iToPort, std::string & strKey );
+
+	PCAP_TCP_MAP m_clsMap;
 };
 
 #endif

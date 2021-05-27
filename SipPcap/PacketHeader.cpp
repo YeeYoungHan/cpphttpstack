@@ -47,11 +47,11 @@ bool StringToIpAddress( const char * pszIp, IpAddress & sttIpAddress )
  * @param pszIpHeader		IP 헤더
  * @returns IP 헤더 checksum 을 리턴한다.
  */
-u_short GetIpHeaderCheckSum( u_short sIpHeaderLen, u_char * pszIpHeader )
+uint16_t GetIpHeaderCheckSum( uint16_t sIpHeaderLen, uint8_t * pszIpHeader )
 {
-	u_short word16;
-	u_int sum = 0;
-	u_short i, sBuf1, sBuf2;
+	uint16_t sValue;
+	uint32_t iSum = 0;
+	uint16_t i, sBuf1, sBuf2;
     
 	for( i = 0; i < sIpHeaderLen; i = i + 2 )
 	{
@@ -66,14 +66,14 @@ u_short GetIpHeaderCheckSum( u_short sIpHeaderLen, u_char * pszIpHeader )
 			sBuf2 = pszIpHeader[i+1];
 		}
 
-		word16 = ( ( sBuf1 << 8) & 0xFF00 )+( sBuf2 & 0xFF );
-		sum = sum + ( u_int )word16;	
+		sValue = ( ( sBuf1 << 8) & 0xFF00 ) + ( sBuf2 & 0xFF );
+		iSum = iSum + ( uint32_t )sValue;	
 	}
 	
-	while( sum >> 16 )
-	  sum = ( sum & 0xFFFF ) + ( sum >> 16 );
+	while( iSum >> 16 )
+	  iSum = ( iSum & 0xFFFF ) + ( iSum >> 16 );
 
-	sum = ~sum;
+	iSum = ~iSum;
 	
-	return ((u_short) sum);
+	return ((uint16_t) iSum);
 }
