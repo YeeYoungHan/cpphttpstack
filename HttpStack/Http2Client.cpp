@@ -192,6 +192,8 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		m_iStreamIdentifier += 2;
 	}
 
+	pclsRequest->m_iStreamIdentifier = m_iStreamIdentifier;
+
 	if( m_clsSendConversion.MakeFrameList( *pclsRequest, m_clsFrameList ) == false )
 	{
 		return false;
@@ -246,7 +248,7 @@ int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 		struct timeval sttTime;
 
 		gettimeofday( &sttTime, NULL );
-		m_clsPcap.WriteTcp( &sttTime, m_strClientIp.c_str(), m_iClientPort, m_strServerIp.c_str(), 80, (char *)pszPacket, iPacketLen );
+		m_clsPcap.WriteTcp( &sttTime, m_strClientIp.c_str(), m_iClientPort, m_strServerIp.c_str(), 8081, (char *)pszPacket, iPacketLen );
 	}
 
 	return n;
@@ -261,7 +263,7 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 		struct timeval sttTime;
 
 		gettimeofday( &sttTime, NULL );
-		m_clsPcap.WriteTcp( &sttTime, m_strServerIp.c_str(), 80, m_strClientIp.c_str(), m_iClientPort, (char *)pszPacket, n );
+		m_clsPcap.WriteTcp( &sttTime, m_strServerIp.c_str(), 8081, m_strClientIp.c_str(), m_iClientPort, (char *)pszPacket, n );
 	}
 
 	return n;

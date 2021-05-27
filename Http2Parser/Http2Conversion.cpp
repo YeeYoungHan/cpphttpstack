@@ -95,12 +95,14 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 		{
 			AddIndexValue( HTTP2_INDEX_METHOD_GET, pszMethod );
 		}
+
+		AddIndexValue( HTTP2_INDEX_PATH, clsMessage.m_strReqUri.c_str() );
 	}
 
-	if( clsMessage.m_strContentType.empty() == false )
-	{
-		AddIndexValue( HTTP2_INDEX_CONTENT_TYPE, clsMessage.m_strContentType.c_str() );
-	}
+	//if( clsMessage.m_strContentType.empty() == false )
+	//{
+	//	AddIndexValue( HTTP2_INDEX_CONTENT_TYPE, clsMessage.m_strContentType.c_str() );
+	//}
 
 	const char * pszName;
 
