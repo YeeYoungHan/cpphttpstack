@@ -7,6 +7,7 @@
 all:
 	cd SipPlatform && make
 	cd HttpParser && make
+	cd Http2Parser && make
 	cd TcpStack && make
 	cd HttpStack && make
 	cd XmlParser && make
@@ -24,6 +25,7 @@ all:
 clean:
 	cd SipPlatform && make clean
 	cd HttpParser && make clean
+	cd Http2Parser && make clean
 	cd TcpStack && make clean
 	cd HttpStack && make clean
 	cd XmlParser && make clean
