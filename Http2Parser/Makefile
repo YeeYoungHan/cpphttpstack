@@ -6,7 +6,7 @@
 
 include ../Makefile.mk
 
-INC=-I../SipPlatform
+INC=-../HttpParser -I../SipPlatform
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp
