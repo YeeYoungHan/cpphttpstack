@@ -89,9 +89,10 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	if( pszPcapFileName )
 	{
+#ifdef WIN32
 		m_clsPcap.Open( pszPcapFileName, HTTP2_FRAME_SIZE + 200 );
-
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
+#endif
 	}
 
 	TcpSetPollIn( m_sttPoll[0], m_hSocket );
