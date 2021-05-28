@@ -1,22 +1,23 @@
-# Makefile for HttpStack
+# Makefile for Http2Parser
 #
 # programmer : yee young han ( websearch@naver.com )
 #            : http://blog.naver.com/websearch
-# start date : 2012/11/22
+# start date : 2021/05/28
 
 include ../Makefile.mk
 
-INC=-I../TcpStack -I../HttpParser -I../XmlParser -I../SipPlatform
+INC=-I../SipPlatform
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp
 	$(CC) $(CFLAGS) -c $< $(INC)
 
-all: libhttpstack.a
+all: libhttp2parser.a
 
-LIB_OBJ=HttpClient.o HttpClient2.o Http2Client.o HttpStack.o WebSocketPacket.o
+LIB_OBJ=Http2Conversion.o Http2Frame.o Http2FrameList.o \
+	Http2Header.o Http2Packet.o Http2Settings.o
 
-libhttpstack.a: $(LIB_OBJ)
+libhttp2parser.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)
 
 clean:

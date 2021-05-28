@@ -82,6 +82,20 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
   * WebSocket 을 이용한 WebRTC 연동 샘플 프로그램
   * 사용법은 http://blog.naver.com/websearch/221142356741 포스트를 참고하세요.
 
+### 컴파일 방법
+본 프로젝트의 컴파일 방법은 다음과 같습니다.
+
+* VC++ 2008
+  * SipStack.sln 더블클릭한 후, 빌드한다.
+  * Visual Studio 2008 버전 9.0.30729.1 SP 에서 빌드할 것을 권장합니다.
+
+* VC++ 2017
+  * SipStack-vs2017.sln 더블클릭한 후, 빌드한다.
+
+* 리눅스
+  * openssl 개발 라이브러리를 설치한다.
+  * make 를 실행하여서 빌드한다.
+
 ### HTTP GET 요청/응답 개발 방법
 HttpStack 라이브러리의 CHttpClient 클래스를 이용한 HTTP GET 프로토콜 연동하는 소스 코드 예제는 다음과 같습니다.
 테스트용 샘플 소스 코드는 TestHttpClient 프로젝트의 TestHttpClientGet.cpp 파일입니다.

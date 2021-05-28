@@ -195,8 +195,29 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 	return true;
 }
 
-bool CHttp2Conversion::MakeMessage( CHttp2FrameList & clsFrameList, CHttpMessage & clsMessage )
+bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMessage )
 {
+	if( clsFrame.GetType() == HTTP2_FRAME_TYPE_HEADERS )
+	{
+		//uint8_t * pszBody = clsFrame.GetBody() + 9;
+		//int iBodyLen = clsFrame.GetBodyLen();
+
+		//for( int i = 0; i < iBodyLen; )
+		//{
+		//	if( pszBody[i] & 0x80 )
+		//	{
+		//		if( pszBody[i] != 0xFF )
+		//		{
+		//			uint8_t cIndex = pszBody[i] &0x7F;
+		//		}
+		//	}
+		//}
+	}
+	else
+	{
+		clsMessage.m_strBody.append( (char *)clsFrame.GetBody(), clsFrame.GetBodyLen() );
+		clsMessage.m_iContentLength += clsMessage.m_strBody.length();
+	}
 
 	return true;
 }

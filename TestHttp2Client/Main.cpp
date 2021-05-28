@@ -16,30 +16,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_CONVERSION_H_
-#define _HTTP2_CONVERSION_H_
+#include "TestHttp2Client.h"
 
-#include "HttpMessage.h"
-#include "Http2Header.h"
-#include "Http2FrameList.h"
-
-class CHttp2Conversion
+int main( int argc, char * argv[] )
 {
-public:
-	CHttp2Conversion();
-	~CHttp2Conversion();
-
-	bool MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList );
-	bool MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMessage );
-
-private:
-	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
-	bool AddNameValue( const char * pszName, const char * pszValue );
-
-	CHttpMessage		* m_pclsMessage;
-	CHttp2FrameList * m_pclsFrameList;
-	CHttp2Header	m_clsHeader;
-	int						m_iHeaderFrameCount;
-};
-
+#ifdef WIN32
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
+
+	TestHttp2ClientGet( argc, argv );
+
+	return 0;
+}

@@ -69,9 +69,11 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		return false;
 	}
 
+	/*
 	uint8_t szProto[] = { 2, 'h', '2' };
 
 	SSL_CTX_set_alpn_protos( m_psttCtx, szProto, sizeof(szProto) );
+	*/
 
 	if( SSLConnect( m_psttCtx, m_hSocket, &m_psttSsl ) == false )
 	{
@@ -109,38 +111,21 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, szPacket );
 
-	if( RecvNonBlocking() == false ) return false;
-
 	CHttp2Settings clsSettings;
 
-	clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 100 );
-	clsSettings.Add( HTTP2_SETTINGS_INITIAL_WINDOW_SIZE, 65535 );
+	clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 1 );
+	clsSettings.Add( HTTP2_SETTINGS_ENABLE_PUSH, 0 );
 
-	CHttp2Frame clsFrame;
-
-	clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
-	n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
-	if( n != clsFrame.m_iPacketLen )
+	m_clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
+	n = Send( (char *)m_clsFrame.m_pszPacket, m_clsFrame.m_iPacketLen );
+	if( n != m_clsFrame.m_iPacketLen )
 	{
 		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
 		Close();
 		return false;
 	}
 
-	clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
-
-	if( RecvNonBlocking() == false ) return false;
-
-	clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
-	n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
-	if( n != clsFrame.m_iPacketLen )
-	{
-		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
-		Close();
-		return false;
-	}
-
-	clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
+	m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
 
 	if( RecvNonBlocking() == false ) return false;
 
@@ -166,6 +151,33 @@ bool CHttp2Client::Close()
 		SSL_CTX_free( m_psttCtx );
 		m_psttCtx = NULL;
 	}
+
+	return true;
+}
+
+bool CHttp2Client::DoGet( const char * pszPath, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	strOutputContentType.clear();
+	strOutputBody.clear();
+
+	if( pszPath == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s pszPath is null", __FUNCTION__ );
+		return false;
+	}
+
+	CHttpMessage clsRequest, clsResponse;
+
+	clsRequest.m_strHttpMethod = "GET";
+	clsRequest.m_strReqUri = pszPath;
+
+	if( Execute( &clsRequest, &clsResponse ) == false )
+	{
+		return false;
+	}
+
+	strOutputContentType = clsResponse.m_strContentType;
+	strOutputBody = clsResponse.m_strBody;
 
 	return true;
 }
@@ -219,7 +231,7 @@ bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderLi
 	strOutputContentType = clsResponse.m_strContentType;
 	strOutputBody = clsResponse.m_strBody;
 
-	return false;
+	return true;
 }
 
 bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
@@ -241,7 +253,10 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	}
 
 	HTTP2_FRAME_LIST::iterator itFL;
-	int n;
+	int		n;
+	bool	bEnd = false;
+
+	if( RecvNonBlocking() == false ) return false;
 
 	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
 	{
@@ -251,19 +266,48 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 			CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
 			return false;
 		}
+
+		(*itFL)->PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
 	}
 
-	while( 1 )
+	while( bEnd == false )
 	{
 		n = Recv( (char *)m_szPacket, sizeof(m_szPacket) );
 		if( n <= 0 ) break;
 
-		if( m_clsPacket.AddPacket( m_szPacket, n ) && m_clsPacket.GetFrame( &m_clsFrame ) )
+		if( m_clsPacket.AddPacket( m_szPacket, n ) )
 		{
-			m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
+			while( m_clsPacket.GetFrame( &m_clsFrame ) )
+			{
+				m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
 
-			if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_GOAWAY ) break;
-			if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_DATA && ( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM ) ) break;
+				switch( m_clsFrame.GetType() )
+				{
+				case HTTP2_FRAME_TYPE_DATA:
+					m_clsSendConversion.MakeMessage( m_clsFrame, *pclsResponse );
+					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
+					{
+						bEnd = true;
+					}
+					break;
+				case HTTP2_FRAME_TYPE_HEADERS:
+					m_clsSendConversion.MakeMessage( m_clsFrame, *pclsResponse );
+					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
+					{
+						bEnd = true;
+					}
+					break;
+				case HTTP2_FRAME_TYPE_SETTINGS:
+					if( m_clsFrame.GetFlags() == 0 )
+					{
+						if( SendSettingsAck() == false ) return false;
+					}
+					break;
+				case HTTP2_FRAME_TYPE_GOAWAY:
+					bEnd = true;
+					break;
+				}
+			}
 		}
 	}
 
@@ -304,7 +348,7 @@ bool CHttp2Client::RecvNonBlocking()
 {
 	while( poll( m_sttPoll, 1, 0 ) > 0 )
 	{
-		int n = SSLRecv( m_psttSsl, (char *)m_szPacket, sizeof(m_szPacket) );
+		int n = Recv( (char *)m_szPacket, sizeof(m_szPacket) );
 		if( n <= 0 )
 		{
 			CLog::Print( LOG_NETWORK, "TCP(%s:%d) closed", m_strServerIp.c_str(), m_iServerPort );
@@ -312,11 +356,35 @@ bool CHttp2Client::RecvNonBlocking()
 			return false;
 		}
 
-		if( m_clsPacket.AddPacket( m_szPacket, n ) && m_clsPacket.GetFrame( &m_clsFrame ) )
+		if( m_clsPacket.AddPacket( m_szPacket, n ) )
 		{
-			m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
+			while( m_clsPacket.GetFrame( &m_clsFrame ) )
+			{
+				m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
+
+				if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_SETTINGS && m_clsFrame.GetFlags() == 0 )
+				{
+					if( SendSettingsAck() == false ) return false;
+				}
+			}
 		}
 	}
+
+	return true;
+}
+
+bool CHttp2Client::SendSettingsAck()
+{
+	m_clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+	int n = Send( (char *)m_clsFrame.m_pszPacket, m_clsFrame.m_iPacketLen );
+	if( n != m_clsFrame.m_iPacketLen )
+	{
+		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+		Close();
+		return false;
+	}
+
+	m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
 
 	return true;
 }

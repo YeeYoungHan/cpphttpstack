@@ -36,6 +36,7 @@ public:
 	bool Connect( const char * pszIp, int iPort, const char * pszClientPemFileName = NULL, const char * pszPcapFileName = NULL );
 	bool Close();
 
+	bool DoGet( const char * pszPath, std::string & strOutputContentType, std::string & strOutputBody );
 	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
 
 	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
@@ -44,6 +45,7 @@ private:
 	int Send( char * pszPacket, int iPacketLen );
 	int Recv( char * pszPacket, int iPacketSize );
 	bool RecvNonBlocking();
+	bool SendSettingsAck();
 
 	Socket		m_hSocket;
 	SSL			* m_psttSsl;
