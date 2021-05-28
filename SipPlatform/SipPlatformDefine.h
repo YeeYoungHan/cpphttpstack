@@ -58,8 +58,6 @@ typedef char int8_t;
 
 #else
 
-#define _MSC_VER 0
-
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>

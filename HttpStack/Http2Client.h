@@ -26,8 +26,10 @@
 #include "Http2FrameList.h"
 #include "Http2Packet.h"
 
+#ifdef WIN32
 #if _MSC_VER == VC2008_VERSION
 #include "PcapSave.h"
+#endif
 #endif
 
 class CHttp2Client
@@ -70,8 +72,10 @@ private:
 	std::string	m_strClientIp;
 	int					m_iClientPort;
 
+#ifdef WIN32
 #if _MSC_VER == VC2008_VERSION
 	CPcapSave		m_clsPcap;
+#endif
 #endif
 };
 
