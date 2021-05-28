@@ -318,6 +318,7 @@ int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 {
 	int n = SSLSend( m_psttSsl, pszPacket, iPacketLen );
 
+#ifdef WIN32
 	if( m_clsPcap.IsOpen() )
 	{
 		struct timeval sttTime;
@@ -325,6 +326,7 @@ int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 		gettimeofday( &sttTime, NULL );
 		m_clsPcap.WriteTcp( &sttTime, m_strClientIp.c_str(), m_iClientPort, m_strServerIp.c_str(), 8081, (char *)pszPacket, iPacketLen );
 	}
+#endif
 
 	return n;
 }
@@ -333,6 +335,7 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 {
 	int n = SSLRecv( m_psttSsl, pszPacket, iPacketSize );
 
+#ifdef WIN32
 	if( n > 0 )
 	{
 		struct timeval sttTime;
@@ -340,6 +343,7 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 		gettimeofday( &sttTime, NULL );
 		m_clsPcap.WriteTcp( &sttTime, m_strServerIp.c_str(), 8081, m_strClientIp.c_str(), m_iClientPort, (char *)pszPacket, n );
 	}
+#endif
 
 	return n;
 }

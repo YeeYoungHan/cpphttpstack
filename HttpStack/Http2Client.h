@@ -25,7 +25,10 @@
 #include "Http2Conversion.h"
 #include "Http2FrameList.h"
 #include "Http2Packet.h"
+
+#ifdef WIN32
 #include "PcapSave.h"
+#endif
 
 class CHttp2Client
 {
@@ -67,7 +70,9 @@ private:
 	std::string	m_strClientIp;
 	int					m_iClientPort;
 
+#ifdef WIN32
 	CPcapSave		m_clsPcap;
+#endif
 };
 
 #endif
