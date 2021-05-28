@@ -89,7 +89,7 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	if( pszPcapFileName )
 	{
-#ifdef WIN32
+#if _MSC_VER == VC2008_VERSION
 		m_clsPcap.Open( pszPcapFileName, HTTP2_FRAME_SIZE + 200 );
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
 #endif
@@ -319,7 +319,7 @@ int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 {
 	int n = SSLSend( m_psttSsl, pszPacket, iPacketLen );
 
-#ifdef WIN32
+#if _MSC_VER == VC2008_VERSION
 	if( m_clsPcap.IsOpen() )
 	{
 		struct timeval sttTime;
@@ -336,7 +336,7 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 {
 	int n = SSLRecv( m_psttSsl, pszPacket, iPacketSize );
 
-#ifdef WIN32
+#if _MSC_VER == VC2008_VERSION
 	if( n > 0 )
 	{
 		struct timeval sttTime;

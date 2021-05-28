@@ -49,6 +49,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHtmlParser", "TestHtmlP
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Http2Parser", "Http2Parser\Http2Parser.vcxproj", "{A977B675-C94D-4B57-A368-20FFB07DD660}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHttp2Client", "TestHttp2Client\TestHttp2Client.vcxproj", "{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -183,6 +185,14 @@ Global
 		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|Win32.ActiveCfg = Release|Win32
 		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|Win32.Build.0 = Release|Win32
 		{A977B675-C94D-4B57-A368-20FFB07DD660}.Release|x64.ActiveCfg = Release|Win32
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Debug|Win32.Build.0 = Debug|Win32
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Debug|x64.ActiveCfg = Debug|x64
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Debug|x64.Build.0 = Debug|x64
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Release|Win32.ActiveCfg = Release|Win32
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Release|Win32.Build.0 = Release|Win32
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Release|x64.ActiveCfg = Release|x64
+		{224FFCEE-3F4F-4E76-AB1D-9DD87C94A23A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

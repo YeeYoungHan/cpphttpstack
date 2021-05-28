@@ -52,7 +52,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -66,7 +66,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -76,12 +76,14 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Http2Client.cpp" />
     <ClCompile Include="HttpClient.cpp" />
     <ClCompile Include="HttpClient2.cpp" />
     <ClCompile Include="HttpStack.cpp" />
     <ClCompile Include="WebSocketPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Http2Client.h" />
     <ClInclude Include="HttpClient.h" />
     <ClInclude Include="HttpClient2.h" />
     <ClInclude Include="HttpStack.h" />
