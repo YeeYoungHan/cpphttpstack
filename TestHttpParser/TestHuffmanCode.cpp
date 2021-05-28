@@ -17,7 +17,7 @@
  */
 
 #include "SipPlatformDefine.h"
-#include "HttpHuffmanCode.h"
+#include "Http2HuffmanCode.h"
 #include "StringUtility.h"
 #include "MemoryDebug.h"
 

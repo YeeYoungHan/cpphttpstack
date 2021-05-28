@@ -6,8 +6,9 @@
 
 include ../Makefile.mk
 
-INC=-I../HttpParser -I../SipPlatform
-LIB=-L../HttpParser -lhttpparser \
+INC=-I../Http2Parser -I../HttpParser -I../SipPlatform
+LIB=-L../Http2Parser -lhttp2parser \
+	-L../HttpParser -lhttpparser \
 	-L../SipPlatform -lsipplatform \
 	-lpthread
 

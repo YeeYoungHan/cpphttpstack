@@ -113,8 +113,8 @@ int HuffmanCodeDecode( const uint8_t * pszInput, uint32_t iInputLen, uint8_t * p
 {
 	int iInputPos = 0, iInputBitRemain = 0;
 	int iOutputPos = 0;
-	int iBitPos = 0, iBitRemain, iTest, iDecode, i;
-	uint32_t iCode = 0, iCodeInput;
+	int iBitPos = 0, iBitRemain, iDecode, i;
+	uint32_t iCode = 0, iCodeInput = 0, iTest;
 	bool bFound;
 
 	while( iInputPos < (int)iInputLen || iBitPos >= 5 )
