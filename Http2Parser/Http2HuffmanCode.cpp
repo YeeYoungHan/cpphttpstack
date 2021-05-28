@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpHuffmanCode.h"
+#include "Http2HuffmanCode.h"
 #include <stdio.h>
 
-#include "HttpHuffmanCodeEncode.hpp"
-#include "HttpHuffmanCodeDecode.hpp"
+#include "Http2HuffmanCodeEncode.hpp"
+#include "Http2HuffmanCodeDecode.hpp"
 
 /**
  * @ingroup HttpParser
