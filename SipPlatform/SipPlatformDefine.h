@@ -50,7 +50,7 @@ typedef __int16 int16_t;
 #if _MSC_VER == VC2008_VERSION
 typedef char int8_t;
 
-#define snprintf		_snprintf
+#define snprintf _snprintf
 #define atoll(x) _atoi64(x)
 #endif
 

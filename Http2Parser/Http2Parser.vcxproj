@@ -11,22 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9B6BB546-F6DA-4D79-95E1-4D8A1BEA87E3}</ProjectGuid>
-    <RootNamespace>TestHttpParser</RootNamespace>
+    <ProjectGuid>{A977B675-C94D-4B57-A368-20FFB07DD660}</ProjectGuid>
+    <RootNamespace>Http2Parser</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -39,22 +39,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>15.0.27130.2010</_ProjectFileVersion>
+    <_ProjectFileVersion>15.0.27130.2020</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Http2Parser;../HttpParser;../SipPlatform;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../HttpParser;../SipPlatform;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,18 +61,12 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <TargetMachine>MachineX86</TargetMachine>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../Http2Parser;../HttpParser;../SipPlatform;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../HttpParser;../SipPlatform;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -82,32 +74,27 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="TestHttpMultipart.cpp" />
-    <ClCompile Include="TestHttpPacket.cpp" />
-    <ClCompile Include="TestHttpParameter.cpp" />
-    <ClCompile Include="TestHuffmanCode.cpp" />
+    <ClCompile Include="Http2Conversion.cpp" />
+    <ClCompile Include="Http2Frame.cpp" />
+    <ClCompile Include="Http2FrameList.cpp" />
+    <ClCompile Include="Http2Header.cpp" />
+    <ClCompile Include="Http2HuffmanCode.cpp" />
+    <ClCompile Include="Http2Packet.cpp" />
+    <ClCompile Include="Http2Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Http2Parser\Http2Parser.vcxproj">
-      <Project>{a977b675-c94d-4b57-a368-20ffb07dd660}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">
-      <Project>{fdc90de9-6824-47be-b089-2b22cf515d7f}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\SipPlatform\SipPlatform.vcxproj">
-      <Project>{59766094-16e8-4602-9621-6c1e5ed9af5f}</Project>
-    </ProjectReference>
+    <ClInclude Include="Http2Conversion.h" />
+    <ClInclude Include="Http2Define.h" />
+    <ClInclude Include="Http2Frame.h" />
+    <ClInclude Include="Http2FrameList.h" />
+    <ClInclude Include="Http2Header.h" />
+    <ClInclude Include="Http2HuffmanCode.h" />
+    <ClInclude Include="Http2HuffmanCodeDecode.hpp" />
+    <ClInclude Include="Http2HuffmanCodeEncode.hpp" />
+    <ClInclude Include="Http2Packet.h" />
+    <ClInclude Include="Http2Settings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -77,7 +77,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HttpHeader.cpp" />
-    <ClCompile Include="HttpHuffmanCode.cpp" />
     <ClCompile Include="HttpMessage.cpp" />
     <ClCompile Include="HttpMultipart.cpp" />
     <ClCompile Include="HttpPacket.cpp" />
@@ -88,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HttpHeader.h" />
-    <ClInclude Include="HttpHuffmanCode.h" />
     <ClInclude Include="HttpMessage.h" />
     <ClInclude Include="HttpMultipart.h" />
     <ClInclude Include="HttpPacket.h" />

@@ -11,54 +11,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HttpHeader.cpp">
+    <ClCompile Include="Http2Conversion.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpMessage.cpp">
+    <ClCompile Include="Http2Frame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpPacket.cpp">
+    <ClCompile Include="Http2FrameList.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpStatusCode.cpp">
+    <ClCompile Include="Http2Header.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpUri.cpp">
+    <ClCompile Include="Http2HuffmanCode.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpParameter.cpp">
+    <ClCompile Include="Http2Packet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HttpParameterList.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="HttpMultipart.cpp">
+    <ClCompile Include="Http2Settings.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HttpHeader.h">
+    <ClInclude Include="Http2HuffmanCodeDecode.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Http2HuffmanCodeEncode.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Http2Conversion.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpMessage.h">
+    <ClInclude Include="Http2Define.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpPacket.h">
+    <ClInclude Include="Http2Frame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpStatusCode.h">
+    <ClInclude Include="Http2FrameList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpUri.h">
+    <ClInclude Include="Http2Header.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpParameter.h">
+    <ClInclude Include="Http2HuffmanCode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpParameterList.h">
+    <ClInclude Include="Http2Packet.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HttpMultipart.h">
+    <ClInclude Include="Http2Settings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

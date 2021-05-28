@@ -19,7 +19,7 @@
 typedef struct
 {
 	uint32_t	iCode;
-	uint32_t	iBit;
+	int	iBit;
 	uint8_t		cChar;
 } HuffmanDecode;
 
