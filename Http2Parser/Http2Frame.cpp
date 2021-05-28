@@ -16,9 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "Http2Define.h"
 #include "Http2Frame.h"
+#include "Http2Settings.h"
 #include "SipTcp.h"
-#include "Log.h"
 
 CHttp2Frame::CHttp2Frame() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {
@@ -39,7 +40,6 @@ bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier,
 	if( m_pszPacket == NULL )
 	{
 		m_iPacketSize = 9 + iBodyLen;
-		m_iPacketLen = m_iPacketSize;
 
 		m_pszPacket = (uint8_t *)malloc( m_iPacketSize );
 		if( m_pszPacket == NULL )
@@ -64,6 +64,32 @@ bool CHttp2Frame::Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier,
 	}
 
 	m_iPacketLen = 9 + iBodyLen;
+
+	return true;
+}
+
+bool CHttp2Frame::Set( uint8_t * pszPacket, int iPacketLen )
+{
+	if( iPacketLen > m_iPacketSize )
+	{
+		Delete();
+	}
+
+	if( m_pszPacket == NULL )
+	{
+		m_iPacketSize = iPacketLen;
+
+		m_pszPacket = (uint8_t *)malloc( m_iPacketSize );
+		if( m_pszPacket == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s malloc(%d) error(%d)", __FUNCTION__, m_iPacketSize, GetError() );
+			Delete();
+			return false;
+		}
+	}
+
+	memcpy( m_pszPacket, pszPacket, iPacketLen );
+	m_iPacketLen = iPacketLen;
 
 	return true;
 }
@@ -120,4 +146,27 @@ void CHttp2Frame::Delete()
 
 	m_iPacketSize = 0;
 	m_iPacketLen = 0;
+}
+
+void CHttp2Frame::PrintLog( EnumLogLevel eLogLevel, const char * pszIp, int iPort, bool bSend )
+{
+	if( m_iPacketLen >= 9 && CLog::IsPrintLogLevel( eLogLevel ) )
+	{
+		int iFrameLen = 0, iFrameId;
+
+		memcpy( (char *)&iFrameLen + 1, m_pszPacket, 3 );
+		iFrameLen = ntohl( iFrameLen );
+
+		memcpy( &iFrameId, m_pszPacket + 5, 4 );
+		iFrameId = ntohl( iFrameId );
+
+		CLog::Print( eLogLevel, "%s(%s:%d) frame( len=%d, type=%0x, flag=%0x, id=%d )", bSend ? "Send" : "Recv", pszIp, iPort, iFrameLen, m_pszPacket[3], m_pszPacket[4], iFrameId );
+
+		switch( m_pszPacket[3] )
+		{
+		case HTTP2_FRAME_TYPE_SETTINGS:
+			CHttp2Settings::PrintLog( eLogLevel, m_pszPacket + 9, iFrameLen );
+			break;
+		}
+	}
 }

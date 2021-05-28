@@ -19,6 +19,8 @@
 #ifndef _SIP_TCP_H_
 #define _SIP_TCP_H_
 
+#define TCP_INIT_BUF_SIZE		16384
+
 #include "SipUdp.h"
 
 bool GetIpByName( const char * szHostName, char * szIp, int iLen );

@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "Http2Define.h"
 #include "Http2Settings.h"
-#include "Log.h"
 
 CHttp2Settings::CHttp2Settings() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {
@@ -67,14 +67,52 @@ void CHttp2Settings::Delete()
 	m_iPacketLen = 0;
 }
 
-void CHttp2Settings::PrintLog( const char * pszIp, int iPort, bool bSend, int iError )
+void CHttp2Settings::PrintLog( EnumLogLevel eLogLevel, uint8_t * pszPacket, int iPacketLen )
 {
-	if( iError )
+	uint16_t sId;
+	uint32_t iValue;
+	char szText[1024];
+	int iLen = 0;
+
+	for( int i = 0; i < iPacketLen; i += 6 )
 	{
-		
+		memcpy( &sId, pszPacket + i, 2 );
+		memcpy( &iValue, pszPacket + i + 2, 4 );
+
+		sId = ntohs( sId );
+		iValue = ntohl( iValue );
+
+		switch( sId )
+		{
+		case HTTP2_SETTINGS_HEADER_TABLE_SIZE:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "HEADER_TABLE_SIZE(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_ENABLE_PUSH:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "ENABLE_PUSH(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "MAX_CONCURRENT_STREAMS(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_INITIAL_WINDOW_SIZE:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "INITIAL_WINDOW_SIZE(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_MAX_FRAME_SIZE:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "MAX_FRAME_SIZE(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_MAX_HEADER_LIST_SIZE:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "MAX_HEADER_LIST_SIZE(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_ACCEPT_CACHE_DIGEST:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "ACCEPT_CACHE_DIGEST(%u) ", iValue );
+			break;
+		case HTTP2_SETTINGS_ENABLE_CONNECT_PROTOCOL:
+			iLen += snprintf( szText + iLen, sizeof(szText) - iLen, "ENABLE_CONNECT_PROTOCOL(%u) ", iValue );
+			break;
+		}
 	}
-	else if( CLog::IsPrintLogLevel( LOG_NETWORK ) )
+
+	if( iLen > 0 )
 	{
-		
+		CLog::Print( eLogLevel, "Settings %s", szText );
 	}
 }

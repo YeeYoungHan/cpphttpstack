@@ -24,6 +24,7 @@
 #include "TlsFunction.h"
 #include "Http2Conversion.h"
 #include "Http2FrameList.h"
+#include "Http2Packet.h"
 #include "PcapSave.h"
 
 class CHttp2Client
@@ -42,6 +43,7 @@ public:
 private:
 	int Send( char * pszPacket, int iPacketLen );
 	int Recv( char * pszPacket, int iPacketSize );
+	bool RecvNonBlocking();
 
 	Socket		m_hSocket;
 	SSL			* m_psttSsl;
@@ -51,6 +53,11 @@ private:
 	CHttp2Conversion	m_clsSendConversion;
 	CHttp2Conversion	m_clsRecvConversion;
 	CHttp2FrameList		m_clsFrameList;
+	CHttp2Frame				m_clsFrame;
+	CHttp2Packet			m_clsPacket;
+
+	pollfd			m_sttPoll[1];
+	uint8_t			m_szPacket[TCP_INIT_BUF_SIZE];
 
 	std::string	m_strServerIp;
 	int					m_iServerPort;

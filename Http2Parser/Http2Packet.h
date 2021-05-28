@@ -19,6 +19,8 @@
 #ifndef _HTTP2_PACKET_H_
 #define _HTTP2_PACKET_H_
 
+#include "SipPlatformDefine.h"
+#include "Http2Frame.h"
 #include <string>
 
 class CHttp2Packet
@@ -27,8 +29,8 @@ public:
 	CHttp2Packet();
 	~CHttp2Packet();
 
-	bool AddPacket( const char * pszPacket, int iPacketLen );
-	bool IsCompleted( );
+	bool AddPacket( const uint8_t * pszPacket, int iPacketLen );
+	bool GetFrame( CHttp2Frame * pclsFrame );
 
 private:
 	std::string m_strBuf;

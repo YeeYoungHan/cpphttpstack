@@ -24,8 +24,6 @@
 #include "TlsFunction.h"
 #include <string>
 
-#define TCP_INIT_BUF_SIZE		16384
-
 class CTcpComm;
 class ITcpStackCallBack;
 

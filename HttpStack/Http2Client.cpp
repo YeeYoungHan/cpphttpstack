@@ -92,6 +92,8 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		GetLocalIpPort( m_hSocket, m_strClientIp, m_iClientPort );
 	}
 
+	TcpSetPollIn( m_sttPoll[0], m_hSocket );
+
 	int n, iLen;
 	char szPacket[8192];
 
@@ -106,6 +108,8 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 	}
 
 	CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, szPacket );
+
+	if( RecvNonBlocking() == false ) return false;
 
 	CHttp2Settings clsSettings;
 
@@ -123,6 +127,10 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		return false;
 	}
 
+	clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
+
+	if( RecvNonBlocking() == false ) return false;
+
 	clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
 	n = Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
 	if( n != clsFrame.m_iPacketLen )
@@ -131,6 +139,10 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		Close();
 		return false;
 	}
+
+	clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
+
+	if( RecvNonBlocking() == false ) return false;
 
 	return true;
 }
@@ -230,8 +242,6 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 
 	HTTP2_FRAME_LIST::iterator itFL;
 	int n;
-	char szPacket[8192];
-	//CHttp2Packet clsPacket;
 
 	for( itFL = m_clsFrameList.m_clsList.begin(); itFL != m_clsFrameList.m_clsList.end(); ++itFL )
 	{
@@ -245,8 +255,16 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 
 	while( 1 )
 	{
-		n = Recv( szPacket, sizeof(szPacket) );
+		n = Recv( (char *)m_szPacket, sizeof(m_szPacket) );
 		if( n <= 0 ) break;
+
+		if( m_clsPacket.AddPacket( m_szPacket, n ) && m_clsPacket.GetFrame( &m_clsFrame ) )
+		{
+			m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
+
+			if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_GOAWAY ) break;
+			if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_DATA && ( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM ) ) break;
+		}
 	}
 
 	return true;
@@ -280,4 +298,25 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 	}
 
 	return n;
+}
+
+bool CHttp2Client::RecvNonBlocking()
+{
+	while( poll( m_sttPoll, 1, 0 ) > 0 )
+	{
+		int n = SSLRecv( m_psttSsl, (char *)m_szPacket, sizeof(m_szPacket) );
+		if( n <= 0 )
+		{
+			CLog::Print( LOG_NETWORK, "TCP(%s:%d) closed", m_strServerIp.c_str(), m_iServerPort );
+			Close();
+			return false;
+		}
+
+		if( m_clsPacket.AddPacket( m_szPacket, n ) && m_clsPacket.GetFrame( &m_clsFrame ) )
+		{
+			m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
+		}
+	}
+
+	return true;
 }

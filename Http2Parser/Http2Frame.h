@@ -20,6 +20,7 @@
 #define _HTTP2_FRAME_H_
 
 #include "SipPlatformDefine.h"
+#include "Log.h"
 
 class CHttp2Frame
 {
@@ -28,6 +29,7 @@ public:
 	~CHttp2Frame();
 
 	bool Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier, uint8_t * pszBody, int iBodyLen );
+	bool Set( uint8_t * pszPacket, int iPacketLen );
 	void Clear();
 	void Delete();
 
@@ -36,6 +38,8 @@ public:
 	uint32_t GetStreamIdentifier();
 	uint8_t * GetBody();
 	int GetBodyLen();
+
+	void PrintLog( EnumLogLevel eLogLevel, const char * pszIp, int iPort, bool bSend );
 
 	uint8_t	* m_pszPacket;
 	int m_iPacketLen;

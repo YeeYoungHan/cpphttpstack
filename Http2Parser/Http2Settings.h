@@ -20,6 +20,7 @@
 #define _HTTP2_SETTINGS_H_
 
 #include "SipPlatformDefine.h"
+#include "Log.h"
 
 class CHttp2Settings
 {
@@ -30,7 +31,8 @@ public:
 	bool Add( uint16_t iName, uint32_t iValue );
 	void Clear();
 	void Delete();
-	void PrintLog( const char * pszIp, int iPort, bool bSend, int iError );
+
+	static void PrintLog( EnumLogLevel eLogLevel, uint8_t * pszPacket, int iPacketLen );
 
 	uint8_t	* m_pszPacket;
 	int m_iPacketLen;

@@ -34,19 +34,14 @@ CHttp2Packet::~CHttp2Packet()
  * @param iPacketLen	패킷 길이
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool CHttp2Packet::AddPacket( const char * pszPacket, int iPacketLen )
+bool CHttp2Packet::AddPacket( const uint8_t * pszPacket, int iPacketLen )
 {
-	m_strBuf.append( pszPacket, iPacketLen );
+	m_strBuf.append( (char *)pszPacket, iPacketLen );
 
 	return true;
 }
 
-/**
- * @ingroup Http2Parser
- * @brief HTTP/2 frame 하나를 수신 완료하였는지 검사한다.
- * @returns HTTP/2 frame 하나를 수신 완료하였으면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
- */
-bool CHttp2Packet::IsCompleted( )
+bool CHttp2Packet::GetFrame( CHttp2Frame * pclsFrame )
 {
 	int iBufLen = (int)m_strBuf.length();
 
@@ -57,10 +52,10 @@ bool CHttp2Packet::IsCompleted( )
 	memcpy( (char *)&iFrameLen + 1, m_strBuf.c_str(), 3 );
 	iFrameLen = ntohl( iFrameLen );
 
-	if( iFrameLen >= iBufLen )
-	{
-		return true;
-	}
+	if( ( iFrameLen + 9 ) > iBufLen ) return false;
+	
+	bool bRes = pclsFrame->Set( (uint8_t *)m_strBuf.c_str(), iFrameLen + 9 );
+	m_strBuf.erase( 0, iFrameLen + 9 );
 
-	return false;
+	return bRes;
 }
