@@ -18,6 +18,8 @@
 
 #include "Http2Define.h"
 #include "Http2Settings.h"
+#include "SipTcp.h"
+#include <stdlib.h>
 
 CHttp2Settings::CHttp2Settings() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {
