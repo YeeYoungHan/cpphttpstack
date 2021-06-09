@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestHttp2Conversion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestHttp2Header.cpp"
 				>
 			</File>
