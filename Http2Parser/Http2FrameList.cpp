@@ -18,6 +18,7 @@
 
 #include "Http2FrameList.h"
 #include "Log.h"
+#include "MemoryDebug.h"
 
 CHttp2FrameList::CHttp2FrameList()
 {

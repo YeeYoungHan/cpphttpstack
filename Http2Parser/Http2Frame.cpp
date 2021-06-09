@@ -20,6 +20,7 @@
 #include "Http2Frame.h"
 #include "Http2Settings.h"
 #include "SipTcp.h"
+#include "MemoryDebug.h"
 
 CHttp2Frame::CHttp2Frame() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {

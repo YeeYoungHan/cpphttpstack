@@ -26,5 +26,10 @@ int main( int argc, char * argv[] )
 
 	TestHttp2ClientGet( argc, argv );
 
+#ifdef WIN32
+	SSLClientStop();
+	SSLFinal();
+#endif
+
 	return 0;
 }

@@ -262,7 +262,6 @@ bool SSLClientStop( )
 	gclsMutex.acquire();
 	if( gbStartSslServer )
 	{
-		SSLStop();
 		if( gpsttClientCtx )
 		{
 			SSL_CTX_free( gpsttClientCtx );
@@ -271,6 +270,8 @@ bool SSLClientStop( )
 
 		gbStartSslServer = false;
 	}
+
+	SSLStop();
 	gclsMutex.release();
 
 	return true;

@@ -19,6 +19,10 @@
 #ifndef _TLS_FUNCTION_H_
 #define _TLS_FUNCTION_H_
 
+#ifdef WIN32
+#define USE_TLS_FREE
+#endif
+
 #include "SipTcp.h"
 #include "openssl/rsa.h"
 #include "openssl/crypto.h"

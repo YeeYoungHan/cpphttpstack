@@ -20,6 +20,7 @@
 #include "Http2Header.h"
 #include <stdlib.h>
 #include "Log.h"
+#include "MemoryDebug.h"
 
 CHttp2Header::CHttp2Header() : m_pszPacket(NULL), m_iPacketLen(0), m_iPacketSize(0)
 {
