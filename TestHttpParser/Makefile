@@ -20,7 +20,7 @@ all: TestHttpParser.exe
 
 SRV_OBJ=Main.o \
 	TestHttpPacket.o TestHttpParameter.o TestHttpMultipart.o \
-	TestHuffmanCode.o
+	TestHttp2Header.o TestHttp2HuffmanCode.o
 
 TestHttpParser.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)
