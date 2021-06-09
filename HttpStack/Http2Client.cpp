@@ -40,6 +40,8 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		return false;
 	}
 
+	m_strHost = pszIp;
+
 	char		szIp[INET6_ADDRSTRLEN];
 
 	memset( szIp, 0, sizeof(szIp) );
@@ -69,11 +71,9 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 		return false;
 	}
 
-	/*
 	uint8_t szProto[] = { 2, 'h', '2' };
 
 	SSL_CTX_set_alpn_protos( m_psttCtx, szProto, sizeof(szProto) );
-	*/
 
 	if( SSLConnect( m_psttCtx, m_hSocket, &m_psttSsl ) == false )
 	{
@@ -173,6 +173,7 @@ bool CHttp2Client::DoGet( const char * pszPath, std::string & strOutputContentTy
 
 	clsRequest.m_strHttpMethod = "GET";
 	clsRequest.m_strReqUri = pszPath;
+	clsRequest.AddHeader( "host", m_strHost.c_str() );
 
 	if( Execute( &clsRequest, &clsResponse ) == false )
 	{

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2021 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
+ * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _HTTP2_CONVERSION_H_
-#define _HTTP2_CONVERSION_H_
-
-#include "HttpMessage.h"
+#include "SipPlatformDefine.h"
 #include "Http2Header.h"
-#include "Http2FrameList.h"
+#include "StringUtility.h"
+#include "MemoryDebug.h"
 
-class CHttp2Conversion
+bool TestHttp2Header( uint32_t iIndex, const char * pszValue, const char * pszPacket )
 {
-public:
-	CHttp2Conversion();
-	~CHttp2Conversion();
+	CHttp2Header clsHeader;
+	std::string strHex;
 
-	bool MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList );
-	bool MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMessage );
+	if( clsHeader.AddIndexValue( iIndex, pszValue ) == false )
+	{
+		printf( "clsHeader.AddIndexValue error\n" );
+		return false;
+	}
 
-private:
-	bool AddIndex( uint32_t iIndex );
-	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
-	bool AddNameValue( const char * pszName, const char * pszValue );
+	StringToHex( (char *)clsHeader.m_pszPacket, clsHeader.m_iPacketLen, strHex );
 
-	CHttpMessage		* m_pclsMessage;
-	CHttp2FrameList * m_pclsFrameList;
-	CHttp2Header	m_clsHeader;
-	int						m_iHeaderFrameCount;
-};
+	if( strcmp( pszPacket, strHex.c_str() ) )
+	{
+		printf( "error\n" );
+		return false;
+	}
 
-#endif
+	return true;
+}
+
+bool TestHttp2Header()
+{
+	if( TestHttp2Header( 33, "1234", "0f120431323334" ) == false ) return false;
+
+	return true;
+}

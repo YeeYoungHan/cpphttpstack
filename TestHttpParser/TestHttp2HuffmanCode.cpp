@@ -238,7 +238,7 @@ bool TestHuffmanCodeDecode( )
 	return true;
 }
 
-bool TestHuffmanCode( )
+bool TestHttp2HuffmanCode( )
 {
 	if( TestHuffmanCodeDecode() == false ) return false;
 	if( TestHuffmanCodeEncode() == false ) return false;

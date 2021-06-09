@@ -206,6 +206,7 @@ int CHttp2Header::AddInt( uint8_t cPrefix, uint8_t cPrefixBit, uint32_t iIndex )
 		if( iIndex < cMax )
 		{
 			m_pszPacket[m_iPacketLen+iPos] = iIndex;
+			++iPos;
 			break;
 		}
 

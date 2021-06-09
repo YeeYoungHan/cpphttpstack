@@ -23,7 +23,8 @@
 bool TestHttpPacket( );
 bool TestHttpParameterList( );
 bool TestHttpMultipart( );
-bool TestHuffmanCode( );
+bool TestHttp2HuffmanCode( );
+bool TestHttp2Header();
 
 int main( int argc, char * argv[] )
 {
@@ -33,7 +34,8 @@ int main( int argc, char * argv[] )
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
 
-	if( TestHuffmanCode( ) == false ) goto FUNC_END;
+	if( TestHttp2Header( ) == false ) goto FUNC_END;
+	if( TestHttp2HuffmanCode( ) == false ) goto FUNC_END;
 	if( TestHttpMultipart( ) == false ) goto FUNC_END;
 	if( TestHttpParameterList( ) == false ) goto FUNC_END;
 	if( TestHttpPacket( ) == false ) goto FUNC_END;

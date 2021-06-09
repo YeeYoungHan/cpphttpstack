@@ -97,12 +97,13 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 		}
 
 		AddIndexValue( HTTP2_INDEX_PATH, clsMessage.m_strReqUri.c_str() );
+		AddIndex( HTTP2_INDEX_SCHEME_HTTPS );
 	}
 
-	//if( clsMessage.m_strContentType.empty() == false )
-	//{
-	//	AddIndexValue( HTTP2_INDEX_CONTENT_TYPE, clsMessage.m_strContentType.c_str() );
-	//}
+	if( clsMessage.m_strContentType.empty() == false )
+	{
+		AddIndexValue( HTTP2_INDEX_CONTENT_TYPE, clsMessage.m_strContentType.c_str() );
+	}
 
 	const char * pszName;
 
@@ -221,6 +222,35 @@ bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMe
 
 	return true;
 }
+
+bool CHttp2Conversion::AddIndex( uint32_t iIndex )
+{
+	if( m_clsHeader.AddIndex( iIndex ) == false )
+	{
+		CHttp2Frame * pclsFrame = m_pclsFrameList->CreateFrame();
+		if( pclsFrame == NULL ) return false;
+
+		++m_iHeaderFrameCount;
+
+		uint8_t cType = HTTP2_FRAME_TYPE_HEADERS;
+
+		if( m_iHeaderFrameCount >= 2 )
+		{
+			cType = HTTP2_FRAME_TYPE_CONTINUATION;
+		}
+
+		if( pclsFrame->Set( cType, 0, m_pclsMessage->m_iStreamIdentifier, m_clsHeader.m_pszPacket, m_clsHeader.m_iPacketLen ) == false ) return false;
+
+		m_clsHeader.Clear();
+		if( m_clsHeader.AddIndex( iIndex ) == false )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 
 bool CHttp2Conversion::AddIndexValue( uint32_t iIndex, const char * pszValue )
 {

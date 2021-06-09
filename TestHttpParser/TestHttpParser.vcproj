@@ -177,6 +177,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestHttp2Header.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestHttp2HuffmanCode.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TestHttpMultipart.cpp"
 				>
 			</File>
@@ -186,10 +194,6 @@
 			</File>
 			<File
 				RelativePath=".\TestHttpParameter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestHuffmanCode.cpp"
 				>
 			</File>
 		</Filter>

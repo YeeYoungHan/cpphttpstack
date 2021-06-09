@@ -63,6 +63,8 @@ private:
 	CHttp2Frame				m_clsFrame;
 	CHttp2Packet			m_clsPacket;
 
+	std::string	m_strHost;
+
 	pollfd			m_sttPoll[1];
 	uint8_t			m_szPacket[TCP_INIT_BUF_SIZE];
 
