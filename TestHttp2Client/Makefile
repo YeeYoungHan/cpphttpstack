@@ -12,7 +12,7 @@ LIB=-L../HttpStack -lhttpstack \
 	-L../Http2Parser -lhttp2parser \
 	-L../HttpParser -lhttpparser \
 	-L../SipPlatform -lsipplatform \
-	-lssl -lcrypto -lpcap -lpthread
+	$(OPENSSL_LIB) -lpcap -lpthread
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp

@@ -14,7 +14,7 @@ LIB=-L../WsdlParser -lwsdlparser \
 	-L../HttpParser -lhttpparser \
 	-L../XmlParser -lxmlparser \
 	-L../SipPlatform -lsipplatform \
-	-lssl -lcrypto -lpthread
+	$(OPENSSL_LIB) -lpthread
 
 .SUFFIXES: .o .cpp
 %.o : %.cpp
