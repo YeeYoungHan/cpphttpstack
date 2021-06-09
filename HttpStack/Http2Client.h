@@ -44,9 +44,10 @@ public:
 	bool DoGet( const char * pszPath, std::string & strOutputContentType, std::string & strOutputBody );
 	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
 
-	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
+	int GetStatusCode();
 
 private:
+	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
 	int Send( char * pszPacket, int iPacketLen );
 	int Recv( char * pszPacket, int iPacketSize );
 	bool RecvNonBlocking();
@@ -73,6 +74,8 @@ private:
 
 	std::string	m_strClientIp;
 	int					m_iClientPort;
+
+	int					m_iStatusCode;
 
 #ifdef WIN32
 #if _MSC_VER == VC2008_VERSION

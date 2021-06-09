@@ -22,7 +22,7 @@
 #include "TimeUtility.h"
 #include "Log.h"
 
-CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0), m_iServerPort(0), m_iClientPort(0)
+CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0), m_iServerPort(0), m_iClientPort(0), m_iStatusCode(0)
 {
 	InitNetwork();
 }
@@ -238,6 +238,11 @@ bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderLi
 	return true;
 }
 
+int CHttp2Client::GetStatusCode()
+{
+	return m_iStatusCode;
+}
+
 bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
 	if( m_iStreamIdentifier == 0 )
@@ -258,7 +263,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 
 	HTTP2_FRAME_LIST::iterator itFL;
 	int		n;
-	bool	bEnd = false;
+	bool	bEnd = false, bRes = false;
 
 	if( RecvNonBlocking() == false ) return false;
 
@@ -292,6 +297,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
 					{
 						bEnd = true;
+						bRes = true;
 					}
 					break;
 				case HTTP2_FRAME_TYPE_HEADERS:
@@ -299,6 +305,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
 					{
 						bEnd = true;
+						bRes = true;
 					}
 					break;
 				case HTTP2_FRAME_TYPE_SETTINGS:
@@ -307,6 +314,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 						if( SendSettingsAck() == false ) return false;
 					}
 					break;
+				case HTTP2_FRAME_TYPE_RST_STREAM:
 				case HTTP2_FRAME_TYPE_GOAWAY:
 					bEnd = true;
 					break;
@@ -315,7 +323,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		}
 	}
 
-	return true;
+	return bRes;
 }
 
 int CHttp2Client::Send( char * pszPacket, int iPacketLen )
