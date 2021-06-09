@@ -56,7 +56,6 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../Http2Parser;../HttpParser;../SipPlatform;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
@@ -92,10 +91,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TestHttp2Conversion.cpp" />
+    <ClCompile Include="TestHttp2Header.cpp" />
+    <ClCompile Include="TestHttp2HuffmanCode.cpp" />
     <ClCompile Include="TestHttpMultipart.cpp" />
     <ClCompile Include="TestHttpPacket.cpp" />
     <ClCompile Include="TestHttpParameter.cpp" />
-    <ClCompile Include="TestHuffmanCode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Http2Parser\Http2Parser.vcxproj">

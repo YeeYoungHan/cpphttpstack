@@ -19,7 +19,13 @@
     <ClCompile Include="TestHttpMultipart.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TestHuffmanCode.cpp">
+    <ClCompile Include="TestHttp2Conversion.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TestHttp2Header.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TestHttp2HuffmanCode.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
