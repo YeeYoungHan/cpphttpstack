@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TestHttp2ClientGet.cpp" />
+    <ClCompile Include="TestHttp2ClientLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestHttp2Client.h" />

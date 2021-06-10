@@ -27,7 +27,7 @@ int main( int argc, char * argv[] )
 	if( argc <= 1 )
 	{
 		printf( "[Usage] %s get {host} {port} {path}\n"
-						"        %s loop {host} {port}\n"
+						"           loop {host} {port}\n"
 			, argv[0] );
 		return 0;
 	}
