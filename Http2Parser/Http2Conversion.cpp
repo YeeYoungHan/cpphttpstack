@@ -201,19 +201,22 @@ bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMe
 {
 	if( clsFrame.GetType() == HTTP2_FRAME_TYPE_HEADERS )
 	{
-		//uint8_t * pszBody = clsFrame.GetBody() + 9;
-		//int iBodyLen = clsFrame.GetBodyLen();
+		if( clsMessage.m_strHttpVersion.empty() ) clsMessage.m_strHttpVersion = "HTTP/2";
 
-		//for( int i = 0; i < iBodyLen; )
-		//{
-		//	if( pszBody[i] & 0x80 )
-		//	{
-		//		if( pszBody[i] != 0xFF )
-		//		{
-		//			uint8_t cIndex = pszBody[i] &0x7F;
-		//		}
-		//	}
-		//}
+		uint8_t * pszBody = clsFrame.GetBody();
+		int iBodyLen = clsFrame.GetBodyLen();
+		int iBodyPos = 0, n;
+		CHttp2HpackHeader clsHpack;
+
+		while( iBodyLen > iBodyPos )
+		{
+			n = clsHpack.Parse( pszBody + iBodyPos, iBodyLen - iBodyPos );
+			if( n == -1 ) return false;
+
+			iBodyPos += n;
+
+			HpackToMessage( clsHpack, clsMessage );
+		}
 	}
 	else
 	{
@@ -307,4 +310,234 @@ bool CHttp2Conversion::AddNameValue( const char * pszName, const char * pszValue
 	}
 
 	return true;
+}
+
+bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage )
+{
+	if( clsHpack.m_iIndex == 0 )
+	{
+		if( clsHpack.m_strName.empty() == false && clsHpack.m_strValue.empty() == false )
+		{
+			clsMessage.AddHeader( clsHpack.m_strName.c_str(), clsHpack.m_strValue.c_str() );
+		}
+	}
+	else if( clsHpack.m_iIndex <= 61 )
+	{
+		switch( clsHpack.m_iIndex )
+		{
+		case HTTP2_INDEX_AUTHORITY:
+			HpackAddHeader( clsHpack, clsMessage, "Authority" );
+			break;
+		case HTTP2_INDEX_METHOD_GET:
+			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "GET" );
+			break;
+		case HTTP2_INDEX_METHOD_POST:
+			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "POST" );
+			break;
+		case HTTP2_INDEX_PATH:
+			HpackToString( clsHpack, clsMessage.m_strReqUri, "/" );
+			break;
+		case HTTP2_INDEX_PATH_INDEX_HTML:
+			HpackToString( clsHpack, clsMessage.m_strReqUri, "/index.html" );
+			break;
+		// HTTP2_INDEX_SCHEME_HTTP
+		// HTTP2_INDEX_SCHEME_HTTPS
+		case HTTP2_INDEX_STATUS_200:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 200 );
+			break;
+		case HTTP2_INDEX_STATUS_204:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 204 );
+			break;
+		case HTTP2_INDEX_STATUS_206:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 206 );
+			break;
+		case HTTP2_INDEX_STATUS_304:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 304 );
+			break;
+		case HTTP2_INDEX_STATUS_400:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 400 );
+			break;
+		case HTTP2_INDEX_STATUS_404:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 404 );
+			break;
+		case HTTP2_INDEX_STATUS_500:
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 500 );
+			break;
+		case HTTP2_INDEX_ACCEPT_CHARSET:
+			HpackAddHeader( clsHpack, clsMessage, "Accept-Charset" );
+			break;
+		case HTTP2_INDEX_ACCEPT_ENCODING:
+			HpackAddHeader( clsHpack, clsMessage, "Accept-Encoding" );
+			break;
+		case HTTP2_INDEX_ACCEPT_LANGUAGE:
+			HpackAddHeader( clsHpack, clsMessage, "Accept-Language" );
+			break;
+		case HTTP2_INDEX_ACCEPT_RANGES:
+			HpackAddHeader( clsHpack, clsMessage, "Accept-Ranges" );
+			break;
+		case HTTP2_INDEX_ACCEPT:
+			HpackAddHeader( clsHpack, clsMessage, "Accept" );
+			break;
+		case HTTP2_INDEX_ACCESS_CONTROL_ALLOW_ORIGIN:
+			HpackAddHeader( clsHpack, clsMessage, "Access-Control-Allow-Origin" );
+			break;
+		case HTTP2_INDEX_AGE:
+			HpackAddHeader( clsHpack, clsMessage, "Age" );
+			break;
+		case HTTP2_INDEX_ALLOW:
+			HpackAddHeader( clsHpack, clsMessage, "Allow" );
+			break;
+		case HTTP2_INDEX_AUTHORIZATION:
+			HpackAddHeader( clsHpack, clsMessage, "Authorization" );
+			break;
+		case HTTP2_INDEX_CACHE_CONTROL:
+			HpackAddHeader( clsHpack, clsMessage, "Cache-Control" );
+			break;
+		case HTTP2_INDEX_CONTENT_DISPOSITION:
+			HpackAddHeader( clsHpack, clsMessage, "Content-Disposition" );
+			break;
+		case HTTP2_INDEX_CONTENT_ENCODING:
+			HpackAddHeader( clsHpack, clsMessage, "Content-Encoding" );
+			break;
+		case HTTP2_INDEX_CONTENT_LANGUAGE:
+			HpackAddHeader( clsHpack, clsMessage, "Content-Language" );
+			break;
+		case HTTP2_INDEX_CONTENT_LENGTH:
+			HpackToInt( clsHpack, clsMessage.m_iContentLength, 0 );
+			break;
+		case HTTP2_INDEX_CONTENT_LOCATION:
+			HpackAddHeader( clsHpack, clsMessage, "Content-Location" );
+			break;
+		case HTTP2_INDEX_CONTENT_RANGE:
+			HpackAddHeader( clsHpack, clsMessage, "Content-Range" );
+			break;
+		case HTTP2_INDEX_CONTENT_TYPE:
+			HpackToString( clsHpack, clsMessage.m_strContentType, "" );
+			break;
+		case HTTP2_INDEX_COOKIE:
+			HpackAddHeader( clsHpack, clsMessage, "Cookie" );
+			break;
+		case HTTP2_INDEX_DATE:
+			HpackAddHeader( clsHpack, clsMessage, "Date" );
+			break;
+		case HTTP2_INDEX_ETAG:
+			HpackAddHeader( clsHpack, clsMessage, "ETag" );
+			break;
+		case HTTP2_INDEX_EXPECT:
+			HpackAddHeader( clsHpack, clsMessage, "Expect" );
+			break;
+		case HTTP2_INDEX_EXPIRES:
+			HpackAddHeader( clsHpack, clsMessage, "Expires" );
+			break;
+		case HTTP2_INDEX_FROM:
+			HpackAddHeader( clsHpack, clsMessage, "From" );
+			break;
+		case HTTP2_INDEX_HOST:
+			HpackAddHeader( clsHpack, clsMessage, "Host" );
+			break;
+		case HTTP2_INDEX_IF_MATCH:
+			HpackAddHeader( clsHpack, clsMessage, "If-Match" );
+			break;
+		case HTTP2_INDEX_IF_MODIFIED_SINCE:
+			HpackAddHeader( clsHpack, clsMessage, "If-Modified-Since" );
+			break;
+		case HTTP2_INDEX_IF_NONE_MATCH:
+			HpackAddHeader( clsHpack, clsMessage, "If-None-Match" );
+			break;
+		case HTTP2_INDEX_IF_RANGE:
+			HpackAddHeader( clsHpack, clsMessage, "If-Range" );
+			break;
+		case HTTP2_INDEX_IF_UNMODIFIED_SINCE:
+			HpackAddHeader( clsHpack, clsMessage, "If-Unmodified-Since" );
+			break;
+		case HTTP2_INDEX_LAST_MODIFIED:
+			HpackAddHeader( clsHpack, clsMessage, "Last-Modified" );
+			break;
+		case HTTP2_INDEX_LINK:
+			HpackAddHeader( clsHpack, clsMessage, "Link" );
+			break;
+		case HTTP2_INDEX_LOCATION:
+			HpackAddHeader( clsHpack, clsMessage, "Location" );
+			break;
+		case HTTP2_INDEX_MAX_FORWARDS:
+			HpackAddHeader( clsHpack, clsMessage, "Max-Forwards" );
+			break;
+		case HTTP2_INDEX_PROXY_AUTHENTICATE:
+			HpackAddHeader( clsHpack, clsMessage, "ProxyAuthenticate" );
+			break;
+		case HTTP2_INDEX_PROXY_AUTHORIZATION:
+			HpackAddHeader( clsHpack, clsMessage, "ProxyAuthorization" );
+			break;
+		case HTTP2_INDEX_RANGE:
+			HpackAddHeader( clsHpack, clsMessage, "Range" );
+			break;
+		case HTTP2_INDEX_REFERER:
+			HpackAddHeader( clsHpack, clsMessage, "Referer" );
+			break;
+		case HTTP2_INDEX_REFRESH:
+			HpackAddHeader( clsHpack, clsMessage, "Refresh" );
+			break;
+		case HTTP2_INDEX_RETRY_AFTER:
+			HpackAddHeader( clsHpack, clsMessage, "Retry-After" );
+			break;
+		case HTTP2_INDEX_SERVER:
+			HpackAddHeader( clsHpack, clsMessage, "Server" );
+			break;
+		case HTTP2_INDEX_SET_COOKIE:
+			HpackAddHeader( clsHpack, clsMessage, "Set-Cookie" );
+			break;
+		case HTTP2_INDEX_STRICT_TRANSPORT_SECURITY:
+			HpackAddHeader( clsHpack, clsMessage, "Strict-Transport-Security" );
+			break;
+		case HTTP2_INDEX_TRANSFER_ENCODING:
+			HpackAddHeader( clsHpack, clsMessage, "Transfer-Encoding" );
+			break;
+		case HTTP2_INDEX_USER_AGENT:
+			HpackAddHeader( clsHpack, clsMessage, "UserAgent" );
+			break;
+		case HTTP2_INDEX_VARY:
+			HpackAddHeader( clsHpack, clsMessage, "Vary" );
+			break;
+		case HTTP2_INDEX_VIA:
+			HpackAddHeader( clsHpack, clsMessage, "Via" );
+			break;
+		case HTTP2_INDEX_WWW_AUTHENTICATE:
+			HpackAddHeader( clsHpack, clsMessage, "WWW-Authenticate" );
+			break;
+		}
+	}
+
+	return true;
+}
+
+void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault )
+{
+	if( clsHpack.m_strValue.empty() )
+	{
+		strOutput = pszDefault;
+	}
+	else
+	{
+		strOutput = clsHpack.m_strValue;
+	}
+}
+
+void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault )
+{
+	if( clsHpack.m_strValue.empty() )
+	{
+		iOutput = iDefault;
+	}
+	else
+	{
+		iOutput = atoi( clsHpack.m_strValue.c_str() );
+	}
+}
+
+void CHttp2Conversion::HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage, const char * pszName )
+{
+	if( clsHpack.m_strValue.empty() == false )
+	{
+		clsMessage.AddHeader( pszName, clsHpack.m_strValue.c_str() );
+	}
 }

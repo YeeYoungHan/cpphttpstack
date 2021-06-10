@@ -22,6 +22,7 @@
 #include "HttpMessage.h"
 #include "Http2Header.h"
 #include "Http2FrameList.h"
+#include "Http2HpackHeader.h"
 
 class CHttp2Conversion
 {
@@ -36,6 +37,10 @@ private:
 	bool AddIndex( uint32_t iIndex );
 	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
 	bool AddNameValue( const char * pszName, const char * pszValue );
+	bool HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage );
+	void HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault );
+	void HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault );
+	void HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage, const char * pszName );
 
 	CHttpMessage		* m_pclsMessage;
 	CHttp2FrameList * m_pclsFrameList;

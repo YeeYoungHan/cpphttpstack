@@ -41,19 +41,19 @@ bool TestHttp2ConversionMessage( const char * pszPacket, const char * pszMessage
 
 	if( clsConversion.MakeMessage( clsFrame, clsMessage ) == false )
 	{
-		printf( "clsConversion.MakeMessage() error - %s line(%d)", __FILE__, iLine );
+		printf( "clsConversion.MakeMessage() error - %s line(%d)\n", __FILE__, iLine );
 		return false;
 	}
 
 	if( clsMessage.ToString( szMessage, sizeof(szMessage) ) <= 0 )
 	{
-		printf( "clsMessage.ToString() error - %s line(%d)", __FILE__, iLine );
+		printf( "clsMessage.ToString() error - %s line(%d)\n", __FILE__, iLine );
 		return false;
 	}
 
 	if( strcmp( szMessage, pszMessage ) )
 	{
-		printf( "want[%s] != output[%s] - %s line(%d)", pszMessage, szMessage, __FILE__, iLine );
+		printf( "want[%s] != output[%s] - %s line(%d)\n", pszMessage, szMessage, __FILE__, iLine );
 		return false;
 	}
 
@@ -62,8 +62,8 @@ bool TestHttp2ConversionMessage( const char * pszPacket, const char * pszMessage
 
 bool TestHttp2Conversion()
 {
-	if( TestHttp2ConversionMessage( "0000490104000000018c5f92497ca589d34d1f6a1271d882a60e1bf0acf7408bb0b296cb0b62d59e8313d788a8eb58594b6585b35c830b6db70f1296e4593e9403ea65b6a5040105403d7001b820a98b46ff"
-		, "HTTP/1.1 400 Bad Request\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: 1555\r\nreferrer-policy: no-referrer\r\ndate: Wed, 09 Jun 2021 08:01:21 GMT\r\n\r\n", __LINE__ ) == false ) return false;
+	if( TestHttp2ConversionMessage( "8c5f92497ca589d34d1f6a1271d882a60e1bf0acf7408bb0b296cb0b62d59e8313d788a8eb58594b6585b35c830b6db70f1296e4593e9403ea65b6a5040105403d7001b820a98b46ff"
+		, "HTTP/2 400 Bad Request\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: 0\r\nreferrer-policy: no-referrer\r\nDate: Wed, 09 Jun 2021 08:01:21 GMT\r\n\r\n", __LINE__ ) == false ) return false;
 
 	return true;
 }
