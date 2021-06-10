@@ -87,11 +87,11 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 본 프로젝트의 컴파일 방법은 다음과 같습니다.
 
 * VC++ 2008
-  * SipStack.sln 더블클릭한 후, 빌드한다.
+  * HttpStack.sln 더블클릭한 후, 빌드한다.
   * Visual Studio 2008 버전 9.0.30729.1 SP 에서 빌드할 것을 권장합니다.
 
 * VC++ 2017
-  * SipStack-vs2017.sln 더블클릭한 후, 빌드한다.
+  * HttpStack-vs2017.sln 더블클릭한 후, 빌드한다.
 
 * 64bit 리눅스
   * make 를 실행하여서 빌드한다.
