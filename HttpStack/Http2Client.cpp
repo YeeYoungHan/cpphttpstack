@@ -293,7 +293,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 				switch( m_clsFrame.GetType() )
 				{
 				case HTTP2_FRAME_TYPE_DATA:
-					m_clsSendConversion.MakeMessage( m_clsFrame, *pclsResponse );
+					m_clsRecvConversion.MakeMessage( m_clsFrame, *pclsResponse );
 					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
 					{
 						bEnd = true;
@@ -301,7 +301,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 					}
 					break;
 				case HTTP2_FRAME_TYPE_HEADERS:
-					m_clsSendConversion.MakeMessage( m_clsFrame, *pclsResponse );
+					m_clsRecvConversion.MakeMessage( m_clsFrame, *pclsResponse );
 					if( m_clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
 					{
 						bEnd = true;
