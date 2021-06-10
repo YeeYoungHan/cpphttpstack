@@ -24,7 +24,18 @@ int main( int argc, char * argv[] )
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
 
-	TestHttp2ClientGet( argc, argv );
+	if( argc <= 1 )
+	{
+		printf( "[Usage] %s get {host} {port} {path}\n", argv[0] );
+		return 0;
+	}
+
+	const char * pszCommand = argv[1];
+
+	if( !strcmp( pszCommand, "get" ) )
+	{
+		TestHttp2ClientGet( argc, argv );
+	}
 
 #ifdef WIN32
 	SSLClientStop();
