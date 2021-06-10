@@ -20,6 +20,7 @@
 #include "Http2Define.h"
 #include "Http2Conversion.h"
 #include "Log.h"
+#include <stdlib.h>
 #include "MemoryDebug.h"
 
 CHttp2Conversion::CHttp2Conversion() : m_pclsMessage(NULL), m_pclsFrameList(NULL), m_iHeaderFrameCount(0)
