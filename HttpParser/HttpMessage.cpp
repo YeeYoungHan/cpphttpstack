@@ -144,11 +144,12 @@ void CHttpMessage::Clear()
 /**
  * @ingroup HttpParser
  * @brief HTTP 메시지 문자열을 생성한다.
- * @param pszText		HTTP 메시지 문자열 저장 변수
- * @param iTextSize HTTP 메시지 문자열 저장 변수 크기
+ * @param pszText			HTTP 메시지 문자열 저장 변수
+ * @param iTextSize		HTTP 메시지 문자열 저장 변수 크기
+ * @param bHeaderOnly	HTTP 메시지의 헤더만 문자열로 생성하고 싶으면 true 를 저장하고 body 를 포함한 HTTP 메시지를 생성하고 싶으면 false 를 저장한다.
  * @returns 성공하면 저장된 HTTP 메시지 문자열 길이를 리턴하고 실패하면 -1 을 리턴한다.
  */
-int CHttpMessage::ToString( char * pszText, int iTextSize )
+int CHttpMessage::ToString( char * pszText, int iTextSize, bool bHeaderOnly )
 {
 	if( pszText == NULL || iTextSize <= 0 ) return -1;
 
@@ -186,7 +187,7 @@ int CHttpMessage::ToString( char * pszText, int iTextSize )
 
 	iLen += snprintf( pszText + iLen, iTextSize - iLen, "\r\n" );
 
-	if( m_iContentLength > 0 )
+	if( m_iContentLength > 0 && bHeaderOnly == false )
 	{
 		if( m_iContentLength > ( iTextSize - iLen ) )
 		{
@@ -203,10 +204,11 @@ int CHttpMessage::ToString( char * pszText, int iTextSize )
 /**
  * @ingroup HttpParser
  * @brief HTTP 메시지 문자열을 생성한다.
- * @param strText		HTTP 메시지 문자열 저장 변수
+ * @param strText			HTTP 메시지 문자열 저장 변수
+ * @param bHeaderOnly	HTTP 메시지의 헤더만 문자열로 생성하고 싶으면 true 를 저장하고 body 를 포함한 HTTP 메시지를 생성하고 싶으면 false 를 저장한다.
  * @returns 성공하면 저장된 HTTP 메시지 문자열 길이를 리턴하고 실패하면 -1 을 리턴한다.
  */
-int CHttpMessage::ToString( std::string & strText )
+int CHttpMessage::ToString( std::string & strText, bool bHeaderOnly )
 {
 	char szBuf[2048];
 
@@ -251,7 +253,7 @@ int CHttpMessage::ToString( std::string & strText )
 
 	strText.append( "\r\n" );
 
-	if( m_iContentLength > 0 )
+	if( m_iContentLength > 0 && bHeaderOnly == false )
 	{
 		strText.append( m_strBody );
 	}
