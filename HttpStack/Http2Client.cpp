@@ -254,6 +254,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		m_iStreamIdentifier += 2;
 	}
 
+	m_iStatusCode = 0;
 	pclsRequest->m_iStreamIdentifier = m_iStreamIdentifier;
 
 	if( m_clsSendConversion.MakeFrameList( *pclsRequest, m_clsFrameList ) == false )
@@ -322,6 +323,8 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 			}
 		}
 	}
+
+	m_iStatusCode = pclsResponse->m_iStatusCode;
 
 	return bRes;
 }
