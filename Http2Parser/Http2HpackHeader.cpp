@@ -151,7 +151,7 @@ int CHttp2HpackHeader::ParseString( const uint8_t * pszBody, int iBodyLen, std::
 int CHttp2HpackHeader::ParseInt( const uint8_t * pszBody, int iBodyLen, int iPrefixBit, int & iOutput )
 {
 	uint8_t cMax = 0xFF >> iPrefixBit;
-	uint8_t cCur;
+	uint8_t cCur = 0;
 	int iPos = 0, iMulti = 1;
 
 	iOutput = 0;
