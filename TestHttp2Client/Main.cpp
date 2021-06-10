@@ -26,7 +26,9 @@ int main( int argc, char * argv[] )
 
 	if( argc <= 1 )
 	{
-		printf( "[Usage] %s get {host} {port} {path}\n", argv[0] );
+		printf( "[Usage] %s get {host} {port} {path}\n"
+						"        %s loop {host} {port}\n"
+			, argv[0] );
 		return 0;
 	}
 
@@ -35,6 +37,10 @@ int main( int argc, char * argv[] )
 	if( !strcmp( pszCommand, "get" ) )
 	{
 		TestHttp2ClientGet( argc, argv );
+	}
+	else if( !strcmp( pszCommand, "loop" ) )
+	{
+		TestHttp2ClientLoop( argc, argv );
 	}
 
 #ifdef WIN32

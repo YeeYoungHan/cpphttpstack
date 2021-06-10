@@ -22,5 +22,6 @@
 #include "Http2Client.h"
 
 int TestHttp2ClientGet( int argc, char * argv[] );
+int TestHttp2ClientLoop( int argc, char * argv[] );
 
 #endif

@@ -21,7 +21,7 @@ LIB=-L../HttpStack -lhttpstack \
 all: TestHttp2Client.exe
 
 SRV_OBJ=Main.o \
-	TestHttp2ClientGet.o
+	TestHttp2ClientGet.o TestHttp2ClientLoop.o
 
 TestHttp2Client.exe: $(SRV_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(SRV_OBJ) $(INC) $(LIB)

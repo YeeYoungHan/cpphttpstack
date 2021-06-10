@@ -188,6 +188,10 @@
 				RelativePath=".\TestHttp2ClientGet.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHttp2ClientLoop.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

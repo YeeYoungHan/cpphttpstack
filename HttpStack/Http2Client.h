@@ -45,6 +45,7 @@ public:
 	bool DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
 
 	int GetStatusCode();
+	void SetHttpHeaderLog( bool bUse );
 
 private:
 	bool Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
@@ -76,6 +77,7 @@ private:
 	int					m_iClientPort;
 
 	int					m_iStatusCode;
+	bool				m_bHttpHeaderLog;
 
 #ifdef WIN32
 #if _MSC_VER == VC2008_VERSION

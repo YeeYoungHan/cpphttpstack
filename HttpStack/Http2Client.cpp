@@ -22,7 +22,8 @@
 #include "TimeUtility.h"
 #include "Log.h"
 
-CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0), m_iServerPort(0), m_iClientPort(0), m_iStatusCode(0)
+CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0)
+	, m_iServerPort(0), m_iClientPort(0), m_iStatusCode(0), m_bHttpHeaderLog(false)
 {
 	InitNetwork();
 }
@@ -243,6 +244,11 @@ int CHttp2Client::GetStatusCode()
 	return m_iStatusCode;
 }
 
+void CHttp2Client::SetHttpHeaderLog( bool bUse )
+{
+	m_bHttpHeaderLog = bUse;
+}
+
 bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
 	if( m_iStreamIdentifier == 0 )
@@ -278,6 +284,14 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		}
 
 		(*itFL)->PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
+	}
+
+	if( m_bHttpHeaderLog )
+	{
+		std::string strLog;
+
+		pclsRequest->ToString( strLog, true );
+		CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
 	}
 
 	while( bEnd == false )
@@ -322,6 +336,14 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 				}
 			}
 		}
+	}
+
+	if( m_bHttpHeaderLog )
+	{
+		std::string strLog;
+
+		pclsRequest->ToString( strLog, true );
+		CLog::Print( LOG_NETWORK, "Recv(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
 	}
 
 	m_iStatusCode = pclsResponse->m_iStatusCode;
