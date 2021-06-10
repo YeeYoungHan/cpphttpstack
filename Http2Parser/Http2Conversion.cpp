@@ -340,8 +340,10 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 		case HTTP2_INDEX_PATH_INDEX_HTML:
 			HpackToString( clsHpack, clsMessage.m_strReqUri, "/index.html" );
 			break;
-		// HTTP2_INDEX_SCHEME_HTTP
-		// HTTP2_INDEX_SCHEME_HTTPS
+		case HTTP2_INDEX_SCHEME_HTTP:
+			break;
+		case HTTP2_INDEX_SCHEME_HTTPS:
+			break;
 		case HTTP2_INDEX_STATUS_200:
 			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 200 );
 			break;
