@@ -18,6 +18,8 @@
 
 #include "Http2HpackHeader.h"
 #include "Http2HuffmanCode.h"
+#include <stdlib.h>
+#include "MemoryDebug.h"
 
 CHttp2HpackHeader::CHttp2HpackHeader() : m_iIndex(0), m_bIncrementalIndexing(false), m_pszBuf(NULL), m_iBufSize(0)
 {
