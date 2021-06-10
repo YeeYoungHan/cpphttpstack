@@ -44,6 +44,7 @@ public:
 	int Parse( const char * pszText, int iTextLen );
 	int ParseHeader( const char * pszText, int iTextLen );
 	int ToString( char * pszText, int iTextSize );
+	int ToString( std::string & strText );
 	void Clear();
 
 	bool AddHeader( const char * pszName, const char * pszValue );

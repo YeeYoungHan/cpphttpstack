@@ -202,6 +202,65 @@ int CHttpMessage::ToString( char * pszText, int iTextSize )
 
 /**
  * @ingroup HttpParser
+ * @brief HTTP 메시지 문자열을 생성한다.
+ * @param strText		HTTP 메시지 문자열 저장 변수
+ * @returns 성공하면 저장된 HTTP 메시지 문자열 길이를 리턴하고 실패하면 -1 을 리턴한다.
+ */
+int CHttpMessage::ToString( std::string & strText )
+{
+	char szBuf[2048];
+
+	strText.clear();
+
+	if( m_strHttpVersion.empty() ) m_strHttpVersion = HTTP_VERSION;
+
+	if( m_iStatusCode > 0 )
+	{
+		if( m_strReasonPhrase.empty() )
+		{
+			m_strReasonPhrase = GetReasonPhrase( m_iStatusCode );
+		}
+
+		snprintf( szBuf, sizeof(szBuf), "%s %d %s\r\n", m_strHttpVersion.c_str(), m_iStatusCode, m_strReasonPhrase.c_str() );
+	}
+	else
+	{
+		if( m_strHttpMethod.empty() || m_strReqUri.empty() || m_strHttpVersion.empty() ) return -1;
+		snprintf( szBuf, sizeof(szBuf), "%s %s %s\r\n", m_strHttpMethod.c_str(), m_strReqUri.c_str(), m_strHttpVersion.c_str() );
+	}
+
+	strText.append( szBuf );
+
+	if( m_strContentType.empty() == false )
+	{
+		snprintf( szBuf, sizeof(szBuf), "Content-Type: %s\r\n", m_strContentType.c_str() );
+		strText.append( szBuf );
+	}
+
+	m_iContentLength = m_strBody.length();
+	snprintf( szBuf, sizeof(szBuf), "Content-Length: %d\r\n", m_iContentLength );
+	strText.append( szBuf );
+
+	for( HTTP_HEADER_LIST::iterator itList = m_clsHeaderList.begin(); itList != m_clsHeaderList.end(); ++itList )
+	{
+		strText.append( itList->m_strName );
+		strText.append( ": " );
+		strText.append( itList->m_strValue );
+		strText.append( "\r\n" );
+	}
+
+	strText.append( "\r\n" );
+
+	if( m_iContentLength > 0 )
+	{
+		strText.append( m_strBody );
+	}
+
+	return strText.length();
+}
+
+/**
+ * @ingroup HttpParser
  * @brief HTTP 헤더 자료구조에 이름과 값을 추가한다.
  * @param pszName		HTTP 헤더 이름
  * @param pszValue	HTTP 헤더 값
