@@ -62,6 +62,8 @@ void CHttp2FrameList::Clear()
 		(*itFL)->Clear();
 		m_clsNotUseList.push_back( *itFL );
 	}
+
+	m_clsList.clear();
 }
 
 void CHttp2FrameList::DeleteAll()

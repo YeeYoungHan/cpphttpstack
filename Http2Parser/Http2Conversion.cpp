@@ -40,6 +40,7 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 
 	clsFrameList.Clear();
 	m_clsHeader.Clear();
+	m_iHeaderFrameCount = 0;
 
 	if( clsMessage.m_iStatusCode > 0 )
 	{
@@ -160,7 +161,6 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 	{
 		const char * pszBody = clsMessage.m_strBody.c_str();
 		int iBodyLen = (int)clsMessage.m_strBody.length();
-		int iBodyFrameCount = 0;
 
 		while( iBodyLen > 0 )
 		{
@@ -170,14 +170,7 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 				return false;
 			}
 
-			++iBodyFrameCount;
-
 			cType = HTTP2_FRAME_TYPE_DATA;
-
-			if( iBodyFrameCount >= 2 )
-			{
-				cType = HTTP2_FRAME_TYPE_CONTINUATION;
-			}
 
 			if( iBodyLen > HTTP2_FRAME_SIZE )
 			{

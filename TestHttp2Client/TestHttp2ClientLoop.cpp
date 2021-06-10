@@ -43,10 +43,23 @@ int TestHttp2ClientLoop( int argc, char * argv[] )
 	if( clsClient.Connect( strIp.c_str(), iPort, NULL, "c:\\temp\\testh2.pcap" ) )
 	{
 		char	szCommand[1024];
+		int iLen;
 
 		memset( szCommand, 0, sizeof(szCommand) );
 		while( fgets( szCommand, sizeof(szCommand), stdin ) )
 		{
+			iLen = strlen( szCommand );
+			if( iLen >= 2 && szCommand[iLen-2] == '\r' )
+			{
+				szCommand[iLen - 2] = '\0';
+				iLen -= 2;
+			}
+			else if (iLen >= 1 && szCommand[iLen - 1] == '\n')
+			{
+				szCommand[iLen - 1] = '\0';
+				--iLen;
+			}
+
 			if( szCommand[0] == 'q' ) break;
 
 			if( !strncmp( szCommand, "get ", 4 ) )

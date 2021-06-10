@@ -342,7 +342,7 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	{
 		std::string strLog;
 
-		pclsRequest->ToString( strLog, true );
+		pclsResponse->ToString( strLog, true );
 		CLog::Print( LOG_NETWORK, "Recv(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
 	}
 
