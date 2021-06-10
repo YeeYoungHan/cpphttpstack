@@ -15,7 +15,7 @@ INC=-I../HttpParser -I../SipPlatform
 all: libhttp2parser.a
 
 LIB_OBJ=Http2Conversion.o Http2Frame.o Http2FrameList.o \
-	Http2Header.o Http2Packet.o Http2Settings.o \
+	Http2Header.o Http2HpackHeader.o Http2Packet.o Http2Settings.o \
 	Http2HuffmanCode.o
 
 libhttp2parser.a: $(LIB_OBJ)
