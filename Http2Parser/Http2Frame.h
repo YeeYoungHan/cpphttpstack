@@ -30,6 +30,7 @@ public:
 
 	bool Set( uint8_t cType, uint8_t cFlag, uint32_t iStreamIdentifier, uint8_t * pszBody, int iBodyLen );
 	bool Set( uint8_t * pszPacket, int iPacketLen );
+	bool SetFlags( uint8_t cFlag );
 	void Clear();
 	void Delete();
 

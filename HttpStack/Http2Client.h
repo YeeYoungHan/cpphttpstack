@@ -53,6 +53,7 @@ private:
 	int Recv( char * pszPacket, int iPacketSize );
 	bool RecvNonBlocking();
 	bool SendSettingsAck();
+	bool SendPingAck();
 
 	Socket		m_hSocket;
 	SSL			* m_psttSsl;

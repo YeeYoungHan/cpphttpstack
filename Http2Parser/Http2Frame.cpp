@@ -95,6 +95,17 @@ bool CHttp2Frame::Set( uint8_t * pszPacket, int iPacketLen )
 	return true;
 }
 
+bool CHttp2Frame::SetFlags( uint8_t cFlag )
+{
+	if( m_iPacketLen >= 9 )
+	{
+		m_pszPacket[4] = cFlag;
+		return true;
+	}
+
+	return false;
+}
+
 uint8_t CHttp2Frame::GetType()
 {
 	if( m_iPacketLen >= 9 ) return m_pszPacket[3];

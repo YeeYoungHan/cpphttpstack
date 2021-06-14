@@ -333,6 +333,12 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 				case HTTP2_FRAME_TYPE_GOAWAY:
 					bEnd = true;
 					break;
+				case HTTP2_FRAME_TYPE_PING:
+					if( m_clsFrame.GetFlags() == 0 )
+					{
+						if( SendPingAck() == false ) return false;
+					}
+					break;
 				}
 			}
 		}
@@ -407,9 +413,20 @@ bool CHttp2Client::RecvNonBlocking()
 			{
 				m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, false );
 
-				if( m_clsFrame.GetType() == HTTP2_FRAME_TYPE_SETTINGS && m_clsFrame.GetFlags() == 0 )
+				switch( m_clsFrame.GetType() )
 				{
-					if( SendSettingsAck() == false ) return false;
+				case HTTP2_FRAME_TYPE_SETTINGS:
+					if( m_clsFrame.GetFlags() == 0 )
+					{
+						if( SendSettingsAck() == false ) return false;
+					}
+					break;
+				case HTTP2_FRAME_TYPE_PING:
+					if( m_clsFrame.GetFlags() == 0 )
+					{
+						if( SendPingAck() == false ) return false;
+					}
+					break;
 				}
 			}
 		}
@@ -421,6 +438,22 @@ bool CHttp2Client::RecvNonBlocking()
 bool CHttp2Client::SendSettingsAck()
 {
 	m_clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+	int n = Send( (char *)m_clsFrame.m_pszPacket, m_clsFrame.m_iPacketLen );
+	if( n != m_clsFrame.m_iPacketLen )
+	{
+		CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", m_strServerIp.c_str(), m_iServerPort, n );
+		Close();
+		return false;
+	}
+
+	m_clsFrame.PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
+
+	return true;
+}
+
+bool CHttp2Client::SendPingAck()
+{
+	m_clsFrame.SetFlags( HTTP2_FLAG_ACK );
 	int n = Send( (char *)m_clsFrame.m_pszPacket, m_clsFrame.m_iPacketLen );
 	if( n != m_clsFrame.m_iPacketLen )
 	{
