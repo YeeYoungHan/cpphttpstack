@@ -20,26 +20,39 @@
 
 int main( int argc, char * argv[] )
 {
+	bool bPrintHelp = false;
+
 #ifdef WIN32
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
 
-	if( argc <= 1 )
+	if( argc >= 2 )
 	{
-		printf( "[Usage] %s get {host} {port} {path}\n"
-						"           loop {host} {port}\n"
-			, argv[0] );
-		return 0;
+		const char * pszCommand = argv[1];
+
+		if( !strcmp( pszCommand, "get" ) )
+		{
+			TestHttp2ClientGet( argc, argv );
+		}
+		else if( !strcmp( pszCommand, "loop" ) )
+		{
+			TestHttp2ClientLoop( argc, argv );
+		}
+		else
+		{
+			bPrintHelp = true;
+		}
+	}
+	else
+	{
+		bPrintHelp = true;
 	}
 
-	const char * pszCommand = argv[1];
-
-	if( !strcmp( pszCommand, "get" ) )
+	if( bPrintHelp )
 	{
+		argc = 1;
+
 		TestHttp2ClientGet( argc, argv );
-	}
-	else if( !strcmp( pszCommand, "loop" ) )
-	{
 		TestHttp2ClientLoop( argc, argv );
 	}
 

@@ -24,6 +24,7 @@ int TestHttp2ClientGet( int argc, char * argv[] )
 	std::string strIp, strPath, strBodyType, strBody;
 	int iPort;
 	CHttp2Client clsClient;
+	char szPcapFileName[255];
 
 	if( argc >= 5 )
 	{
@@ -37,9 +38,11 @@ int TestHttp2ClientGet( int argc, char * argv[] )
 		return 0;
 	}
 
+	snprintf( szPcapFileName, sizeof(szPcapFileName), "c:\\temp\\%s.pcap", strIp.c_str() );
+
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
-	if( clsClient.Connect( strIp.c_str(), iPort, NULL, "c:\\temp\\testh2.pcap" ) )
+	if( clsClient.Connect( strIp.c_str(), iPort, NULL, szPcapFileName ) )
 	{
 		if( clsClient.DoGet( strPath.c_str(), strBodyType, strBody ) )
 		{

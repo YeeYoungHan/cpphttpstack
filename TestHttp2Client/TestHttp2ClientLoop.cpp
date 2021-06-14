@@ -24,6 +24,7 @@ int TestHttp2ClientLoop( int argc, char * argv[] )
 	std::string strIp, strPath, strBodyType, strBody;
 	int iPort;
 	CHttp2Client clsClient;
+	char szPcapFileName[255];
 
 	if( argc >= 4 )
 	{
@@ -36,11 +37,13 @@ int TestHttp2ClientLoop( int argc, char * argv[] )
 		return 0;
 	}
 
+	snprintf( szPcapFileName, sizeof(szPcapFileName), "c:\\temp\\%s.pcap", strIp.c_str() );
+
 	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
 
 	clsClient.SetHttpHeaderLog( true );
 
-	if( clsClient.Connect( strIp.c_str(), iPort, NULL, "c:\\temp\\testh2.pcap" ) )
+	if( clsClient.Connect( strIp.c_str(), iPort, NULL, szPcapFileName ) )
 	{
 		char	szCommand[1024];
 		int iLen;
