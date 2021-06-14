@@ -80,6 +80,7 @@
     <ClCompile Include="Http2FrameList.cpp" />
     <ClCompile Include="Http2Header.cpp" />
     <ClCompile Include="Http2HpackHeader.cpp" />
+    <ClCompile Include="Http2HpackHeaderList.cpp" />
     <ClCompile Include="Http2HuffmanCode.cpp" />
     <ClCompile Include="Http2Packet.cpp" />
     <ClCompile Include="Http2Settings.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="Http2FrameList.h" />
     <ClInclude Include="Http2Header.h" />
     <ClInclude Include="Http2HpackHeader.h" />
+    <ClInclude Include="Http2HpackHeaderList.h" />
     <ClInclude Include="Http2HuffmanCode.h" />
     <ClInclude Include="Http2HuffmanCodeDecode.hpp" />
     <ClInclude Include="Http2HuffmanCodeEncode.hpp" />
