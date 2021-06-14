@@ -21,6 +21,15 @@
 
 #include "SipPlatformDefine.h"
 
+/**
+ * @defgroup Http2Parser Http2Parser
+ * HTTP/2 메시지 파서/생성 라이브러리
+ */
+
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 헤더 생성 클래스
+ */
 class CHttp2Header
 {
 public:

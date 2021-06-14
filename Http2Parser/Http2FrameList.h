@@ -24,6 +24,10 @@
 
 typedef std::list< CHttp2Frame * > HTTP2_FRAME_LIST;
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 frame 리스트 클래스
+ */
 class CHttp2FrameList
 {
 public:

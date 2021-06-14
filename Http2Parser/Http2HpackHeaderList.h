@@ -25,6 +25,10 @@
 
 typedef std::list< CHttp2HpackHeader > HTTP2_HPACK_HEADER_LIST;
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더 리스트 클래스
+ */
 class CHttp2HpackHeaderList
 {
 public:

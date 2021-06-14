@@ -33,6 +33,15 @@ CHttp2Client::~CHttp2Client()
 	Close();
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP/2 서버에 연결한다.
+ * @param pszIp HTTP/2 서버 IP 주소 또는 도메인 이름
+ * @param iPort HTTP/2 서버 포트 번호
+ * @param pszClientPemFileName TLS 통신에서 클라이언트 키/인증서를 사용하는 경우, 클라이언트 키/인증서의 full path 를 입력하고 그렇지 않으면 NULL 을 입력한다.
+ * @param pszPcapFileName 통신 데이터를 pcap 파일에 저장하고 싶으면 pcap 파일 full path 를 입력하고 그렇지 않으면 NULL 을 입력한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClientPemFileName, const char * pszPcapFileName )
 {
 	if( m_hSocket != INVALID_SOCKET )
@@ -136,6 +145,11 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP/2 서버와의 연결을 종료시킨다.
+ * @returns true 를 리턴한다.
+ */
 bool CHttp2Client::Close()
 {
 	if( m_psttSsl )
@@ -159,6 +173,14 @@ bool CHttp2Client::Close()
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP GET 명령을 전송한 후, 이에 대한 응답을 수신한다.
+ * @param pszPath								path
+ * @param strOutputContentType	[out] 수신 content-type
+ * @param strOutputBody					[out] 수신 body
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::DoGet( const char * pszPath, std::string & strOutputContentType, std::string & strOutputBody )
 {
 	strOutputContentType.clear();
@@ -187,6 +209,18 @@ bool CHttp2Client::DoGet( const char * pszPath, std::string & strOutputContentTy
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP POST 명령을 전송한 후, 이에 대한 응답을 수신한다.
+ * @param pszPath								path
+ * @param pclsHeaderList				HTTP 헤더 리스트
+ * @param pszInputContentType		전송 content-type
+ * @param pszInputBody					전송 body
+ * @param iInputBodyLen					전송 body 길이
+ * @param strOutputContentType	[out] 수신 content-type
+ * @param strOutputBody					[out] 수신 body
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderList, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody )
 {
 	strOutputContentType.clear();
@@ -239,16 +273,33 @@ bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderLi
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP 응답 코드를 리턴한다.
+ * @returns HTTP 응답 코드를 리턴한다.
+ */
 int CHttp2Client::GetStatusCode()
 {
 	return m_iStatusCode;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP 전송/수신시 로그에 HTTP 헤더 정보를 출력하는지 설정한다.
+ * @param bUse HTTP 전송/수신시 로그에 HTTP 헤더 정보를 출력하면 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ */
 void CHttp2Client::SetHttpHeaderLog( bool bUse )
 {
 	m_bHttpHeaderLog = bUse;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP 요청 메시지를 전송한 후, 이에 대한 HTTP 응답 메시지를 수신한다.
+ * @param pclsRequest		HTTP 요청 메시지
+ * @param pclsResponse	HTTP 응답 메시지
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
 	if( m_iStreamIdentifier == 0 )
@@ -357,6 +408,13 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 	return bRes;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief 패킷을 전송한다.
+ * @param pszPacket		전송할 데이터를 저장한 변수
+ * @param iPacketLen	전송 데이터의 길이
+ * @returns 전송된 데이터의 길이를 리턴한다.
+ */
 int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 {
 	int n = SSLSend( m_psttSsl, pszPacket, iPacketLen );
@@ -376,6 +434,13 @@ int CHttp2Client::Send( char * pszPacket, int iPacketLen )
 	return n;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief 패킷을 수신한다.
+ * @param pszPacket		[out] 수신한 데이터를 저장할 변수
+ * @param iPacketSize pszPacket 변수의 크기
+ * @returns 수신한 데이터의 길이를 리턴한다.
+ */
 int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 {
 	int n = SSLRecv( m_psttSsl, pszPacket, iPacketSize );
@@ -395,6 +460,11 @@ int CHttp2Client::Recv( char * pszPacket, int iPacketSize )
 	return n;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief non-blocking mode 로 TCP 수신 처리한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::RecvNonBlocking()
 {
 	while( poll( m_sttPoll, 1, 0 ) > 0 )
@@ -435,6 +505,11 @@ bool CHttp2Client::RecvNonBlocking()
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief SETTINGS ACK frame 을 전송한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::SendSettingsAck()
 {
 	m_clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
@@ -451,6 +526,11 @@ bool CHttp2Client::SendSettingsAck()
 	return true;
 }
 
+/**
+ * @ingroup HttpStack
+ * @brief PING ACK frame 을 전송한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Client::SendPingAck()
 {
 	m_clsFrame.SetFlags( HTTP2_FLAG_ACK );

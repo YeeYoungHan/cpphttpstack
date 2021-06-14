@@ -26,6 +26,12 @@ CHttp2HpackHeaderList::~CHttp2HpackHeaderList()
 {
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더를 HPACK 리스트에 저장한다.
+ * @param pclsHpack HPACK 헤더
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2HpackHeaderList::Insert( CHttp2HpackHeader * pclsHpack )
 {
 	CHttp2HpackHeader clsHpack;
@@ -50,6 +56,13 @@ bool CHttp2HpackHeaderList::Insert( CHttp2HpackHeader * pclsHpack )
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더 리스트에서 입력된 인덱스에 해당하는 HPACK 헤더가 존재하면 해당 HPACK 헤더를 저장한다.
+ * @param iIndex			인덱스
+ * @param ppclsHpack	[out] HPACK 헤더의 포인터의 포인터
+ * @returns HPACK 인덱스에 해당하는 HPACK 헤더가 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2HpackHeaderList::Select( int iIndex, CHttp2HpackHeader ** ppclsHpack )
 {
 	HTTP2_HPACK_HEADER_LIST::iterator itHL;
@@ -69,6 +82,11 @@ bool CHttp2HpackHeaderList::Select( int iIndex, CHttp2HpackHeader ** ppclsHpack 
 	return false;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 최대 리스트 길이를 저장한다.
+ * @param iMaxCount 최대 리스트 길이
+ */
 void CHttp2HpackHeaderList::SetMaxCount( int iMaxCount )
 {
 	m_iMaxCount = iMaxCount;

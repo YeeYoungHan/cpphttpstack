@@ -22,6 +22,10 @@
 #include "SipPlatformDefine.h"
 #include <string>
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더 클래스
+ */
 class CHttp2HpackHeader
 {
 public:

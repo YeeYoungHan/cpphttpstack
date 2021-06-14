@@ -31,6 +31,13 @@ CHttp2Conversion::~CHttp2Conversion()
 {
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/1.1 을 HTTP/2 로 전환한다.
+ * @param clsMessage		HTTP/1.1 메시지
+ * @param clsFrameList	[out] HTTP/2 frame 리스트
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList & clsFrameList )
 {
 	CHttp2Frame * pclsFrame;
@@ -191,6 +198,13 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 frame 을 HTTP/1.1 메시지에 저장한다.
+ * @param clsFrame		HTTP/2 frame
+ * @param clsMessage	[out] HTTP/1.1 메시지
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMessage )
 {
 	if( clsFrame.GetType() == HTTP2_FRAME_TYPE_HEADERS )
@@ -221,6 +235,12 @@ bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMe
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 인덱스만 존재하는 HTTP/2 헤더를 추가한다.
+ * @param iIndex 인덱스 번호
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::AddIndex( uint32_t iIndex )
 {
 	if( m_clsHeader.AddIndex( iIndex ) == false )
@@ -250,6 +270,13 @@ bool CHttp2Conversion::AddIndex( uint32_t iIndex )
 }
 
 
+/**
+ * @ingroup Http2Parser
+ * @brief 인덱스 & 값이 존재하는 HTTP/2 헤더를 추가한다.
+ * @param iIndex		인덱스 번호
+ * @param pszValue	헤더 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::AddIndexValue( uint32_t iIndex, const char * pszValue )
 {
 	if( m_clsHeader.AddIndexValue( iIndex, pszValue ) == false )
@@ -278,6 +305,13 @@ bool CHttp2Conversion::AddIndexValue( uint32_t iIndex, const char * pszValue )
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 이름 & 값이 존재하는 HTTP/2 헤더를 추가한다.
+ * @param pszName		헤더 이름
+ * @param pszValue	헤더 값
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::AddNameValue( const char * pszName, const char * pszValue )
 {
 	if( m_clsHeader.AddNameValue( pszName, pszValue ) == false )
@@ -306,6 +340,13 @@ bool CHttp2Conversion::AddNameValue( const char * pszName, const char * pszValue
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더를 HTTP/1.1 메시지에 저장한다.
+ * @param clsHpack		HPACK 헤더
+ * @param clsMessage	[out] HTTP/1.1 메시지
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage )
 {
 	bool bRes = false;
@@ -528,6 +569,13 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 	return bRes;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더의 값을 문자열로 저장한다.
+ * @param clsHpack		HPACK 헤더
+ * @param strOutput		[out] 문자열 저장 변수
+ * @param pszDefault	HPACK 헤더에 값이 존재하지 않는 경우, 기본값 문자열
+ */
 void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault )
 {
 	if( clsHpack.m_strValue.empty() )
@@ -540,6 +588,13 @@ void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string 
 	}
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더의 값을 숫자로 저장한다.
+ * @param clsHpack	HPACK 헤더
+ * @param iOutput		[out] 숫자 저장 변수
+ * @param iDefault	HPACK 헤더에 숫자가 존재하지 않는 경우, 기본 숫자
+ */
 void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault )
 {
 	if( clsHpack.m_strValue.empty() )
@@ -552,6 +607,13 @@ void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, 
 	}
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HPACK 헤더를 HTTP/1.1 메시지에 저장한다.
+ * @param clsHpack		HPACK 헤더
+ * @param clsMessage	[out] HTTP/1.1 메시지
+ * @param pszName			HTTP/1.1 메시지에 저장할 헤더 이름
+ */
 void CHttp2Conversion::HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage, const char * pszName )
 {
 	if( clsHpack.m_strValue.empty() == false )

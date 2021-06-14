@@ -29,6 +29,11 @@ CHttp2FrameList::~CHttp2FrameList()
 	DeleteAll();
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 새로운 frame 객체를 생성한다.
+ * @returns 성공하면 새로운 frame 객체 포인터를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
+ */
 CHttp2Frame * CHttp2FrameList::CreateFrame()
 {
 	CHttp2Frame * pclsFrame = NULL;
@@ -53,6 +58,10 @@ CHttp2Frame * CHttp2FrameList::CreateFrame()
 	return pclsFrame;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 멤버 변수를 초기화시킨다.
+ */
 void CHttp2FrameList::Clear()
 {
 	HTTP2_FRAME_LIST::iterator itFL;
@@ -66,6 +75,10 @@ void CHttp2FrameList::Clear()
 	m_clsList.clear();
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 메모리를 해제한다.
+ */
 void CHttp2FrameList::DeleteAll()
 {
 	HTTP2_FRAME_LIST::iterator itFL;

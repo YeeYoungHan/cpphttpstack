@@ -31,6 +31,13 @@ CHttp2Settings::~CHttp2Settings()
 	Delete();
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 
+ * @param iName 
+ * @param iValue 
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Settings::Add( uint16_t iName, uint32_t iValue )
 {
 	if( m_pszPacket == NULL )
@@ -53,11 +60,19 @@ bool CHttp2Settings::Add( uint16_t iName, uint32_t iValue )
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 멤버 변수를 초기화시킨다.
+ */
 void CHttp2Settings::Clear()
 {
 	m_iPacketLen = 0;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 메모리를 해제한다.
+ */
 void CHttp2Settings::Delete()
 {
 	if( m_pszPacket )
@@ -70,6 +85,13 @@ void CHttp2Settings::Delete()
 	m_iPacketLen = 0;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief SETTINGS 헤더 정보를 로그에 출력한다.
+ * @param eLogLevel		로그 레벨
+ * @param pszPacket		패킷
+ * @param iPacketLen	pszPacket 길이
+ */
 void CHttp2Settings::PrintLog( EnumLogLevel eLogLevel, uint8_t * pszPacket, int iPacketLen )
 {
 	uint16_t sId;

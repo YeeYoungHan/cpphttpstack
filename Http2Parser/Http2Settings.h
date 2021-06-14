@@ -22,6 +22,10 @@
 #include "SipPlatformDefine.h"
 #include "Log.h"
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 SETTINGS frame 저장 클래스
+ */
 class CHttp2Settings
 {
 public:

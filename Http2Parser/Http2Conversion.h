@@ -24,6 +24,10 @@
 #include "Http2FrameList.h"
 #include "Http2HpackHeaderList.h"
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 을 HTTP/1.1 로 전환하거나 HTTP/1.1 을 HTTP/2 로 전환하는 클래스
+ */
 class CHttp2Conversion
 {
 public:

@@ -32,6 +32,10 @@
 #endif
 #endif
 
+/**
+ * @ingroup HttpStack
+ * @brief HTTP/2 클라이언트
+ */
 class CHttp2Client
 {
 public:

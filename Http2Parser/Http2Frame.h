@@ -22,6 +22,10 @@
 #include "SipPlatformDefine.h"
 #include "Log.h"
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 frame Å¬·¡½º
+ */
 class CHttp2Frame
 {
 public:

@@ -31,6 +31,12 @@ CHttp2Header::~CHttp2Header()
 	Delete();
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 인덱스만 존재하는 HTTP/2 헤더를 추가한다.
+ * @param iIndex 인덱스 번호
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Header::AddIndex( uint32_t iIndex )
 {
 	int iIndexLen = AddInt( 0x80, 1, iIndex );
@@ -41,6 +47,14 @@ bool CHttp2Header::AddIndex( uint32_t iIndex )
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 인덱스 & 값이 존재하는 HTTP/2 헤더를 추가한다.
+ * @param iIndex		인덱스 번호
+ * @param pszValue	헤더 값
+ * @param bIndexing 증분 인덱싱이면 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Header::AddIndexValue( uint32_t iIndex, const char * pszValue, bool bIndexing )
 {
 	int iIndexLen;
@@ -79,6 +93,14 @@ bool CHttp2Header::AddIndexValue( uint32_t iIndex, const char * pszValue, bool b
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 이름 & 값이 존재하는 HTTP/2 헤더를 추가한다.
+ * @param pszName		헤더 이름
+ * @param pszValue	헤더 값
+ * @param bIndexing 증분 인덱싱이면 true 를 입력하고 그렇지 않으면 false 를 입력한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Header::AddNameValue( const char * pszName, const char * pszValue, bool bIndexing )
 {
 	int iIntLen;
@@ -139,11 +161,19 @@ bool CHttp2Header::AddNameValue( const char * pszName, const char * pszValue, bo
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 멤버 변수를 초기화시킨다.
+ */
 void CHttp2Header::Clear()
 {
 	m_iPacketLen = 0;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 메모리를 해제한다.
+ */
 void CHttp2Header::Delete()
 {
 	if( m_pszPacket )
@@ -156,6 +186,11 @@ void CHttp2Header::Delete()
 	m_iPacketLen = 0;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief 메모리를 할당한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Header::Create()
 {
 	if( m_pszPacket == NULL )
@@ -174,6 +209,14 @@ bool CHttp2Header::Create()
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 헤더에 정수를 저장한다.
+ * @param cPrefix			prefix
+ * @param cPrefixBit	prefix bit 개수
+ * @param iIndex			인덱스
+ * @returns 성공하면 저장된 패킷 길이를 리턴하고 그렇지 않으면 0 을 리턴한다.
+ */
 int CHttp2Header::AddInt( uint8_t cPrefix, uint8_t cPrefixBit, uint32_t iIndex )
 {
 	if( Create() == false ) return 0;

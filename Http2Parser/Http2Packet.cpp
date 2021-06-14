@@ -41,6 +41,12 @@ bool CHttp2Packet::AddPacket( const uint8_t * pszPacket, int iPacketLen )
 	return true;
 }
 
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 프로토콜 기반으로 수신한 패킷에서 하나의 frame 이 모두 수신되었는지 검사한다.
+ * @param pclsFrame [out] 하나의 frame 저장 변수
+ * @returns 하나의 frame 이 수신되었다면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttp2Packet::GetFrame( CHttp2Frame * pclsFrame )
 {
 	int iBufLen = (int)m_strBuf.length();
