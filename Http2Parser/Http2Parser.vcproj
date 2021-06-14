@@ -171,6 +171,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Http2HpackHeaderList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Http2HuffmanCode.cpp"
 				>
 			</File>
@@ -218,6 +222,10 @@
 			</File>
 			<File
 				RelativePath=".\Http2HpackHeader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Http2HpackHeaderList.h"
 				>
 			</File>
 			<File

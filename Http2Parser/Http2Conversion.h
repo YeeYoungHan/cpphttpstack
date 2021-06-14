@@ -22,7 +22,7 @@
 #include "HttpMessage.h"
 #include "Http2Header.h"
 #include "Http2FrameList.h"
-#include "Http2HpackHeader.h"
+#include "Http2HpackHeaderList.h"
 
 class CHttp2Conversion
 {
@@ -44,7 +44,8 @@ private:
 
 	CHttpMessage		* m_pclsMessage;
 	CHttp2FrameList * m_pclsFrameList;
-	CHttp2Header	m_clsHeader;
+	CHttp2Header					m_clsHeader;
+	CHttp2HpackHeaderList	m_clsHpackList;
 	int						m_iHeaderFrameCount;
 };
 

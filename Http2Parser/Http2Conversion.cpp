@@ -308,11 +308,13 @@ bool CHttp2Conversion::AddNameValue( const char * pszName, const char * pszValue
 
 bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage )
 {
+	bool bRes = false;
+
 	if( clsHpack.m_iIndex == 0 )
 	{
 		if( clsHpack.m_strName.empty() == false && clsHpack.m_strValue.empty() == false )
 		{
-			clsMessage.AddHeader( clsHpack.m_strName.c_str(), clsHpack.m_strValue.c_str() );
+			bRes = clsMessage.AddHeader( clsHpack.m_strName.c_str(), clsHpack.m_strValue.c_str() );
 		}
 	}
 	else if( clsHpack.m_iIndex <= 61 )
@@ -501,9 +503,29 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 			HpackAddHeader( clsHpack, clsMessage, "WWW-Authenticate" );
 			break;
 		}
+
+		bRes = true;
+	}
+	else
+	{
+		CHttp2HpackHeader * pclsHpack;
+
+		if( m_clsHpackList.Select( clsHpack.m_iIndex, &pclsHpack ) == false )
+		{
+			CLog::Print( LOG_ERROR, "%s hpack index(%d) is not found in hpack list", __FUNCTION__, clsHpack.m_iIndex );
+		}
+		else
+		{
+			bRes = HpackToMessage( *pclsHpack, clsMessage );
+		}
 	}
 
-	return true;
+	if( clsHpack.m_bIncrementalIndexing )
+	{
+		m_clsHpackList.Insert( &clsHpack );
+	}
+
+	return bRes;
 }
 
 void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault )
