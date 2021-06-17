@@ -25,9 +25,9 @@ CHttpStack gclsStack;
 
 int main( int argc, char * argv[] )
 {
-	if( argc != 2 )
+	if( argc < 2 )
 	{
-		printf( "[Usage] %s {Document root path}\n", argv[0] );
+		printf( "[Usage] %s {Document root path} {cert pem file}\n", argv[0] );
 		return 0;
 	}
 
@@ -60,6 +60,12 @@ int main( int argc, char * argv[] )
 
 	// HTTP 서버에서 사용할 Document root 폴더를 설정한다.
 	clsServer.m_strDocumentRoot = argv[1];
+
+	if( argc >= 3 )
+	{
+		clsSetup.m_iListenPort = 8443;
+		clsSetup.m_strCertFile = argv[2];
+	}
 
 	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) == false )
 	{

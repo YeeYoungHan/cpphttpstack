@@ -340,7 +340,7 @@ PROC_HTTP_2:
 				CHttpHeader * pclsHeader;
 				bool bClose = false;
 
-				if( !strcmp( pclsRecv->m_strHttpMethod.c_str(), "PRI" ) && !strcmp( pclsRecv->m_strReqUri.c_str(), "*" ) && !strcmp( pclsRecv->m_strBody.c_str(), "SM" ) )
+				if( !strcmp( pclsRecv->m_strHttpMethod.c_str(), "PRI" ) && !strcmp( pclsRecv->m_strReqUri.c_str(), "*" ) && !strncmp( pclsRecv->m_strBody.c_str(), "SM", 2 ) )
 				{
 					pclsApp->m_eType = E_HST_HTTP_2;
 					pclsApp->m_clsHttp2Packet.AddPacket( &pclsApp->m_clsHttpPacket );
