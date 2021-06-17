@@ -21,6 +21,7 @@
 
 #include "SipPlatformDefine.h"
 #include "Http2Frame.h"
+#include "HttpPacket.h"
 #include <string>
 
 /**
@@ -34,6 +35,7 @@ public:
 	~CHttp2Packet();
 
 	bool AddPacket( const uint8_t * pszPacket, int iPacketLen );
+	bool AddPacket( CHttpPacket * pclsPacket );
 	bool GetFrame( CHttp2Frame * pclsFrame );
 
 private:

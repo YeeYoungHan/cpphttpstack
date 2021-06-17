@@ -147,6 +147,11 @@ CHttpMessage * CHttpPacket::GetHttpMessage( )
 	return &m_clsMessage;
 }
 
+std::string * CHttpPacket::GetBuf()
+{
+	return &m_strBuf;
+}
+
 /**
  * @ingroup HttpParser
  * @brief Chunked header ¸¦ ÆÄ½ÌÇÑ´Ù.

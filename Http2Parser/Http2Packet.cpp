@@ -32,11 +32,30 @@ CHttp2Packet::~CHttp2Packet()
  * @brief HTTP/2 프로토콜 기반으로 수신한 패킷을 저장한다.
  * @param pszPacket		패킷
  * @param iPacketLen	패킷 길이
- * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ * @returns true 를 리턴한다.
  */
 bool CHttp2Packet::AddPacket( const uint8_t * pszPacket, int iPacketLen )
 {
 	m_strBuf.append( (char *)pszPacket, iPacketLen );
+
+	return true;
+}
+
+/**
+ * @ingroup Http2Parser
+ * @brief HTTP/2 프로토콜 기반으로 수신한 패킷을 저장한다.
+ * @param pclsPacket HTTP/1.1 프로토콜 기반으로 수신한 패킷 저장 객체
+ * @returns true 를 리턴한다.
+ */
+bool CHttp2Packet::AddPacket( CHttpPacket * pclsPacket )
+{
+	std::string * pstrBuf = pclsPacket->GetBuf();
+
+	if( pstrBuf->empty() == false )
+	{
+		m_strBuf.append( *pstrBuf );
+		pstrBuf->clear();
+	}
 
 	return true;
 }

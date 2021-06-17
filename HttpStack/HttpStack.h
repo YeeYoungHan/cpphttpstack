@@ -21,6 +21,8 @@
 
 #include "TcpStack.h"
 #include "HttpPacket.h"
+#include "Http2Packet.h"
+#include "Http2Conversion.h"
 #include "WebSocketPacket.h"
 #include "HttpStackCallBack.h"
 
@@ -40,6 +42,16 @@ enum EHttpSessionType
  * HTTP 통신 라이브러리
  */
 
+class CHttpMessageSendRecv
+{
+public:
+	CHttpMessage m_clsSend;
+	CHttpMessage m_clsRecv;
+};
+
+// key = HTTP/2 frame id
+typedef std::map< int, CHttpMessageSendRecv > HTTP_MESSAGE_MAP;
+
 /**
  * @ingroup HttpStack
  * @brief HTTP 서버의 각 세션 정보를 저장하는 클래스
@@ -50,9 +62,33 @@ public:
 	CHttpStackSession() : m_eType(E_HST_NULL){};
 	virtual ~CHttpStackSession(){};
 
+	CHttpMessageSendRecv * GetMessage( int iId )
+	{
+		HTTP_MESSAGE_MAP::iterator itMap = m_clsMessageMap.find( iId );
+		if( itMap == m_clsMessageMap.end() )
+		{
+			CHttpMessageSendRecv clsData;
+
+			m_clsMessageMap.insert( HTTP_MESSAGE_MAP::value_type( iId, clsData ) );
+			itMap = m_clsMessageMap.find( iId );
+			if( itMap == m_clsMessageMap.end() )
+			{
+				return NULL;
+			}
+		}
+
+		return &itMap->second;
+	}
+
 	CHttpPacket				m_clsHttpPacket;
+	CHttp2Packet			m_clsHttp2Packet;
+	CHttp2Conversion	m_clsSendConversion;
+	CHttp2Conversion	m_clsRecvConversion;
+	CHttp2FrameList		m_clsFrameList;
 	CWebSocketPacket	m_clsWsPacket;
 	EHttpSessionType	m_eType;
+
+	HTTP_MESSAGE_MAP	m_clsMessageMap;
 };
 
 /**

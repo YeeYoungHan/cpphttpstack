@@ -43,10 +43,12 @@ public:
 	~CHttpPacket();
 
 	bool AddPacket( const char * pszPacket, int iPacketLen );
-	bool IsCompleted( );
-	void ClearMessage( );
+	bool IsCompleted();
+	void ClearMessage();
 
-	CHttpMessage * GetHttpMessage( );
+	CHttpMessage * GetHttpMessage();
+
+	std::string * GetBuf();
 
 private:
 	CHttpMessage m_clsMessage;

@@ -18,6 +18,8 @@
 
 #include "HttpStack.h"
 #include "HttpStatusCode.h"
+#include "Http2Define.h"
+#include "Http2Settings.h"
 #include "Log.h"
 #include "Base64.h"
 #include "MemoryDebug.h"
@@ -198,7 +200,89 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 
 	CHttpStackSession * pclsApp = (CHttpStackSession *)pclsSessionInfo->m_pclsApp;
 
-	if( pclsApp->m_eType == E_HST_WEB_SOCKET )
+	if( pclsApp->m_eType == E_HST_HTTP_2 )
+	{
+		pclsApp->m_clsHttp2Packet.AddPacket( (uint8_t *)pszPacket, iPacketLen );
+
+PROC_HTTP_2:
+		CHttp2Frame clsFrame;
+		CHttpMessageSendRecv * pclsData;
+		int n;
+
+		while( pclsApp->m_clsHttp2Packet.GetFrame( &clsFrame ) )
+		{
+			clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, false );
+			pclsData = pclsApp->GetMessage( clsFrame.GetStreamIdentifier() );
+
+			switch( clsFrame.GetType() )
+			{
+			case HTTP2_FRAME_TYPE_HEADERS:
+			case HTTP2_FRAME_TYPE_DATA:
+				pclsApp->m_clsRecvConversion.MakeMessage( clsFrame, pclsData->m_clsRecv );
+				if( clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
+				{
+					if( m_pclsCallBack->RecvHttpRequest( &pclsData->m_clsRecv, &pclsData->m_clsSend ) == false )
+					{
+						CLog::Print( LOG_ERROR, "%s RecvHttpRequest error", __FUNCTION__ );
+						return false;
+					}
+
+					if( pclsApp->m_clsSendConversion.MakeFrameList( pclsData->m_clsSend, pclsApp->m_clsFrameList ) == false )
+					{
+						CLog::Print( LOG_ERROR, "%s MakeFrameList error", __FUNCTION__ );
+						return false;
+					}
+
+					HTTP2_FRAME_LIST::iterator itFL;
+
+					for( itFL = pclsApp->m_clsFrameList.m_clsList.begin(); itFL != pclsApp->m_clsFrameList.m_clsList.end(); ++itFL )
+					{
+						n = pclsSessionInfo->Send( (char *)((*itFL)->m_pszPacket), (*itFL)->m_iPacketLen );
+						if( n != (*itFL)->m_iPacketLen )
+						{
+							CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, n );
+							return false;
+						}
+
+						(*itFL)->PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+					}
+				}
+				break;
+			case HTTP2_FRAME_TYPE_SETTINGS:
+				if( clsFrame.GetFlags() == 0 )
+				{
+					clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, HTTP2_FLAG_ACK, 0, NULL, 0 );
+					n = pclsSessionInfo->Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+					if( n != clsFrame.m_iPacketLen )
+					{
+						CLog::Print( LOG_ERROR, "%s Send(%s:%d) error(%d)", __FUNCTION__, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, n );
+						return false;
+					}
+
+					clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+				}
+				break;
+			case HTTP2_FRAME_TYPE_RST_STREAM:
+			case HTTP2_FRAME_TYPE_GOAWAY:
+				break;
+			case HTTP2_FRAME_TYPE_PING:
+				if( clsFrame.GetFlags() == 0 )
+				{
+					clsFrame.SetFlags( HTTP2_FLAG_ACK );
+					n = pclsSessionInfo->Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+					if( n != clsFrame.m_iPacketLen )
+					{
+						CLog::Print( LOG_ERROR, "%s Send(%s:%d) error(%d)", __FUNCTION__, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, n );
+						return false;
+					}
+
+					clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+				}
+				break;
+			}
+		}
+	}
+	else if( pclsApp->m_eType == E_HST_WEB_SOCKET )
 	{
 		// WebSocket 프로토콜
 		CWebSocketPacketHeader clsHeader;
@@ -255,6 +339,29 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 				CHttpMessage clsSend;
 				CHttpHeader * pclsHeader;
 				bool bClose = false;
+
+				if( !strcmp( pclsRecv->m_strHttpMethod.c_str(), "PRI" ) && !strcmp( pclsRecv->m_strReqUri.c_str(), "*" ) && !strcmp( pclsRecv->m_strBody.c_str(), "SM" ) )
+				{
+					pclsApp->m_eType = E_HST_HTTP_2;
+					pclsApp->m_clsHttp2Packet.AddPacket( &pclsApp->m_clsHttpPacket );
+
+					CHttp2Settings clsSettings;
+					CHttp2Frame clsFrame;
+
+					clsSettings.Add( HTTP2_SETTINGS_MAX_CONCURRENT_STREAMS, 10 );
+
+					clsFrame.Set( HTTP2_FRAME_TYPE_SETTINGS, 0, 0, clsSettings.m_pszPacket, clsSettings.m_iPacketLen );
+					int n = pclsSessionInfo->Send( (char *)clsFrame.m_pszPacket, clsFrame.m_iPacketLen );
+					if( n != clsFrame.m_iPacketLen )
+					{
+						CLog::Print( LOG_ERROR, "Send(%s:%d) error(%d)", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, n );
+						return false;
+					}
+
+					clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+
+					goto PROC_HTTP_2;
+				}
 
 				pclsHeader = pclsRecv->GetHeader( "Upgrade" );
 				if( pclsHeader && !strcmp( pclsHeader->m_strValue.c_str(), "websocket" ) )
