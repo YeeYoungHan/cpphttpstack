@@ -25,6 +25,17 @@
 #include "HttpStackCallBack.h"
 
 /**
+ * @ingroup HttpStack
+ * @brief HTTP 세션 타입
+ */
+enum EHttpSessionType
+{
+	E_HST_NULL = 0,
+	E_HST_WEB_SOCKET,
+	E_HST_HTTP_2
+};
+
+/**
  * @defgroup HttpStack HttpStack
  * HTTP 통신 라이브러리
  */
@@ -36,12 +47,12 @@
 class CHttpStackSession : public ITcpSessionApp
 {
 public:
-	CHttpStackSession() : m_bWebSocket(false){};
+	CHttpStackSession() : m_eType(E_HST_NULL){};
 	virtual ~CHttpStackSession(){};
 
 	CHttpPacket				m_clsHttpPacket;
 	CWebSocketPacket	m_clsWsPacket;
-	bool m_bWebSocket;
+	EHttpSessionType	m_eType;
 };
 
 /**

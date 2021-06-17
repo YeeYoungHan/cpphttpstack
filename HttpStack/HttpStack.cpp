@@ -169,7 +169,7 @@ void CHttpStack::SessionClosed( CTcpSessionInfo * pclsSessionInfo )
 	{
 		CHttpStackSession * pclsApp = (CHttpStackSession *)pclsSessionInfo->m_pclsApp;
 
-		if( pclsApp->m_bWebSocket )
+		if( pclsApp->m_eType == E_HST_WEB_SOCKET )
 		{
 			m_pclsCallBack->WebSocketClosed( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort );
 		}
@@ -198,7 +198,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 
 	CHttpStackSession * pclsApp = (CHttpStackSession *)pclsSessionInfo->m_pclsApp;
 
-	if( pclsApp->m_bWebSocket )
+	if( pclsApp->m_eType == E_HST_WEB_SOCKET )
 	{
 		// WebSocket 프로토콜
 		CWebSocketPacketHeader clsHeader;
@@ -265,7 +265,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 						return false;
 					}
 
-					pclsApp->m_bWebSocket = true;
+					pclsApp->m_eType = E_HST_WEB_SOCKET;
 				}
 				else
 				{
@@ -312,7 +312,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 					return false;
 				}
 
-				if( pclsApp->m_bWebSocket )
+				if( pclsApp->m_eType == E_HST_WEB_SOCKET )
 				{
 					m_pclsCallBack->WebSocketConnected( pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort );
 				}
