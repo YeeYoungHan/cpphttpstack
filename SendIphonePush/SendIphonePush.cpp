@@ -45,18 +45,21 @@ int main( int argc, char * argv[] )
 	char szInputBody[255];
 
 	snprintf( szPath, sizeof(szPath), "/3/device/%s", pszDeviceId );
-	snprintf( szInputBody, sizeof(szInputBody), "{ \"aps\" : { \"alert\" : \"Hello\" } }" );
+	//snprintf( szInputBody, sizeof(szInputBody), "{ \"aps\" : { \"alert\" : \"Hello\" } }" );
+	snprintf( szInputBody, sizeof(szInputBody), "{ \"aps\" : { \"from\" : \"%s\", \"type\" : \"%d\" } }", "01012345678", 1 );
 
-	clsHeader.Set( "apns-topic", pszApnsTopic );
+	//clsHeader.Set( "apns-push-type", "alert" );
+	clsHeader.Set( "apns-push-type", "voip" );
 	clsHeaderList.push_back( clsHeader );
 
-	clsHeader.Set( "apns-push-type", "alert" );
-	clsHeaderList.push_back( clsHeader );
+	clsClient.SetHttpHeaderLog( true );
 
 	if( clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath, "c:\\temp\\h2.pcap" ) )
 	{
 		clsClient.DoPost( szPath, &clsHeaderList, "application/json", szInputBody, strlen(szInputBody), strOutputContentType, strOutputBody );
 		clsClient.Close();
+
+		printf( "output body[%s]\n", strOutputBody.c_str() );
 	}
 
 	return 0;
