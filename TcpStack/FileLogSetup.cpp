@@ -57,8 +57,8 @@ bool SetupFileLog( CFileLog & clsFileLog, CXmlElement & clsElement )
 		pclsClient->SelectAttribute( "Network", bTemp );
 		if( bTemp ) iLogLevel |= LOG_NETWORK;
 
-		pclsClient->SelectAttribute( "Sql", bTemp );
-		if( bTemp ) iLogLevel |= LOG_SQL;
+		pclsClient->SelectAttribute( "Http2", bTemp );
+		if( bTemp ) iLogLevel |= LOG_HTTP2;
 	}
 
 	int			iLogMaxSize = 0;

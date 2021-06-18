@@ -33,7 +33,7 @@ bool CHttpStack::RecvPacketHttp2Pri( CTcpSessionInfo * pclsSessionInfo, CHttpSta
 		return false;
 	}
 
-	clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+	clsFrame.PrintLog( LOG_HTTP2, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
 
 	return RecvPacketHttp2( NULL, 0, pclsSessionInfo, pclsApp );
 }
@@ -47,7 +47,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 
 	while( pclsApp->m_clsHttp2Packet.GetFrame( &clsFrame ) )
 	{
-		clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, false );
+		clsFrame.PrintLog( LOG_HTTP2, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, false );
 		pclsData = pclsApp->GetMessage( clsFrame.GetStreamIdentifier() );
 
 		switch( clsFrame.GetType() )
@@ -62,7 +62,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 					std::string strLog;
 
 					pclsData->m_clsRecv.ToString( strLog, true );
-					CLog::Print( LOG_NETWORK, "Recv(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
+					CLog::Print( LOG_HTTP2, "Recv(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
 				}
 
 				if( m_pclsCallBack->RecvHttpRequest( &pclsData->m_clsRecv, &pclsData->m_clsSend ) == false )
@@ -76,7 +76,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 					std::string strLog;
 
 					pclsData->m_clsSend.ToString( strLog, true );
-					CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
+					CLog::Print( LOG_HTTP2, "Send(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
 				}
 
 				pclsData->m_clsSend.m_iStreamIdentifier = clsFrame.GetStreamIdentifier();
@@ -97,7 +97,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 						return false;
 					}
 
-					(*itFL)->PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+					(*itFL)->PrintLog( LOG_HTTP2, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
 				}
 			}
 			break;
@@ -111,7 +111,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 					return false;
 				}
 
-				clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+				clsFrame.PrintLog( LOG_HTTP2, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
 			}
 			break;
 		case HTTP2_FRAME_TYPE_RST_STREAM:
@@ -127,7 +127,7 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 					return false;
 				}
 
-				clsFrame.PrintLog( LOG_NETWORK, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
+				clsFrame.PrintLog( LOG_HTTP2, pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, true );
 			}
 			break;
 		}

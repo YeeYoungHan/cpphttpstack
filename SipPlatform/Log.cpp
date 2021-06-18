@@ -157,8 +157,8 @@ int CLog::Print( EnumLogLevel iLevel, const char * fmt, ... )
 	case LOG_SYSTEM:
 		snprintf( szHeader, sizeof(szHeader), "[SYSTEM] " );
 		break;
-	case LOG_SQL:
-		snprintf( szHeader, sizeof(szHeader), "[SQL] " );
+	case LOG_HTTP2:
+		snprintf( szHeader, sizeof(szHeader), "[HTTP2] " );
 		break;
 	default:
 		memset( szHeader, 0, sizeof(szHeader) );

@@ -48,8 +48,8 @@ enum EnumLogLevel
 	LOG_NETWORK = 0x0200,
 	/** 시스템 로그 */
 	LOG_SYSTEM = 0x400,
-	/** SQL 로그 */
-	LOG_SQL = 0x800
+	/** HTTP/2 로그 */
+	LOG_HTTP2 = 0x800
 };
 
 /**
