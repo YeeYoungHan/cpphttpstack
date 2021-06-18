@@ -182,7 +182,6 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 			if( iBodyLen > HTTP2_FRAME_SIZE )
 			{
 				if( pclsFrame->Set( cType, 0, m_pclsMessage->m_iStreamIdentifier, (uint8_t *)pszBody, HTTP2_FRAME_SIZE ) == false ) return false;
-				pszBody += HTTP2_FRAME_SIZE;
 			}
 			else
 			{
