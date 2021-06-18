@@ -70,6 +70,9 @@ public:
 
 	/** HTTP/2 를 사용하면 true 를 입력하고 그렇지 않으면 false 를 입력한다. */
 	bool m_bUseHttp2;
+
+	/** HTTP/2 를 HTTP/1.1 로 변환한 후, HTTP 헤더 정보를 출력하고 싶으면 true 를 입력하고 그렇지 않으면 false 를 입력한다. */
+	bool m_bUseHttp2HeaderLog;
 };
 
 #endif

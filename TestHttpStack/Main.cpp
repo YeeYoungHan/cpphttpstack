@@ -67,6 +67,7 @@ int main( int argc, char * argv[] )
 		clsSetup.m_bUseTls = true;
 		clsSetup.m_strCertFile = argv[2];
 		clsSetup.m_bUseHttp2 = true;
+		clsSetup.m_bUseHttp2HeaderLog = true;
 	}
 
 	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) == false )

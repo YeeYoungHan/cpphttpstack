@@ -174,7 +174,20 @@ uint32_t CHttp2Frame::GetStreamIdentifier()
  */
 uint8_t * CHttp2Frame::GetBody()
 {
-	if( m_iPacketLen > 9 ) return m_pszPacket + 9;
+	if( m_iPacketLen > 9 ) 
+	{
+		if( m_pszPacket[4] & HTTP2_FLAG_PRIORITY )
+		{
+			if( m_iPacketLen > 14 )
+			{
+				return m_pszPacket + 14;
+			}
+
+			return NULL;
+		}
+
+		return m_pszPacket + 9;
+	}
 
 	return NULL;
 }
@@ -186,7 +199,20 @@ uint8_t * CHttp2Frame::GetBody()
  */
 int CHttp2Frame::GetBodyLen()
 {
-	if( m_iPacketLen > 9 ) return m_iPacketLen - 9;
+	if( m_iPacketLen > 9 )
+	{
+		if( m_pszPacket[4] & HTTP2_FLAG_PRIORITY )
+		{
+			if( m_iPacketLen > 14 )
+			{
+				return m_iPacketLen - 14;
+			}
+
+			return 0;
+		}
+
+		return m_iPacketLen - 9;
+	}
 
 	return 0;
 }

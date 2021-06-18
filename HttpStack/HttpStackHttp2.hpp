@@ -57,10 +57,26 @@ bool CHttpStack::RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionI
 			pclsApp->m_clsRecvConversion.MakeMessage( clsFrame, pclsData->m_clsRecv );
 			if( clsFrame.GetFlags() & HTTP2_FLAG_END_STREAM )
 			{
+				if( m_clsTcpStack.m_clsSetup.m_bUseHttp2HeaderLog )
+				{
+					std::string strLog;
+
+					pclsData->m_clsRecv.ToString( strLog, true );
+					CLog::Print( LOG_NETWORK, "Recv(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
+				}
+
 				if( m_pclsCallBack->RecvHttpRequest( &pclsData->m_clsRecv, &pclsData->m_clsSend ) == false )
 				{
 					CLog::Print( LOG_ERROR, "%s RecvHttpRequest error", __FUNCTION__ );
 					return false;
+				}
+
+				if( m_clsTcpStack.m_clsSetup.m_bUseHttp2HeaderLog )
+				{
+					std::string strLog;
+
+					pclsData->m_clsSend.ToString( strLog, true );
+					CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", pclsSessionInfo->m_strIp.c_str(), pclsSessionInfo->m_iPort, strLog.c_str() );
 				}
 
 				pclsData->m_clsSend.m_iStreamIdentifier = clsFrame.GetStreamIdentifier();

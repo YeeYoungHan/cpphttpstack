@@ -24,7 +24,7 @@
 CTcpStackSetup::CTcpStackSetup() : m_iListenPort(0)
 	, m_iThreadInitCount(1), m_iThreadMaxCount(10), m_iMaxSocketPerThread(10)
 	, m_iTcpRecvTimeout(3600), m_iTcpNoPacketTimeout(10), m_iTcpConnectTimeout(10)
-	, m_bUseTls(false), m_bUseThreadPipe(true), m_bUseHttp2(false)
+	, m_bUseTls(false), m_bUseThreadPipe(true), m_bUseHttp2(false), m_bUseHttp2HeaderLog(false)
 {
 }
 
@@ -51,6 +51,8 @@ bool CTcpStackSetup::Parse( CXmlElement & clsXml )
 	clsXml.SelectElementData( "UseTls", m_bUseTls );
 	clsXml.SelectElementTrimData( "CertFile", m_strCertFile );
 	clsXml.SelectElementData( "UseThreadPipe", m_bUseThreadPipe );
+	clsXml.SelectElementData( "UseHttp2", m_bUseHttp2 );
+	clsXml.SelectElementData( "UseHttp2HeaderLog", m_bUseHttp2HeaderLog );
 
 	if( m_iListenPort > 0 && m_bUseTls && m_strCertFile.empty() )
 	{

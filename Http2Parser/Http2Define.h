@@ -40,6 +40,7 @@
 #define HTTP2_FLAG_ACK									0x01
 #define HTTP2_FLAG_END_HEADER						0x04
 #define HTTP2_FLAG_PADDED								0x08
+#define HTTP2_FLAG_PRIORITY							0x20
 
 // SETTINGS
 #define HTTP2_SETTINGS_HEADER_TABLE_SIZE				0x01

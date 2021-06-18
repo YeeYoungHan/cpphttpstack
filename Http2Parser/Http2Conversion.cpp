@@ -212,6 +212,12 @@ bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMe
 		if( clsMessage.m_strHttpVersion.empty() ) clsMessage.m_strHttpVersion = "HTTP/2";
 
 		uint8_t * pszBody = clsFrame.GetBody();
+		if( pszBody == NULL )
+		{
+			CLog::Print( LOG_ERROR, "%s GetBody() return NULL", __FUNCTION__ );
+			return false;
+		}
+
 		int iBodyLen = clsFrame.GetBodyLen();
 		int iBodyPos = 0, n;
 		CHttp2HpackHeader clsHpack;
