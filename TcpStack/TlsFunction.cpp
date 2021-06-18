@@ -161,14 +161,6 @@ bool SSLServerStart( const char * szCertFile, const char * szCipherList )
 			}
 			else
 			{
-				if( szCipherList && strlen(szCipherList) > 0 )
-				{
-					if( SSL_CTX_set_cipher_list( gpsttServerCtx, szCipherList ) == 0 )
-					{
-						CLog::Print( LOG_ERROR, "SSL_CTX_set_cipher_list(%s) error", szCipherList );
-					}
-				}
-
 				gpsttClientMeth = SSLv23_client_method();
 				if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
 				{
@@ -189,6 +181,16 @@ bool SSLServerStart( const char * szCertFile, const char * szCipherList )
 				}
 				else
 				{
+					SSL_CTX_set_ecdh_auto( gpsttServerCtx, 1 );
+
+					if( szCipherList && strlen(szCipherList) > 0 )
+					{
+						if( SSL_CTX_set_cipher_list( gpsttServerCtx, szCipherList ) == 0 )
+						{
+							CLog::Print( LOG_ERROR, "SSL_CTX_set_cipher_list(%s) error", szCipherList );
+						}
+					}
+
 					gbStartSslServer = true;
 				}
 			}
