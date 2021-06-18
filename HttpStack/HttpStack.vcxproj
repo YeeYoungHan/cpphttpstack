@@ -87,6 +87,8 @@
     <ClInclude Include="HttpClient2.h" />
     <ClInclude Include="HttpStack.h" />
     <ClInclude Include="HttpStackCallBack.h" />
+    <ClInclude Include="HttpStackHttp2.hpp" />
+    <ClInclude Include="HttpStackWebSocket.hpp" />
     <ClInclude Include="WebSocketPacket.h" />
   </ItemGroup>
   <ItemGroup>

@@ -49,5 +49,11 @@
     <ClInclude Include="Http2Client.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="HttpStackHttp2.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpStackWebSocket.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
