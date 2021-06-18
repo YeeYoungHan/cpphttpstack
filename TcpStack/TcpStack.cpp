@@ -56,6 +56,11 @@ bool CTcpStack::Start( CTcpStackSetup * pclsSetup, ITcpStackCallBack * pclsCallB
 				CLog::Print( LOG_ERROR, "SSLServerStart error" );
 				return false;
 			}
+
+			if( pclsSetup->m_bUseHttp2 )
+			{
+				SSLServerSetHttp2();
+			}
 		}
 
 		if( pclsSetup->m_strListenIp.empty() )

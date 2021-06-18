@@ -73,7 +73,7 @@ bool CHttp2Client::Connect( const char * pszIp, int iPort, const char * pszClien
 
 	CLog::Print( LOG_NETWORK, "TcpConnect(%s:%d) success", szIp, iPort );
 
-	m_psttCtx = SSLClientStart( pszClientPemFileName, E_TLS_1_2 );
+	m_psttCtx = SSLClientStart( pszClientPemFileName );
 	if( m_psttCtx == NULL )
 	{
 		CLog::Print( LOG_ERROR, "%s SSLClientStart(%s) error", __FUNCTION__, pszClientPemFileName );

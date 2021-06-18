@@ -153,14 +153,14 @@ bool SSLServerStart( const char * szCertFile )
 			SSL_load_error_strings();
 			SSLeay_add_ssl_algorithms();
 
-			gpsttServerMeth = TLSv1_server_method();
+			gpsttServerMeth = SSLv23_server_method();
 			if( (gpsttServerCtx = SSL_CTX_new( gpsttServerMeth )) == NULL )
 			{
 				CLog::Print( LOG_ERROR, "SSL_CTX_new error - server" );
 			}
 			else
 			{
-				gpsttClientMeth = TLSv1_client_method();
+				gpsttClientMeth = SSLv23_client_method();
 				if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
 				{
 					CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
@@ -235,7 +235,7 @@ bool SSLClientStart( )
 			SSL_load_error_strings();
 			SSLeay_add_ssl_algorithms();
 
-			gpsttClientMeth = TLSv1_client_method();
+			gpsttClientMeth = SSLv23_client_method();
 
 			if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
 			{
@@ -284,7 +284,7 @@ bool SSLClientStop( )
  * @param eTlsVersion TLS 버전
  * @returns 성공하면 SSL_CTX 를 리턴하고 그렇지 않으면 NULL 을 리턴한다.
  */
-SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion )
+SSL_CTX * SSLClientStart( const char * szCertFile )
 {
 	if( SSLStart() == false ) return NULL;
 
@@ -292,14 +292,7 @@ SSL_CTX * SSLClientStart( const char * szCertFile, ETlsVersion eTlsVersion )
 	SSL_CTX * pCtx;
 	int n;
 
-	if( eTlsVersion == E_TLS_1_2 )
-	{
-		psttClientMeth = TLSv1_2_client_method();
-	}
-	else
-	{
-		psttClientMeth = TLSv1_client_method();
-	}
+	psttClientMeth = SSLv23_client_method();
 
 	if( (pCtx = SSL_CTX_new( psttClientMeth )) == NULL )
 	{
@@ -580,6 +573,26 @@ bool SSLClose( SSL * ssl )
 	}
 
 	return true;
+}
+
+int SSLAlpnCallBack( SSL * ssl, const unsigned char **out, unsigned char *outlen, const unsigned char *in, unsigned int inlen, void *arg )
+{
+	for( unsigned int i = 0; i < inlen; i += 1 + in[i] )
+	{
+		if( ( in[i] == 2 && !strncmp( (char *)in + i + 1, "h2", 2 ) ) || ( in[i] == 8 && !strncmp( (char *)in + i + 1, "http/1.1", 8 ) ) )
+		{
+			*out = &in[i+1];
+			*outlen = in[i];
+			return 0;
+		}
+	}
+
+	return -1;
+}
+
+void SSLServerSetHttp2()
+{
+	SSL_CTX_set_alpn_select_cb( gpsttServerCtx, SSLAlpnCallBack, NULL );
 }
 
 /**

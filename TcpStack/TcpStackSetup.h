@@ -67,6 +67,9 @@ public:
 	/** 쓰레드와 통신에 pipe 를 사용할 것인지 설정한다. 쓰레드와 통신을 pipe 로 한다는 것은 thread pool 을 사용한다는 것을 의미한다. 
 			thread pool 을 이용할 경우 true 로 입력하고 그렇지 않으면 false 로 입력한다. */
 	bool m_bUseThreadPipe;
+
+	/** HTTP/2 를 사용하면 true 를 입력하고 그렇지 않으면 false 를 입력한다. */
+	bool m_bUseHttp2;
 };
 
 #endif
