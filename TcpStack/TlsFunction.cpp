@@ -165,12 +165,12 @@ bool SSLServerStart( const char * szCertFile )
 				{
 					CLog::Print( LOG_ERROR, "SSL_CTX_new error - client" );
 				}
-				else if( SSL_CTX_use_certificate_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM) <= 0 )
+				else if( SSL_CTX_use_certificate_file( gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM ) <= 0 )
 				{
 					CLog::Print( LOG_ERROR, "SSL_CTX_use_certificate_file error" );
 					SSLPrintError( );
 				}
-				else if( ( n = SSL_CTX_use_PrivateKey_file(gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM)) <= 0 )
+				else if( ( n = SSL_CTX_use_PrivateKey_file( gpsttServerCtx, szCertFile, SSL_FILETYPE_PEM ) ) <= 0 )
 				{
 					CLog::Print( LOG_ERROR, "SSL_CTX_use_PrivateKey_file error(%d)", n );
 				}
@@ -590,6 +590,10 @@ int SSLAlpnCallBack( SSL * ssl, const unsigned char **out, unsigned char *outlen
 	return -1;
 }
 
+/**
+ * @ingroup TcpStack
+ * @brief ALPN 으로 h2 또는 http/1.1 을 선택하도록 설정한다.
+ */
 void SSLServerSetHttp2()
 {
 	SSL_CTX_set_alpn_select_cb( gpsttServerCtx, SSLAlpnCallBack, NULL );
