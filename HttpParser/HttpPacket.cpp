@@ -105,9 +105,24 @@ bool CHttpPacket::AddPacket( const char * pszPacket, int iPacketLen )
 		}
 		else
 		{
-			m_clsMessage.m_strBody = m_strBuf;
-			m_strBuf.clear();
-			m_eStatus = H_HPS_BODY_END;
+			if( !strcmp( m_clsMessage.m_strHttpMethod.c_str(), "PRI" ) )
+			{
+				const char * pszBuf = m_strBuf.c_str();
+				const char * pszBodyEnd = strstr( pszBuf, "\r\n\r\n" );
+				if( pszBodyEnd )
+				{
+					int iBodyLen = (int)(pszBodyEnd + 4 - pszBuf);
+					m_clsMessage.m_strBody.append( pszBuf, iBodyLen );
+					m_strBuf.erase( 0, iBodyLen );
+					m_eStatus = H_HPS_BODY_END;
+				}
+			}
+			else
+			{
+				m_clsMessage.m_strBody = m_strBuf;
+				m_strBuf.clear();
+				m_eStatus = H_HPS_BODY_END;
+			}
 		}
 	}
 

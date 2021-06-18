@@ -36,7 +36,10 @@ CHttp2Packet::~CHttp2Packet()
  */
 bool CHttp2Packet::AddPacket( const uint8_t * pszPacket, int iPacketLen )
 {
-	m_strBuf.append( (char *)pszPacket, iPacketLen );
+	if( pszPacket && iPacketLen > 0 )
+	{
+		m_strBuf.append( (char *)pszPacket, iPacketLen );
+	}
 
 	return true;
 }

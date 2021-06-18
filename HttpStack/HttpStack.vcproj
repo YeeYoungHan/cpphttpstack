@@ -167,7 +167,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HttpStackHttp2.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\HttpStackVersion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpStackWebSocket.hpp"
 				>
 			</File>
 		</Filter>

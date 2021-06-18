@@ -103,18 +103,23 @@ public:
 
 	bool Start( CTcpStackSetup * pclsSetup, IHttpStackCallBack * pclsCallBack );
 	bool Stop( );
-
-	bool SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen );
-
 	static void Release();
+
+	// HttpStackWebSocket.hpp
+	bool SendWebSocketPacket( const char * pszClientIp, int iClientPort, const char * pszData, int iDataLen );
 
 	// ITcpStackCallBack
 	virtual bool InComingConnected( CTcpSessionInfo * pclsSessionInfo );
 	virtual void SessionClosed( CTcpSessionInfo * pclsSessionInfo );
-
 	virtual bool RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo );
 
 private:
+	// HttpStackHttp2.hpp
+	bool RecvPacketHttp2Pri( CTcpSessionInfo * pclsSessionInfo, CHttpStackSession * pclsApp );
+	bool RecvPacketHttp2( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo, CHttpStackSession * pclsApp );
+
+	// HttpStackWebSocket.hpp
+	bool RecvPacketWebSocket( char * pszPacket, int iPacketLen, CTcpSessionInfo * pclsSessionInfo, CHttpStackSession * pclsApp );
 	bool MakeWebSocketResponse( CHttpMessage * pclsRecv, CHttpMessage * pclsSend );
 
 	CTcpStack m_clsTcpStack;
