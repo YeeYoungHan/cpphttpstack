@@ -68,6 +68,8 @@ int main( int argc, char * argv[] )
 		clsSetup.m_strCertFile = argv[2];
 		clsSetup.m_bUseHttp2 = true;
 		clsSetup.m_bUseHttp2HeaderLog = true;
+		//clsSetup.m_strCipherList = "ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384";
+		clsSetup.m_strCipherList = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384";
 	}
 
 	if( CDirectory::IsDirectory( clsServer.m_strDocumentRoot.c_str() ) == false )

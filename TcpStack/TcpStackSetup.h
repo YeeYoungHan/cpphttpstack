@@ -64,6 +64,9 @@ public:
 	/** TLS 서버를 위한 개인키/인증서 PEM 저장 파일 이름 ( full path ) */
 	std::string m_strCertFile;
 
+	/** TLS 서버에서 사용할 암호화 알고리즘 리스트 */
+	std::string m_strCipherList;
+
 	/** 쓰레드와 통신에 pipe 를 사용할 것인지 설정한다. 쓰레드와 통신을 pipe 로 한다는 것은 thread pool 을 사용한다는 것을 의미한다. 
 			thread pool 을 이용할 경우 true 로 입력하고 그렇지 않으면 false 로 입력한다. */
 	bool m_bUseThreadPipe;

@@ -50,6 +50,7 @@ bool CTcpStackSetup::Parse( CXmlElement & clsXml )
 	clsXml.SelectElementData( "TcpConnectTimeout", m_iTcpConnectTimeout );
 	clsXml.SelectElementData( "UseTls", m_bUseTls );
 	clsXml.SelectElementTrimData( "CertFile", m_strCertFile );
+	clsXml.SelectElementTrimData( "CipherList", m_strCipherList );
 	clsXml.SelectElementData( "UseThreadPipe", m_bUseThreadPipe );
 	clsXml.SelectElementData( "UseHttp2", m_bUseHttp2 );
 	clsXml.SelectElementData( "UseHttp2HeaderLog", m_bUseHttp2HeaderLog );

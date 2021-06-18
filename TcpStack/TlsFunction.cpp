@@ -132,9 +132,10 @@ static void SSLPrintError( )
  * @ingroup TcpStack
  * @brief SSL 서버 라이브러리를 시작한다.
  * @param szCertFile		서버 인증서 및 개인키 파일
+ * @param szCipherList	암호화 알고리즘 리스트
  * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
  */
-bool SSLServerStart( const char * szCertFile )
+bool SSLServerStart( const char * szCertFile, const char * szCipherList )
 {
 	if( szCertFile == NULL ) return false;
 	if( IsExistFile( szCertFile ) == false )
@@ -160,6 +161,14 @@ bool SSLServerStart( const char * szCertFile )
 			}
 			else
 			{
+				if( szCipherList && strlen(szCipherList) > 0 )
+				{
+					if( SSL_CTX_set_cipher_list( gpsttServerCtx, szCipherList ) == 0 )
+					{
+						CLog::Print( LOG_ERROR, "SSL_CTX_set_cipher_list(%s) error", szCipherList );
+					}
+				}
+
 				gpsttClientMeth = SSLv23_client_method();
 				if( (gpsttClientCtx = SSL_CTX_new( gpsttClientMeth )) == NULL )
 				{
