@@ -97,6 +97,8 @@ int main( int argc, char * argv[] )
 #ifdef WIN32
 	CHttpStack::Release();
 	CLog::Release();
+	SSLServerStop();
+	SSLFinal();
 #endif
 
 	return 0;
