@@ -15,10 +15,16 @@
 * 본 프로젝트의 라이선스는 GPLv3 이고 기업용 라이선스는 websearch@naver.com 으로 문의해 주세요.
 
 ### 실행 방법
-TestHttpStack.exe 프로그램은 Document root 폴더를 인자로 아래와 같이 실행하면 됩니다.
+HTTP/1.1 프로토콜만 사용할 경우, TestHttpStack.exe 프로그램은 Document root 폴더를 인자로 아래와 같이 실행하면 됩니다.
 
 ```
 # TestHttpStack.exe {Document root}
+```
+
+HTTP/2 프로토콜을 사용할 경우, TestHttpStack.exe 프로그램은 Document root 폴더 및 인증서 파일 인자로 아래와 같이 실행하면 됩니다.
+
+```
+# TestHttpStack.exe {Document root} {pem file}
 ```
 
 ### WebSocket echo 테스트 방법
