@@ -32,6 +32,9 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * HtmlParser
   * HTML 문서를 파싱/생성하는 라이브러리
 
+* Http2Parser
+  * HTTP/2 프로토콜 파싱/생성하는 라이브러리
+
 * HttpNoCacheProxy
   * HTTP 캐시 기능을 사용하지 않는 HTTP Proxy 서비스
 
@@ -72,8 +75,14 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * XmlParser
   * XML 문서를 파싱하는 라이브러리
 
+* TestHttp2Client
+  * HTTP/2 클라이언트 테스트 프로그램
+
+* TestHttpClient
+  * HTTP/1.1 클라이언트 테스트 프로그램
+
 * TestHttpStack
-  * HttpStack 을 이용한 간단한 HTTP 서버 샘플 프로그램
+  * HttpStack 을 이용한 간단한 HTTP/1.1 & HTTP/2 서버 샘플 프로그램
   * HttpStack 을 이용한 WebSocket echo 서버 프로그램
 
 * TestHttpStackMfc
@@ -194,6 +203,7 @@ TestJsonParser 폴더의 소스 코드를 참고하세요.
 
 ### 관련 포스트
 
+* https://blog.naver.com/websearch/222404707445 : HTTP/2 프로토콜 기능 1차 개발 완료
 * https://blog.naver.com/websearch/221511179768 : 읽기 편한 json 문자열 생성 기능 추가 완료
 * https://blog.naver.com/websearch/221416268609 : 안드로이드 FCM 푸시 알림 전송 샘플 프로그램 개발 완료
 * https://blog.naver.com/websearch/221406617987 : HTTP no cache proxy 프로그램 개발 완
