@@ -371,41 +371,41 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 			HpackAddHeader( clsHpack, clsMessage, "Authority" );
 			break;
 		case HTTP2_INDEX_METHOD_GET:
-			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "GET" );
+			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "GET", HTTP2_METHOD_TYPE );
 			break;
 		case HTTP2_INDEX_METHOD_POST:
-			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "POST" );
+			HpackToString( clsHpack, clsMessage.m_strHttpMethod, "POST", HTTP2_METHOD_TYPE );
 			break;
 		case HTTP2_INDEX_PATH:
-			HpackToString( clsHpack, clsMessage.m_strReqUri, "/" );
+			HpackToString( clsHpack, clsMessage.m_strReqUri, "/", HTTP2_PATH_TYPE );
 			break;
 		case HTTP2_INDEX_PATH_INDEX_HTML:
-			HpackToString( clsHpack, clsMessage.m_strReqUri, "/index.html" );
+			HpackToString( clsHpack, clsMessage.m_strReqUri, "/index.html", HTTP2_PATH_TYPE );
 			break;
 		case HTTP2_INDEX_SCHEME_HTTP:
 			break;
 		case HTTP2_INDEX_SCHEME_HTTPS:
 			break;
 		case HTTP2_INDEX_STATUS_200:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 200 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 200, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_204:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 204 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 204, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_206:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 206 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 206, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_304:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 304 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 304, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_400:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 400 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 400, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_404:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 404 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 404, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_STATUS_500:
-			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 500 );
+			HpackToInt( clsHpack, clsMessage.m_iStatusCode, 500, HTTP2_STATUS_CODE_TYPE );
 			break;
 		case HTTP2_INDEX_ACCEPT_CHARSET:
 			HpackAddHeader( clsHpack, clsMessage, "Accept-Charset" );
@@ -447,7 +447,7 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 			HpackAddHeader( clsHpack, clsMessage, "Content-Language" );
 			break;
 		case HTTP2_INDEX_CONTENT_LENGTH:
-			HpackToInt( clsHpack, clsMessage.m_iContentLength, 0 );
+			HpackToInt( clsHpack, clsMessage.m_iContentLength, 0, HTTP2_CONTENT_LENGTH_TYPE );
 			break;
 		case HTTP2_INDEX_CONTENT_LOCATION:
 			HpackAddHeader( clsHpack, clsMessage, "Content-Location" );
@@ -456,7 +456,7 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 			HpackAddHeader( clsHpack, clsMessage, "Content-Range" );
 			break;
 		case HTTP2_INDEX_CONTENT_TYPE:
-			HpackToString( clsHpack, clsMessage.m_strContentType, "" );
+			HpackToString( clsHpack, clsMessage.m_strContentType, "", HTTP2_CONTENT_TYPE_TYPE );
 			break;
 		case HTTP2_INDEX_COOKIE:
 			HpackAddHeader( clsHpack, clsMessage, "Cookie" );
@@ -562,7 +562,54 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 		}
 		else
 		{
-			bRes = HpackToMessage( *pclsHpack, clsMessage );
+			const char * pszName = pclsHpack->m_strName.c_str();
+
+			if( !strcmp( pszName, HTTP2_METHOD_TYPE ) )
+			{
+				HpackToString( clsHpack, clsMessage.m_strHttpMethod, pclsHpack->m_strValue.c_str(), HTTP2_METHOD_TYPE );
+			}
+			else if( !strcmp( pszName, HTTP2_PATH_TYPE ) )
+			{
+				HpackToString( clsHpack, clsMessage.m_strReqUri, pclsHpack->m_strValue.c_str(), HTTP2_PATH_TYPE );
+			}
+			else if( !strcmp( pszName, HTTP2_STATUS_CODE_TYPE ) )
+			{
+				int iStatusCode = atoi( pclsHpack->m_strValue.c_str() );
+				HpackToInt( clsHpack, clsMessage.m_iStatusCode, iStatusCode, HTTP2_STATUS_CODE_TYPE );
+			}
+			else if( !strcmp( pszName, HTTP2_CONTENT_LENGTH_TYPE ) )
+			{
+				int iContentLength = atoi( pclsHpack->m_strValue.c_str() );
+				HpackToInt( clsHpack, clsMessage.m_iContentLength, iContentLength, HTTP2_CONTENT_LENGTH_TYPE );
+			}
+			else if( !strcmp( pszName, HTTP2_CONTENT_TYPE_TYPE ) )
+			{
+				HpackToString( clsHpack, clsMessage.m_strContentType, pclsHpack->m_strValue.c_str(), HTTP2_CONTENT_TYPE_TYPE );
+			}
+			else
+			{
+				if( clsHpack.m_strValue.empty() )
+				{
+					HpackAddHeader( *pclsHpack, clsMessage, pclsHpack->m_strName.c_str() );
+				}
+				else
+				{
+					HpackAddHeader( clsHpack, clsMessage, pclsHpack->m_strName.c_str() );
+				}
+
+				if( clsHpack.m_bIncrementalIndexing )
+				{
+					if( clsHpack.m_strName.empty() )
+					{
+						clsHpack.m_strName = pclsHpack->m_strName;
+					}
+
+					if( clsHpack.m_strValue.empty() )
+					{
+						clsHpack.m_strValue = pclsHpack->m_strValue;
+					}
+				}
+			}
 		}
 	}
 
@@ -580,8 +627,9 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
  * @param clsHpack		HPACK 헤더
  * @param strOutput		[out] 문자열 저장 변수
  * @param pszDefault	HPACK 헤더에 값이 존재하지 않는 경우, 기본값 문자열
+ * @param pszType			IncrementalIndexing 인 경우, HPACK 이름으로 저장할 문자열
  */
-void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault )
+void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault, const char * pszType )
 {
 	if( clsHpack.m_strValue.empty() )
 	{
@@ -591,6 +639,12 @@ void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string 
 	{
 		strOutput = clsHpack.m_strValue;
 	}
+
+	if( clsHpack.m_bIncrementalIndexing )
+	{
+		clsHpack.m_strName = pszType;
+		clsHpack.m_strValue = strOutput;
+	}
 }
 
 /**
@@ -599,8 +653,9 @@ void CHttp2Conversion::HpackToString( CHttp2HpackHeader & clsHpack, std::string 
  * @param clsHpack	HPACK 헤더
  * @param iOutput		[out] 숫자 저장 변수
  * @param iDefault	HPACK 헤더에 숫자가 존재하지 않는 경우, 기본 숫자
+ * @param pszType			IncrementalIndexing 인 경우, HPACK 이름으로 저장할 문자열
  */
-void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault )
+void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault, const char * pszType )
 {
 	if( clsHpack.m_strValue.empty() )
 	{
@@ -609,6 +664,16 @@ void CHttp2Conversion::HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, 
 	else
 	{
 		iOutput = atoi( clsHpack.m_strValue.c_str() );
+	}
+
+	if( clsHpack.m_bIncrementalIndexing )
+	{
+		char szOutput[11];
+
+		snprintf( szOutput, sizeof(szOutput), "%d", iOutput );
+
+		clsHpack.m_strName = pszType;
+		clsHpack.m_strValue = szOutput;
 	}
 }
 
@@ -624,5 +689,10 @@ void CHttp2Conversion::HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessag
 	if( clsHpack.m_strValue.empty() == false )
 	{
 		clsMessage.AddHeader( pszName, clsHpack.m_strValue.c_str() );
+		
+		if( clsHpack.m_bIncrementalIndexing )
+		{
+			clsHpack.m_strName = pszName;
+		}
 	}
 }

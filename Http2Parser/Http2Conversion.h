@@ -42,8 +42,8 @@ private:
 	bool AddIndexValue( uint32_t iIndex, const char * pszValue );
 	bool AddNameValue( const char * pszName, const char * pszValue );
 	bool HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage );
-	void HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault );
-	void HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault );
+	void HpackToString( CHttp2HpackHeader & clsHpack, std::string & strOutput, const char * pszDefault, const char * pszType );
+	void HpackToInt( CHttp2HpackHeader & clsHpack, int & iOutput, int iDefault, const char * pszType );
 	void HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessage & clsMessage, const char * pszName );
 
 	CHttpMessage		* m_pclsMessage;

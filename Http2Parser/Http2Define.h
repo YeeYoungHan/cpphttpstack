@@ -115,4 +115,11 @@
 #define HTTP2_INDEX_VIA									60
 #define HTTP2_INDEX_WWW_AUTHENTICATE		61
 
+// HPACK 이름에 저장할 문자열
+#define HTTP2_METHOD_TYPE					"Method"
+#define HTTP2_PATH_TYPE						"Path"
+#define HTTP2_STATUS_CODE_TYPE		"StatusCode"
+#define HTTP2_CONTENT_LENGTH_TYPE	"Content-Length"
+#define HTTP2_CONTENT_TYPE_TYPE		"Content-Type"
+
 #endif
