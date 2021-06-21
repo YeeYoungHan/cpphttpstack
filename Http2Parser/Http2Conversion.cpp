@@ -129,6 +129,10 @@ bool CHttp2Conversion::MakeFrameList( CHttpMessage & clsMessage, CHttp2FrameList
 		{
 			AddIndexValue( HTTP2_INDEX_CONTENT_TYPE, itList->m_strValue.c_str() );
 		}
+		else if( !strcasecmp( pszName, "cookie" ) )
+		{
+			AddIndexValue( HTTP2_INDEX_COOKIE, itList->m_strValue.c_str() );
+		}
 		else
 		{
 			AddNameValue( itList->m_strName.c_str(), itList->m_strValue.c_str() );
