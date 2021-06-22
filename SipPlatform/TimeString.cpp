@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "TimeString.h"
 #include "MemoryDebug.h"
 
