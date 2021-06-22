@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HttpSetCookie.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\HttpStatusCode.cpp"
 				>
 			</File>
@@ -210,6 +214,10 @@
 			</File>
 			<File
 				RelativePath=".\HttpParameterList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpSetCookie.h"
 				>
 			</File>
 			<File

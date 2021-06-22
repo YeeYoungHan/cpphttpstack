@@ -30,6 +30,7 @@ public:
 	~CHttpClient2();
 
 	bool DoGet( const char * pszUrl, std::string & strOutputContentType, std::string & strOutputBody );
+	bool DoPost( const char * pszUrl, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody );
 
 	void Close();
 	void SetRecvTimeout( int iRecvTimeout );
@@ -37,6 +38,7 @@ public:
 
 private:
 	bool Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttpPacket * pclsPacket );
+	void SetCookie( CHttpMessage * pclsMessage );
 
 	int m_iRecvTimeout;
 	int m_iStatusCode;

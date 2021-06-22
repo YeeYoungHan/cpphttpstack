@@ -66,16 +66,87 @@ bool CHttpClient2::DoGet( const char * pszUrl, std::string & strOutputContentTyp
 	clsRequest.SetRequest( "GET", &clsUri );
 	clsRequest.AddHeader( "Connection", "keep-alive" );
 
-	if( Execute( &clsUri, &clsRequest, &clsPacket ) )
+	if( Execute( &clsUri, &clsRequest, &clsPacket ) == false )
 	{
-		CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
-
-		strOutputContentType = pclsMessage->m_strContentType;
-		strOutputBody = pclsMessage->m_strBody;
-		return true;
+		return false;
 	}
 
-	return false;
+	CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+	strOutputContentType = pclsMessage->m_strContentType;
+	strOutputBody = pclsMessage->m_strBody;
+
+	SetCookie( pclsMessage );
+
+	return true;
+}
+
+/**
+ * @ingroup HttpStack
+ * @brief	HTTP POST 명령을 실행한다.
+ * @param pszUrl								HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
+ * @param pszInputContentType		전송 Content-Type
+ * @param pszInputBody					전송 body
+ * @param iInputBodyLen					전송 body 길이
+ * @param strOutputContentType	수신 Content-Type
+ * @param strOutputBody					수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType, const char * pszInputBody, int iInputBodyLen, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	strOutputContentType.clear();
+	strOutputBody.clear();
+
+	if( pszUrl == NULL || pszInputContentType == NULL || pszInputBody == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s pszUrl or input content type or input body is null", __FUNCTION__ );
+		return false;
+	}
+
+	CHttpUri clsUri;
+	int iUrlLen = strlen( pszUrl );
+	int iContentLength = 0;
+
+	if( iInputBodyLen > 0 )
+	{
+		iContentLength = iInputBodyLen;
+	}
+	else
+	{
+		iContentLength = strlen( pszInputBody );
+	}
+
+	if( iContentLength <= 0 )
+	{
+		CLog::Print( LOG_ERROR, "%s pszInputBody's length(%d) error", __FUNCTION__, iContentLength );
+		return false;
+	}
+
+	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
+	{
+		CLog::Print( LOG_ERROR, "%s clsUri.Parse(%s) error", __FUNCTION__, pszUrl );
+		return false;
+	}
+
+	CHttpMessage clsRequest;
+	CHttpPacket clsPacket;
+
+	clsRequest.SetRequest( "POST", &clsUri );
+	clsRequest.AddHeader( "Connection", "keep-alive" );
+	clsRequest.m_strContentType = pszInputContentType;
+	clsRequest.m_iContentLength = iContentLength;
+	clsRequest.m_strBody.append( pszInputBody, iContentLength );
+
+	if( Execute( &clsUri, &clsRequest, &clsPacket ) == false )
+	{
+		return false;
+	}
+
+	CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+	strOutputContentType = pclsMessage->m_strContentType;
+	strOutputBody = pclsMessage->m_strBody;
+	return true;
 }
 
 /**
@@ -272,4 +343,16 @@ FUNC_END:
 	}
 
 	return bRes;
+}
+
+void CHttpClient2::SetCookie( CHttpMessage * pclsMessage )
+{
+	HTTP_HEADER_LIST::iterator itHL;
+
+	for( itHL = pclsMessage->m_clsHeaderList.begin(); itHL != pclsMessage->m_clsHeaderList.end(); ++itHL )
+	{
+		if( !strcasecmp( itHL->m_strName.c_str(), "Set-Cookie" ) )
+		{
+		}
+	}
 }

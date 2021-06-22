@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
+ * Copyright (C) 2021 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpClient2.h"
-#include "Log.h"
-#include "MemoryDebug.h"
+#ifndef _HTTP_SET_COOKIE_H_
+#define _HTTP_SET_COOKIE_H_
 
-int TestHttpClient2Get( int argc, char * argv[] )
+#include <string>
+
+class CHttpSetCookie
 {
-	std::string strUrl, strBodyType, strBody;
-	CHttpClient2 clsClient;
+public:
+	CHttpSetCookie();
+	~CHttpSetCookie();
 
-	if( argc >= 3 )
-	{
-		strUrl = argv[2];
-	}
-	
-	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
+	int Parse( const char * pszText, int iTextLen );
+	void Clear();
 
-	if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
-	{
-		printf( "BodyType[%s] BodyLen[%d]\n", strBodyType.c_str(), (int)strBody.length() );
-		printf( "%s", strBody.c_str() );
-	}
-	else
-	{
-		printf( "clsClient.DoGet error\n" );
-	}
+	std::string m_strName;
+	std::string m_strValue;
+	std::string m_strDomain;
+	std::string m_strPath;
 
-	return 0;
-}
+	time_t	m_iExpireTime;
+	bool		m_bSecure;
+};
+
+#endif

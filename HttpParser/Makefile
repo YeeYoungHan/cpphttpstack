@@ -17,7 +17,7 @@ all: libhttpparser.a
 LIB_OBJ=HttpHeader.o HttpMessage.o HttpPacket.o \
 	HttpStatusCode.o HttpUri.o \
 	HttpParameter.o HttpParameterList.o \
-	HttpMultipart.o
+	HttpMultipart.o HttpSetCookie.o
 
 libhttpparser.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)
