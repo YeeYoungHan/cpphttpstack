@@ -6,7 +6,8 @@
 
 include ../Makefile.mk
 
-INC=-I../HttpStack -I../TcpStack -I../Http2Parser -I../HttpParser -I../SipPlatform
+INC=-I../HttpStack -I../TcpStack -I../Http2Parser -I../HttpParser \
+	-I../SipPlatform
 LIB=-L../HttpStack -lhttpstack \
 	-L../TcpStack -ltcpstack \
 	-L../Http2Parser -lhttp2parser \
