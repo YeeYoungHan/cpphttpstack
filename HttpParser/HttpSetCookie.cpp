@@ -20,6 +20,7 @@
 #include "HttpSetCookie.h"
 #include "HttpParameterList.h"
 #include "TimeString.h"
+#include <stdlib.h>
 
 CHttpSetCookie::CHttpSetCookie() : m_iExpireTime(0), m_bSecure(false)
 {
