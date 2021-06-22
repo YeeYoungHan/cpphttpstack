@@ -203,7 +203,7 @@ time_t ParseCookieExpires( const char * pszTime )
 		}
 		else if( cType )
 		{
-			if( iBufPos >= ( sizeof(szBuf) - 1 ) ) return 0;
+			if( iBufPos >= ( (int)sizeof(szBuf) - 1 ) ) return 0;
 			szBuf[iBufPos++] = pszTime[i];
 		}
 
