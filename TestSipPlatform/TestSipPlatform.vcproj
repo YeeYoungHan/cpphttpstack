@@ -184,6 +184,10 @@
 				RelativePath=".\TestStringUtility.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestTimeString.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -129,3 +129,96 @@ void GetTimeString( char * pszTime, int iTimeSize )
 
 	GetTimeString( iTime, pszTime, iTimeSize );
 }
+
+/**
+ * @ingroup SipPlatform
+ * @brief Set-Cookie 헤더에 포함된 expires 날짜를 time_t 로 변환한다.
+ * @param pszTime Set-Cookie 헤더에 포함된 expires 날짜 예) Wed, 22-Jun-2022 05:04:13 GMT
+ * @returns Set-Cookie 헤더에 포함된 expires 날짜를 time_t 로 리턴한다.
+ */
+time_t ParseCookieExpires( const char * pszTime )
+{
+	static const char * arrMonth[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", NULL };
+
+	struct tm	sttTm;
+	char szBuf[11];
+	char cType = 0;
+	int iBufPos = 0;
+	bool bClearBuf = false;
+
+	memset( &sttTm, 0, sizeof(sttTm) );
+	memset( szBuf, 0, sizeof(szBuf) );
+
+	for( int i = 0; pszTime[i]; ++i )
+	{
+		if( pszTime[i] == ' ' )
+		{
+			switch( cType )
+			{
+			case 3:
+				sttTm.tm_year = atoi( szBuf ) - 1900;
+				break;
+			case 6:
+				sttTm.tm_sec = atoi( szBuf );
+				break;
+			}
+
+			bClearBuf = true;
+		}
+		else if( pszTime[i] == '-' )
+		{
+			switch( cType )
+			{
+			case 1:
+				sttTm.tm_mday = atoi( szBuf );
+				break;
+			case 2:
+				for( int iIndex = 0; arrMonth[iIndex]; ++iIndex )
+				{
+					if( !strcasecmp( arrMonth[iIndex], szBuf ) )
+					{
+						sttTm.tm_mon = iIndex;
+						break;
+					}
+				}
+				break;
+			}
+
+			bClearBuf = true;
+		}
+		else if( pszTime[i] == ':' )
+		{
+			switch( cType )
+			{
+			case 4:
+				sttTm.tm_hour = atoi( szBuf );
+				break;
+			case 5:
+				sttTm.tm_min = atoi( szBuf );
+				break;
+			}
+
+			bClearBuf = true;
+		}
+		else if( cType )
+		{
+			if( iBufPos >= ( sizeof(szBuf) - 1 ) ) return 0;
+			szBuf[iBufPos++] = pszTime[i];
+		}
+
+		if( bClearBuf )
+		{
+			memset( szBuf, 0, sizeof(szBuf) );
+			iBufPos = 0;
+			bClearBuf = false;
+			++cType;
+		}
+	}
+
+	time_t iTime = mktime( &sttTm );
+
+	// Seoul = GMT + 9
+	iTime += 9 * 3600;
+
+	return iTime;
+}

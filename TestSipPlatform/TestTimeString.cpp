@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2012 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
+ * Copyright (C) 2021 Yee Young Han <websearch@naver.com> (http://blog.naver.com/websearch)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TEST_SIP_PLATFORM_H_
-#define _TEST_SIP_PLATFORM_H_
+#include "TestSipPlatform.h"
+#include "TimeString.h"
+#include <string.h>
 
-#include <stdio.h>
+bool TestCookieExpires( const char * pszCookieExpires, const char * pszTime )
+{
+	char szTime[21];
+	time_t iTime = ParseCookieExpires( pszCookieExpires );
+	
+	GetDateTimeString( iTime, szTime, sizeof(szTime) );
 
-bool TestStringUtility();
-bool TestTimeString();
+	if( strcmp( pszTime, szTime ) )
+	{
+		printf( "%s(%s,%s) error - szTime(%s)\n", __FUNCTION__, pszCookieExpires, pszTime, szTime );
+		return false;
+	}
 
-#endif
+	return true;
+}
+
+
+bool TestTimeString()
+{
+	if( TestCookieExpires( "Wed, 22-Jun-2022 05:04:13 GMT", "20220622140413" ) == false ) return false;
+
+	return true;
+}
