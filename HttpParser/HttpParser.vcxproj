@@ -81,6 +81,7 @@
     <ClCompile Include="HttpPacket.cpp" />
     <ClCompile Include="HttpParameter.cpp" />
     <ClCompile Include="HttpParameterList.cpp" />
+    <ClCompile Include="HttpSetCookie.cpp" />
     <ClCompile Include="HttpStatusCode.cpp" />
     <ClCompile Include="HttpUri.cpp" />
   </ItemGroup>
@@ -91,6 +92,7 @@
     <ClInclude Include="HttpPacket.h" />
     <ClInclude Include="HttpParameter.h" />
     <ClInclude Include="HttpParameterList.h" />
+    <ClInclude Include="HttpSetCookie.h" />
     <ClInclude Include="HttpStatusCode.h" />
     <ClInclude Include="HttpUri.h" />
   </ItemGroup>
