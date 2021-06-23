@@ -29,6 +29,11 @@ CHttpHeader::CHttpHeader( const char * pszName, const char * pszValue )
 	Set( pszName, pszValue );
 }
 
+CHttpHeader::CHttpHeader( const char * pszName, std::string & strValue )
+{
+	Set( pszName, strValue );
+}
+
 CHttpHeader::~CHttpHeader()
 {
 }
@@ -148,6 +153,18 @@ void CHttpHeader::Set( const char * pszName, const char * pszValue )
 {
 	m_strName = pszName;
 	m_strValue = pszValue;
+}
+
+/**
+ * @ingroup HttpParser
+ * @brief 헤더의 이름과 값을 설정한다.
+ * @param pszName		헤더 이름
+ * @param strValue	헤더 값
+ */
+void CHttpHeader::Set( const char * pszName, std::string & strValue )
+{
+	m_strName = pszName;
+	m_strValue = strValue;
 }
 
 /**

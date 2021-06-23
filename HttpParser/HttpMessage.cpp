@@ -261,6 +261,17 @@ int CHttpMessage::ToString( std::string & strText, bool bHeaderOnly )
 	return strText.length();
 }
 
+bool CHttpMessage::AddHeader( const char * pszName, std::string & strValue )
+{
+	if( pszName == NULL ) return false;
+
+	CHttpHeader clsHeader( pszName, strValue );
+
+	m_clsHeaderList.push_back( clsHeader );
+
+	return true;
+}
+
 /**
  * @ingroup HttpParser
  * @brief HTTP 헤더 자료구조에 이름과 값을 추가한다.

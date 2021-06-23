@@ -31,12 +31,14 @@ class CHttpHeader
 public:
 	CHttpHeader();
 	CHttpHeader( const char * pszName, const char * pszValue );
+	CHttpHeader( const char * pszName, std::string & strValue );
 	~CHttpHeader();
 
 	int Parse( const char * pszText, int iTextLen );
 	int ToString( char * pszText, int iTextSize );
 
 	void Set( const char * pszName, const char * pszValue );
+	void Set( const char * pszName, std::string & strValue );
 	void Clear();
 
 	/** ¿Ã∏ß */

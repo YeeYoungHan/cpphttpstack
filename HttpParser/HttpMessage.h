@@ -47,6 +47,7 @@ public:
 	int ToString( std::string & strText, bool bHeaderOnly = false );
 	void Clear();
 
+	bool AddHeader( const char * pszName, std::string & strValue );
 	bool AddHeader( const char * pszName, const char * pszValue );
 	bool AddHeader( const char * pszName, int iValue );
 
