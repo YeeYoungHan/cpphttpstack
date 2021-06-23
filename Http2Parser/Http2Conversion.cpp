@@ -364,7 +364,7 @@ bool CHttp2Conversion::HpackToMessage( CHttp2HpackHeader & clsHpack, CHttpMessag
 	{
 		if( clsHpack.m_strName.empty() == false && clsHpack.m_strValue.empty() == false )
 		{
-			bRes = clsMessage.AddHeader( clsHpack.m_strName.c_str(), clsHpack.m_strValue.c_str() );
+			bRes = clsMessage.AddHeader( clsHpack.m_strName.c_str(), clsHpack.m_strValue );
 		}
 	}
 	else if( clsHpack.m_iIndex <= 61 )
@@ -692,7 +692,7 @@ void CHttp2Conversion::HpackAddHeader( CHttp2HpackHeader & clsHpack, CHttpMessag
 {
 	if( clsHpack.m_strValue.empty() == false )
 	{
-		clsMessage.AddHeader( pszName, clsHpack.m_strValue.c_str() );
+		clsMessage.AddHeader( pszName, clsHpack.m_strValue );
 		
 		if( clsHpack.m_bIncrementalIndexing )
 		{
