@@ -28,5 +28,8 @@
     <ClCompile Include="TestHttp2HuffmanCode.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestHttpSetCookie.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -97,6 +97,7 @@
     <ClCompile Include="TestHttpMultipart.cpp" />
     <ClCompile Include="TestHttpPacket.cpp" />
     <ClCompile Include="TestHttpParameter.cpp" />
+    <ClCompile Include="TestHttpSetCookie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Http2Parser\Http2Parser.vcxproj">
