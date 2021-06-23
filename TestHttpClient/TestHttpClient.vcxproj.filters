@@ -25,5 +25,8 @@
     <ClCompile Include="TestHttpClient2Get.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestHttpClient2Loop.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

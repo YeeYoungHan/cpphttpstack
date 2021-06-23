@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TestHttpClient2Get.cpp" />
+    <ClCompile Include="TestHttpClient2Loop.cpp" />
     <ClCompile Include="TestHttpClientGet.cpp" />
     <ClCompile Include="TestHttpClientPost.cpp" />
     <ClCompile Include="TestHttpClientSoap.cpp" />

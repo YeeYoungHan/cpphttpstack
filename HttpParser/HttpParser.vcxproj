@@ -75,6 +75,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HttpDomainCookie.cpp" />
     <ClCompile Include="HttpHeader.cpp" />
     <ClCompile Include="HttpMessage.cpp" />
     <ClCompile Include="HttpMultipart.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="HttpUri.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HttpDomainCookie.h" />
     <ClInclude Include="HttpHeader.h" />
     <ClInclude Include="HttpMessage.h" />
     <ClInclude Include="HttpMultipart.h" />
