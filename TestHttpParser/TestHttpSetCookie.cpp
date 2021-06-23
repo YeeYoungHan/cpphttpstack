@@ -17,45 +17,38 @@
  */
 
 #include "SipPlatformDefine.h"
-#include <stdio.h>
+#include "HttpSetCookie.h"
+#include <stdlib.h>
 #include "MemoryDebug.h"
 
-bool TestHttpPacket( );
-bool TestHttpParameterList( );
-bool TestHttpMultipart( );
-bool TestHttp2HuffmanCode( );
-bool TestHttp2Header();
-bool TestHttp2Conversion();
-bool TestHttpSetCookie( );
-
-int main( int argc, char * argv[] )
+bool TestHttpSetCookie( )
 {
-	bool bOk = false;
+	CHttpSetCookie clsSetCookie;
+	const char * pszSetCookie = "JSESSIONID=1C1A4301CA917C57A8D39A316D91081B; Path=/test; HttpOnly";
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	if( TestHttpSetCookie() == false ) goto FUNC_END;
-	if( TestHttp2Conversion() == false ) goto FUNC_END;
-	if( TestHttp2Header() == false ) goto FUNC_END;
-	if( TestHttp2HuffmanCode() == false ) goto FUNC_END;
-	if( TestHttpMultipart() == false ) goto FUNC_END;
-	if( TestHttpParameterList() == false ) goto FUNC_END;
-	if( TestHttpPacket() == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
+	if( clsSetCookie.Parse( pszSetCookie, strlen(pszSetCookie) ) == -1 )
 	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
+		printf( "%s clsSetCookie.Parse() error", __FUNCTION__ );
+		return false;
 	}
 
-	return 0;
+	if( strcmp( clsSetCookie.m_strName.c_str(), "JSESSIONID" ) )
+	{
+		printf( "%s cookie name error", __FUNCTION__ );
+		return false;
+	}
+
+	if( strcmp( clsSetCookie.m_strValue.c_str(), "1C1A4301CA917C57A8D39A316D91081B" ) )
+	{
+		printf( "%s cookie value error", __FUNCTION__ );
+		return false;
+	}
+
+	if( strcmp( clsSetCookie.m_strPath.c_str(), "/test" ) )
+	{
+		printf( "%s cookie path error", __FUNCTION__ );
+		return false;
+	}
+
+	return true;
 }

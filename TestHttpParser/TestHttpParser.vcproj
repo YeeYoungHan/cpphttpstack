@@ -200,6 +200,10 @@
 				RelativePath=".\TestHttpParameter.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHttpSetCookie.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
