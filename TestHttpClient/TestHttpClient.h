@@ -20,6 +20,7 @@
 #define _TEST_HTTP_CLIENT_H_
 
 int TestHttpClient2Get( int argc, char * argv[] );
+int TestHttpClient2Loop( int argc, char * argv[] );
 int TestHttpClientGet( int argc, char * argv[] );
 int TestHttpClientPost( int argc, char * argv[] );
 int TestHttpClientSoap( int argc, char * argv[] );

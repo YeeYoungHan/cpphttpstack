@@ -88,6 +88,15 @@ int CHttpSetCookie::Parse( const char * pszText, int iTextLen )
 		}
 	}
 
+	if( m_strDomain.empty() == false )
+	{
+		// 도메인이 .google.com 이면 맨 앞의 . 을 제거한다.
+		if( m_strDomain[0] == '.' )
+		{
+			m_strDomain.erase( 0, 1 );
+		}
+	}
+
 	return n;
 }
 

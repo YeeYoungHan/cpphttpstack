@@ -23,7 +23,7 @@
 #include "Log.h"
 
 CHttp2Client::CHttp2Client() : m_hSocket(INVALID_SOCKET), m_psttSsl(NULL), m_psttCtx(NULL), m_iStreamIdentifier(0)
-	, m_iServerPort(0), m_iClientPort(0), m_iStatusCode(0), m_bHttpHeaderLog(false)
+	, m_iServerPort(0), m_iClientPort(0), m_iStatusCode(0)
 {
 	InitNetwork();
 }
@@ -196,7 +196,7 @@ bool CHttp2Client::DoGet( const char * pszPath, std::string & strOutputContentTy
 
 	clsRequest.m_strHttpMethod = "GET";
 	clsRequest.m_strReqUri = pszPath;
-	clsRequest.AddHeader( "host", m_strHost.c_str() );
+	clsRequest.AddHeader( "host", m_strHost );
 
 	if( Execute( &clsRequest, &clsResponse ) == false )
 	{
@@ -285,16 +285,6 @@ int CHttp2Client::GetStatusCode()
 
 /**
  * @ingroup HttpStack
- * @brief HTTP 전송/수신시 로그에 HTTP 헤더 정보를 출력하는지 설정한다.
- * @param bUse HTTP 전송/수신시 로그에 HTTP 헤더 정보를 출력하면 true 를 입력하고 그렇지 않으면 false 를 입력한다.
- */
-void CHttp2Client::SetHttpHeaderLog( bool bUse )
-{
-	m_bHttpHeaderLog = bUse;
-}
-
-/**
- * @ingroup HttpStack
  * @brief HTTP 요청 메시지를 전송한 후, 이에 대한 HTTP 응답 메시지를 수신한다.
  * @param pclsRequest		HTTP 요청 메시지
  * @param pclsResponse	HTTP 응답 메시지
@@ -337,12 +327,12 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		(*itFL)->PrintLog( LOG_NETWORK, m_strServerIp.c_str(), m_iServerPort, true );
 	}
 
-	if( m_bHttpHeaderLog )
+	if( CLog::IsPrintLogLevel( LOG_HTTP_HEADER ) )
 	{
 		std::string strLog;
 
 		pclsRequest->ToString( strLog, true );
-		CLog::Print( LOG_NETWORK, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
+		CLog::Print( LOG_HTTP_HEADER, "Send(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
 	}
 
 	while( bEnd == false )
@@ -395,12 +385,12 @@ bool CHttp2Client::Execute( CHttpMessage * pclsRequest, CHttpMessage * pclsRespo
 		}
 	}
 
-	if( m_bHttpHeaderLog )
+	if( CLog::IsPrintLogLevel( LOG_HTTP_HEADER ) )
 	{
 		std::string strLog;
 
 		pclsResponse->ToString( strLog, true );
-		CLog::Print( LOG_NETWORK, "Recv(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
+		CLog::Print( LOG_HTTP_HEADER, "Recv(%s:%d) [%s]", m_strServerIp.c_str(), m_iServerPort, strLog.c_str() );
 	}
 
 	m_iStatusCode = pclsResponse->m_iStatusCode;

@@ -399,7 +399,7 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 
 	if( m_strUserAgent.empty() == false )
 	{
-		pclsRequest->AddHeader( "User-Agent", m_strUserAgent.c_str() );
+		pclsRequest->AddHeader( "User-Agent", m_strUserAgent );
 	}
 	
 	iBufLen = pclsRequest->ToString( pszBuf, iNewBufLen );

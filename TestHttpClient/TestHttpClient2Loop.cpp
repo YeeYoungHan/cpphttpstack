@@ -16,43 +16,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpClient.h"
-#include "SipTcp.h"
+#include "HttpClient2.h"
 #include "Log.h"
-#include "TestHttpClient.h"
 #include "MemoryDebug.h"
 
-int main( int argc, char * argv[] )
+int TestHttpClient2Loop( int argc, char * argv[] )
 {
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
+	std::string strBodyType, strBody;
+	CHttpClient2 clsClient;
 
-	if( argc >= 2 )
+	CLog::SetLevel( LOG_DEBUG | LOG_HTTP_HEADER );
+
+	char	szCommand[1024];
+	int iLen;
+
+	memset( szCommand, 0, sizeof(szCommand) );
+	while( fgets( szCommand, sizeof(szCommand), stdin ) )
 	{
-		if( !strcmp( argv[1], "soap" ) )
+		iLen = strlen( szCommand );
+		if( iLen >= 2 && szCommand[iLen-2] == '\r' )
 		{
-			TestHttpClientSoap( argc, argv );
+			szCommand[iLen - 2] = '\0';
+			iLen -= 2;
 		}
-		else if( !strcmp( argv[1], "post" ) )
+		else if (iLen >= 1 && szCommand[iLen - 1] == '\n')
 		{
-			TestHttpClientPost( argc, argv );
+			szCommand[iLen - 1] = '\0';
+			--iLen;
 		}
-		else if( !strcmp( argv[1], "upload" ) )
+
+		if( szCommand[0] == 'q' ) break;
+		if( szCommand[0] == '1' )
 		{
-			TestHttpClientUpload( argc, argv );
+			snprintf( szCommand, sizeof(szCommand), "http://www.google.com" );
 		}
-		else if( !strcmp( argv[1], "2" ) )
+
+		if( clsClient.DoGet( szCommand, strBodyType, strBody ) == false )
 		{
-			TestHttpClient2Get( argc, argv );
-		}
-		else if( !strcmp( argv[1], "loop" ) )
-		{
-			TestHttpClient2Loop( argc, argv );
-		}
-		else
-		{
-			TestHttpClientGet( argc, argv );
+			printf( "clsClient.DoGet error\n" );
+			break;
 		}
 	}
 

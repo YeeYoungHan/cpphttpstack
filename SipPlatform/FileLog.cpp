@@ -142,6 +142,9 @@ bool CFileLog::Print( EnumLogLevel iLevel, const char * fmt, ... )
 	case LOG_HTTP2:
 		snprintf( szHeader, sizeof(szHeader), "[HTTP2] " );
 		break;
+	case LOG_HTTP_HEADER:
+		snprintf( szHeader, sizeof(szHeader), "[HTTP] " );
+		break;
 	default:
 		memset( szHeader, 0, sizeof(szHeader) );
 		break;

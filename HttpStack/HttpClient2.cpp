@@ -18,11 +18,13 @@
 
 #include "SipPlatformDefine.h"
 #include "HttpClient2.h"
+#include "HttpSetCookie.h"
 #include "Log.h"
 #include "FileUtility.h"
+#include "StringUtility.h"
 #include "MemoryDebug.h"
 
-CHttpClient2::CHttpClient2() : m_iPort(0), m_hSocket(INVALID_SOCKET), m_psttSsl(NULL)
+CHttpClient2::CHttpClient2() : m_iRecvTimeout(10), m_iPort(0), m_hSocket(INVALID_SOCKET), m_psttSsl(NULL)
 {
 	InitNetwork();
 }
@@ -75,8 +77,6 @@ bool CHttpClient2::DoGet( const char * pszUrl, std::string & strOutputContentTyp
 
 	strOutputContentType = pclsMessage->m_strContentType;
 	strOutputBody = pclsMessage->m_strBody;
-
-	SetCookie( pclsMessage );
 
 	return true;
 }
@@ -146,6 +146,7 @@ bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType
 
 	strOutputContentType = pclsMessage->m_strContentType;
 	strOutputBody = pclsMessage->m_strBody;
+
 	return true;
 }
 
@@ -214,6 +215,8 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 	memset( pszBuf, 0, iNewBufLen );
 
 	pclsRequest->m_strHttpVersion = "HTTP/1.1";
+
+	AddCookie( pclsUri, pclsRequest );
 	
 	iBufLen = pclsRequest->ToString( pszBuf, iNewBufLen );
 	if( iBufLen <= 0 )
@@ -273,6 +276,14 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 
 	CLog::Print( LOG_NETWORK, "TcpSend(%s:%d) [%s]", pclsUri->m_strHost.c_str(), pclsUri->m_iPort, pszBuf );
 
+	if( CLog::IsPrintLogLevel( LOG_HTTP_HEADER ) )
+	{
+		std::string strLog;
+
+		pclsRequest->ToString( strLog, true );
+		CLog::Print( LOG_HTTP_HEADER, "Send(%s:%d) [%s]", pclsUri->m_strHost.c_str(), pclsUri->m_iPort, strLog.c_str() );
+	}
+
 	while( 1 )
 	{
 		memset( pszBuf, 0, iNewBufLen );
@@ -308,6 +319,16 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 	if( pclsResponse->m_iStatusCode / 100 == 2 )
 	{
 		bRes = true;
+
+		SetCookie( pclsResponse );
+	}
+
+	if( CLog::IsPrintLogLevel( LOG_HTTP_HEADER ) )
+	{
+		std::string strLog;
+
+		pclsResponse->ToString( strLog, true );
+		CLog::Print( LOG_HTTP_HEADER, "Recv(%s:%d) [%s]", pclsUri->m_strHost.c_str(), pclsUri->m_iPort, strLog.c_str() );
 	}
 
 FUNC_END:
@@ -345,14 +366,58 @@ FUNC_END:
 	return bRes;
 }
 
+void CHttpClient2::AddCookie( CHttpUri * pclsUri, CHttpMessage * pclsMessage )
+{
+	std::string strCookie;
+
+	if( pclsUri->m_strHost.empty() ) return;
+	if( m_clsDomainCookie.IsEmpty() ) return;
+
+	if( isdigit( pclsUri->m_strHost[0] ) == 0 )
+	{
+		// 도메인 이름 파싱
+		STRING_LIST clsList;
+		STRING_LIST::reverse_iterator it;
+		std::string strDomain, strCookieOne;
+
+		SplitString( pclsUri->m_strHost.c_str(), clsList, '.' );
+
+		for( it = clsList.rbegin(); it != clsList.rend(); ++it )
+		{
+			if( strDomain.empty() == false ) strDomain.insert( 0, "." );
+			strDomain.insert( 0, *it );
+
+			if( m_clsDomainCookie.Select( strDomain.c_str(), pclsMessage->m_strReqUri.c_str(), strCookieOne ) )
+			{
+				if( strCookie.empty() == false ) strCookie.append( "; " );
+				strCookie.append( strCookieOne );
+			}
+		}
+	}
+	else
+	{
+		m_clsDomainCookie.Select( pclsUri->m_strHost.c_str(), pclsMessage->m_strReqUri.c_str(), strCookie );
+	}
+
+	if( strCookie.empty() == false )
+	{
+		pclsMessage->AddHeader( "Cookie", strCookie );
+	}
+}
+
 void CHttpClient2::SetCookie( CHttpMessage * pclsMessage )
 {
 	HTTP_HEADER_LIST::iterator itHL;
+	CHttpSetCookie clsSetCookie;
 
 	for( itHL = pclsMessage->m_clsHeaderList.begin(); itHL != pclsMessage->m_clsHeaderList.end(); ++itHL )
 	{
 		if( !strcasecmp( itHL->m_strName.c_str(), "Set-Cookie" ) )
 		{
+			if( clsSetCookie.Parse( itHL->m_strValue.c_str(), itHL->m_strValue.length() ) != -1 )
+			{
+				m_clsDomainCookie.Insert( &clsSetCookie );
+			}
 		}
 	}
 }

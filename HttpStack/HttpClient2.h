@@ -20,6 +20,7 @@
 #define _HTTP_CLIENT2_H_
 
 #include "HttpPacket.h"
+#include "HttpDomainCookie.h"
 #include "SipTcp.h"
 #include "TlsFunction.h"
 
@@ -38,6 +39,7 @@ public:
 
 private:
 	bool Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttpPacket * pclsPacket );
+	void AddCookie( CHttpUri * pclsUri, CHttpMessage * pclsMessage );
 	void SetCookie( CHttpMessage * pclsMessage );
 
 	int m_iRecvTimeout;
@@ -48,6 +50,8 @@ private:
 
 	Socket m_hSocket;
 	SSL * m_psttSsl;
+
+	CHttpDomainCookie m_clsDomainCookie;
 };
 
 #endif

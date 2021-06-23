@@ -39,9 +39,7 @@ int TestHttp2ClientLoop( int argc, char * argv[] )
 
 	snprintf( szPcapFileName, sizeof(szPcapFileName), "c:\\temp\\%s.pcap", strIp.c_str() );
 
-	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK );
-
-	clsClient.SetHttpHeaderLog( true );
+	CLog::SetLevel( LOG_DEBUG | LOG_HTTP_HEADER );
 
 	if( clsClient.Connect( strIp.c_str(), iPort, NULL, szPcapFileName ) )
 	{

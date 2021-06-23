@@ -49,7 +49,9 @@ enum EnumLogLevel
 	/** 시스템 로그 */
 	LOG_SYSTEM = 0x400,
 	/** HTTP/2 로그 */
-	LOG_HTTP2 = 0x800
+	LOG_HTTP2 = 0x800,
+	/** HTTP 헤더 로그 */
+	LOG_HTTP_HEADER = 0x1000
 };
 
 /**

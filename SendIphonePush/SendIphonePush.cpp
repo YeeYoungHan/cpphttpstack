@@ -23,7 +23,7 @@
 
 int main( int argc, char * argv[] )
 {
-	CLog::SetLevel( LOG_DEBUG | LOG_NETWORK | LOG_INFO );
+	CLog::SetLevel( LOG_DEBUG | LOG_HTTP_HEADER | LOG_INFO );
 
 	if( argc != 4 )
 	{
@@ -51,8 +51,6 @@ int main( int argc, char * argv[] )
 	//clsHeader.Set( "apns-push-type", "alert" );
 	clsHeader.Set( "apns-push-type", "voip" );
 	clsHeaderList.push_back( clsHeader );
-
-	clsClient.SetHttpHeaderLog( true );
 
 	if( clsClient.Connect( "api.sandbox.push.apple.com", 443, pszPemFilePath, "c:\\temp\\h2.pcap" ) )
 	{
