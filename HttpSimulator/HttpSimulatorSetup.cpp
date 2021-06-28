@@ -60,6 +60,11 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 			if( !strcasecmp( clsCommand.m_strMethod.c_str(), "post" ) )
 			{
 				clsCommand.m_strMethod = "POST";
+
+				if( clsCommand.m_strBody.empty() && clsCommand.m_strBodyExecute.empty() )
+				{
+					CLog::Print( LOG_ERROR, "%s Command(%s) POST body not found", __FUNCTION__, clsCommand.m_strUrl.c_str() );
+				}
 			}
 			else
 			{
