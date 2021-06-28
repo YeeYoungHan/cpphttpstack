@@ -41,11 +41,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../SipPlatform;../TcpStack;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../XmlParser;../SipPlatform;../TcpStack;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -116,9 +116,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../SipPlatform;../TcpStack;../openssl/window/32bit/include"
+				AdditionalIncludeDirectories="../HttpStack;../HttpParser;../XmlParser;../SipPlatform;../TcpStack;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -176,6 +176,18 @@
 			>
 			<File
 				RelativePath=".\HttpSimulator.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="설정파일"
+			>
+			<File
+				RelativePath=".\HttpSimulatorSetup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpSimulatorSetup.h"
 				>
 			</File>
 		</Filter>
