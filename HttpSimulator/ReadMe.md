@@ -18,32 +18,39 @@
 
 ### 실행 방법
 
-* HttpSimulator.xml 파일에 HTTP 웹 시뮬레이터 명령을 저장한다.
+* HttpSimulator.xml 파일에 아래와 같은 HTTP 웹서버 연동 명령을 저장한다.
+  * 각 명령은 순서대로 실행된다.
 
 ```
 <HttpSimulator>
+  <!-- HTTP 웹서버 연동 명령 리스트 -->
 	<CommandList>
+	
 		<!-- HTTP GET 명령 -->
 		<Command>
 			<Url>http://127.0.0.1/</Url>
 		</Command>
+		
 		<!-- HTTP POST 명령 -->
 		<Command>
 			<Method>POST</Method>
 			<Url>http://127.0.0.1/login</Url>
 			<Body>userId=test&passWord=1234</Body>
 		</Command>
+		
 		<!-- 수신한 HTTP body 를 파일로 저장하는 명령 -->
 		<Command>
 			<Url>http://127.0.0.1/</Url>
 			<RecvFileName>c:\temp\index.html</RecvFileName>
 		</Command>
+		
 		<!-- HTTP POST body 에 저장할 문자열을 출력하는 프로그램을 실행하여서 HTTP POST 명령을 수행한다. -->
 		<Command>
 			<Method>POST</Method>
 			<Url>http://127.0.0.1/login</Url>
 			<BodyExecute>java PrintLoginText c:\temp\index.html</BodyExecute>
 		</Command>
+		
 	</CommandList>
 	<Log>
 		<Level Debug="true" Network="false" HttpHeader="true" />
