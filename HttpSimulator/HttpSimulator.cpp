@@ -16,8 +16,51 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include "HttpSimulatorSetup.h"
+#include "HttpClient2.h"
+#include "Log.h"
+
 int main( int argc, char * argv[] )
 {
+	if( argc != 2 )
+	{
+		printf( "[Usage] %s {setup file}\n", argv[0] );
+		return 0;
+	}
+
+	CHttpSimulatorSetup clsSetup;
+
+	if( clsSetup.Read( argv[1] ) == false )
+	{
+		return 0;
+	}
+
+	HTTP_SIMULATOR_COMMAND_LIST::iterator itCL;
+	CHttpClient2 clsClient;
+	std::string strOutputContentType, strOutputBody;
+	bool bRes;
+
+	for( itCL = clsSetup.m_clsCommandList.begin(); itCL != clsSetup.m_clsCommandList.end(); ++itCL )
+	{
+		if( !strcasecmp( itCL->m_strMethod.c_str(), "POST" ) )
+		{
+			bRes = clsClient.DoPost( itCL->m_strUrl.c_str(), "application/x-www-form-urlencoded", itCL->m_strBody.c_str(), itCL->m_strBody.length(), strOutputContentType, strOutputBody );
+		}
+		else
+		{
+			bRes = clsClient.DoGet( itCL->m_strUrl.c_str(), strOutputContentType, strOutputBody );
+		}
+
+		if( bRes )
+		{
+			CLog::Print( LOG_INFO, "url[%s] ok", itCL->m_strUrl.c_str() );
+		}
+		else
+		{
+			CLog::Print( LOG_ERROR, "url[%s] error - status code(%d)", itCL->m_strUrl.c_str(), clsClient.GetStatusCode() );
+			break;
+		}
+	}
 
 	return 0;
 }

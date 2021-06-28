@@ -30,9 +30,10 @@ CHttpSimulatorSetup::~CHttpSimulatorSetup()
 
 bool CHttpSimulatorSetup::Read( const char * pszFileName )
 {
-	CXmlElement clsXml;
+	CXmlElement clsXml, *pclsElement;
 	XML_ELEMENT_LIST clsList;
 	XML_ELEMENT_LIST::iterator itEL;
+	std::string strTemp;
 
 	if( clsXml.ParseFile( pszFileName ) == false )
 	{
@@ -40,6 +41,7 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 		return false;
 	}
 
+	// 명령
 	clsXml.SelectElementList( "CommandList", clsList );
 
 	for( itEL = clsList.begin(); itEL != clsList.end(); ++itEL )
@@ -58,6 +60,58 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 		{
 			clsCommand.m_strMethod = "GET";
 		}
+
+		m_clsCommandList.push_back( clsCommand );
+	}
+
+	if( m_clsCommandList.empty() )
+	{
+		printf( "[SetupFile] CommandList is empty\n" );
+		return false;
+	}
+
+	// 로그
+	pclsElement = clsXml.SelectElement( "Log" );
+	if( pclsElement )
+	{
+		if( pclsElement->SelectElementTrimData( "Folder", strTemp ) )
+		{
+			if( CLog::SetDirectory( strTemp.c_str() ) == false )
+			{
+				printf( "[SetupFile] CLog::SetDirectory(%s) error\n", strTemp.c_str() );
+				return false;
+			}
+		}
+
+		int iLogLevel = 0;
+
+		CXmlElement * pclsClient = pclsElement->SelectElement( "Level" );
+		if( pclsClient )
+		{
+			bool bTemp;
+
+			pclsClient->SelectAttribute( "Debug", bTemp );
+			if( bTemp ) iLogLevel |= LOG_DEBUG;
+
+			pclsClient->SelectAttribute( "Info", bTemp );
+			if( bTemp ) iLogLevel |= LOG_INFO;
+
+			pclsClient->SelectAttribute( "Network", bTemp );
+			if( bTemp ) iLogLevel |= LOG_NETWORK;
+
+			pclsClient->SelectAttribute( "HttpHeader", bTemp );
+			if( bTemp ) iLogLevel |= LOG_HTTP_HEADER;
+		}
+
+		int			iLogMaxSize = 0;
+		int64_t iLogMaxFolderSize = 0;
+
+		pclsElement->SelectElementData( "MaxSize", iLogMaxSize );
+		pclsElement->SelectElementData( "MaxFolderSize", iLogMaxFolderSize );
+
+		CLog::SetLevel( iLogLevel );
+		CLog::SetMaxLogSize( iLogMaxSize );
+		CLog::SetMaxFolderSize( iLogMaxFolderSize );
 	}
 
 	return true;
