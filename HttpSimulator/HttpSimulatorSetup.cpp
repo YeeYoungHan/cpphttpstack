@@ -54,6 +54,7 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 			itEL->SelectElementTrimData( "Method", clsCommand.m_strMethod );
 			itEL->SelectElementTrimData( "Url", clsCommand.m_strUrl );
 			itEL->SelectElementTrimData( "Body", clsCommand.m_strBody );
+			itEL->SelectElementTrimData( "RecvFileName", clsCommand.m_strRecvFileName );
 
 			if( !strcasecmp( clsCommand.m_strMethod.c_str(), "post" ) )
 			{

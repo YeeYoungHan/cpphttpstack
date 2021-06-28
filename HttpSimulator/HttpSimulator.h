@@ -16,24 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpSimulator.h"
+#ifndef _HTTP_SIMULATOR_H_
+#define _HTTP_SIMULATOR_H_
 
-int main( int argc, char * argv[] )
-{
-	if( argc != 2 )
-	{
-		printf( "[Usage] %s {setup file}\n", argv[0] );
-		return 0;
-	}
+#include "HttpSimulatorSetup.h"
 
-	CHttpSimulatorSetup clsSetup;
+bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList );
 
-	if( clsSetup.Read( argv[1] ) == false )
-	{
-		return 0;
-	}
-
-	Execute( clsSetup.m_clsCommandList );
-
-	return 0;
-}
+#endif

@@ -36,6 +36,8 @@
 
 #define strcasecmp	_stricmp
 #define strncasecmp	_strnicmp
+#define popen				_popen
+#define pclose			_pclose
 #define sleep(x)		Sleep(x*1000)
 
 typedef unsigned __int64 uint64_t;
