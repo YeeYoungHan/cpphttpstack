@@ -416,6 +416,8 @@ void CHttpClient2::SetCookie( CHttpMessage * pclsMessage )
 		{
 			if( clsSetCookie.Parse( itHL->m_strValue.c_str(), itHL->m_strValue.length() ) != -1 )
 			{
+				if( clsSetCookie.m_strDomain.empty() ) clsSetCookie.m_strDomain = m_strHost;
+
 				m_clsDomainCookie.Insert( &clsSetCookie );
 			}
 		}
