@@ -23,7 +23,7 @@
 
 ```
 <HttpSimulator>
-  <!-- HTTP 웹서버 연동 명령 리스트 -->
+	<!-- HTTP 웹서버 연동 명령 리스트 -->
 	<CommandList>
 	
 		<!-- HTTP GET 명령 -->

@@ -46,6 +46,8 @@ static bool GetPostBody( std::string & strExecute, std::string & strPostBody )
 
 	pclose( fd );
 
+	if( strPostBody.empty() ) return false;
+
 	return true;
 }
 
