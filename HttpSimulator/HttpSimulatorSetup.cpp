@@ -42,26 +42,30 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 	}
 
 	// ¸í·É
-	clsXml.SelectElementList( "CommandList", clsList );
-
-	for( itEL = clsList.begin(); itEL != clsList.end(); ++itEL )
+	pclsElement = clsXml.SelectElement( "CommandList" );
+	if( pclsElement )
 	{
-		CHttpSimulatorCommand clsCommand;
+		pclsElement->SelectElementList( "Command", clsList );
 
-		itEL->SelectElementTrimData( "Method", clsCommand.m_strMethod );
-		itEL->SelectElementTrimData( "Url", clsCommand.m_strUrl );
-		itEL->SelectElementTrimData( "Body", clsCommand.m_strBody );
-
-		if( !strcasecmp( clsCommand.m_strMethod.c_str(), "post" ) )
+		for( itEL = clsList.begin(); itEL != clsList.end(); ++itEL )
 		{
-			clsCommand.m_strMethod = "POST";
-		}
-		else
-		{
-			clsCommand.m_strMethod = "GET";
-		}
+			CHttpSimulatorCommand clsCommand;
 
-		m_clsCommandList.push_back( clsCommand );
+			itEL->SelectElementTrimData( "Method", clsCommand.m_strMethod );
+			itEL->SelectElementTrimData( "Url", clsCommand.m_strUrl );
+			itEL->SelectElementTrimData( "Body", clsCommand.m_strBody );
+
+			if( !strcasecmp( clsCommand.m_strMethod.c_str(), "post" ) )
+			{
+				clsCommand.m_strMethod = "POST";
+			}
+			else
+			{
+				clsCommand.m_strMethod = "GET";
+			}
+
+			m_clsCommandList.push_back( clsCommand );
+		}
 	}
 
 	if( m_clsCommandList.empty() )

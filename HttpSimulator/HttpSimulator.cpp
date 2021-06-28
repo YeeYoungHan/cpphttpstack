@@ -18,6 +18,7 @@
 
 #include "HttpSimulatorSetup.h"
 #include "HttpClient2.h"
+#include "StringUtility.h"
 #include "Log.h"
 
 int main( int argc, char * argv[] )
@@ -50,6 +51,20 @@ int main( int argc, char * argv[] )
 		{
 			bRes = clsClient.DoGet( itCL->m_strUrl.c_str(), strOutputContentType, strOutputBody );
 		}
+
+#ifdef WIN32
+		const char * pszContentType = strOutputContentType.c_str();
+
+		if( strstr( pszContentType, "UTF-8" ) )
+		{
+			std::string strOutput;
+
+			if( Utf8ToAnsi( strOutputBody.c_str(), strOutput ) )
+			{
+				CLog::Print( LOG_DEBUG, "body(%s)", strOutput.c_str() );
+			}
+		}
+#endif
 
 		if( bRes )
 		{

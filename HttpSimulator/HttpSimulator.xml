@@ -1,0 +1,15 @@
+<HttpSimulator>
+	<CommandList>
+		<Command>
+			<Url>http://127.0.0.1:8080/WebFax/users/login</Url>
+		</Command>
+		<Command>
+			<Method>POST</Method>
+			<Url>http://127.0.0.1:8080/WebFax/users/login/proc</Url>
+			<Body>userId=lyh&pwd=ubline!1</Body>
+		</Command>
+	</CommandList>
+	<Log>
+		<Level Debug="true" Network="false" HttpHeader="true" />
+	</Log>
+</HttpSimulator>
