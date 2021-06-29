@@ -15,7 +15,8 @@
 
 ### 파일 설명
 
-* HttpNoCacheProxy.exe : HttpNoCacheProxy 프로그램
-* HttpSpeed.exe : HttpSpeed 프로그램
+* HttpNoCacheProxy.zip : HttpNoCacheProxy 프로그램
+* HttpSimulator.zip : HttpSimulator 프로그램
+* HttpSpeed.zip : HttpSpeed 프로그램
 
  
