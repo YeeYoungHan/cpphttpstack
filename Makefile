@@ -21,6 +21,7 @@ all:
 	cd TestJsonParser && make
 	cd TestHtmlParser && make
 	cd HttpSpeed && make
+	cd HttpSimulator && make
 
 clean:
 	cd SipPlatform && make clean
@@ -39,6 +40,7 @@ clean:
 	cd TestJsonParser && make clean
 	cd TestHtmlParser && make clean
 	cd HttpSpeed && make clean
+	cd HttpSimulator && make clean
 
 install:
 
