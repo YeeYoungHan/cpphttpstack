@@ -1,8 +1,8 @@
-# Makefile for HttpSpeed
+# Makefile for HttpSimulator
 #
 # programmer : yee young han ( websearch@naver.com )
 #            : http://blog.naver.com/websearch
-# start date : 2018/06/22
+# start date : 2021/06/29
 
 include ../Makefile.mk
 
@@ -12,7 +12,7 @@ LIB=-L../HttpStack -lhttpstack \
 	-L../TcpStack -ltcpstack \
 	-L../HttpParser -lhttpparser \
 	-L../HtmlParser -lhtmlparser \
-	-L../XmlParser -lxmlparser
+	-L../XmlParser -lxmlparser \
 	-L../SipPlatform -lsipplatform \
 	$(OPENSSL_LIB) -lpthread
 
