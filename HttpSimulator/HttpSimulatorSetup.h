@@ -22,6 +22,10 @@
 #include <string>
 #include <list>
 
+/**
+ * @ingroup HttpSimulator
+ * @brief 명령 정보 저장 클래스
+ */
 class CHttpSimulatorCommand
 {
 public:
@@ -30,10 +34,15 @@ public:
 	std::string m_strBody;					// POST body
 	std::string m_strRecvFileName;	// 수신한 HTTP body 를 저장할 파일 full path
 	std::string m_strBodyExecute;		// POST body 에 저장할 문자열을 출력하는 프로그램 full path
+	bool				m_bDownloadAll;			// img, js, css 를 모두 다운로드한다.
 };
 
 typedef std::list< CHttpSimulatorCommand > HTTP_SIMULATOR_COMMAND_LIST;
 
+/**
+ * @ingroup HttpSimulator
+ * @brief 설정 파일
+ */
 class CHttpSimulatorSetup
 {
 public:

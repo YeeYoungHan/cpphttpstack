@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "HttpSimulator.h"
+#include "HtmlElementUrl.h"
 #include "HttpClient2.h"
 #include "FileUtility.h"
 #include "StringUtility.h"
@@ -105,6 +106,88 @@ static bool SaveBodyToFile( std::string & strRecvFileName, std::string & strOutp
 
 /**
  * @ingroup HttpSimulator
+ * @brief HTML 문자열에서 URL 리스트를 가져온다.
+ * @param strHtml			HTML 문자열
+ * @param clsUrlList	[out] URL 리스트
+ * @returns URL 리스트가 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool GetHtmlUrlList( std::string & strHtml, STRING_LIST & clsUrlList )
+{
+	CHtmlElementUrl clsHtml;
+	
+	if( clsHtml.Parse( strHtml, E_HEO_NOT_CHECK_END_TAG ) == -1 )
+	{
+		return false;
+	}
+
+	return clsHtml.GetUrlList( clsUrlList );
+}
+
+/**
+ * @ingroup HttpSimulator
+ * @brief URL 에서 최상위 URL 과 현재 URL 의 부모 URL 를 가져온다.
+ * @param strUrl				URL	(예: http://127.0.0.1/test/index.html )
+ * @param strRootUrl		[out] 최상위 URL (예: http://127.0.0.1 )
+ * @param strParentUrl	[out] 부모 URL (예: http://127.0.0.1/test )
+ * @returns true 를 리턴한다.
+ */
+bool GetRootParentUrl( std::string & strUrl, std::string & strRootUrl, std::string & strParentUrl )
+{
+	const char * pszUrl = strUrl.c_str();
+	int iLen = (int)strUrl.length();
+	int iParentUrlEnd = 0;
+	char cType = 0;
+
+	for( int i = 4; i < iLen; ++i )
+	{
+		if( cType == 0 )
+		{
+			if( pszUrl[i-2] == ':' && pszUrl[i-1] == '/' && pszUrl[i] == '/' )
+			{
+				cType = 1;
+			}
+		}
+		else if( cType == 1 )
+		{
+			if( pszUrl[i] == '/' )
+			{
+				strRootUrl.append( pszUrl, i );
+				cType = 2;
+			}
+		}
+		else if( cType == 2 )
+		{
+			if( pszUrl[i] == '/' )
+			{
+				iParentUrlEnd = i;
+			}
+			else if( pszUrl[i] == '?' )
+			{
+				break;
+			}
+		}
+	}
+
+	if( iParentUrlEnd )
+	{
+		strParentUrl.append( pszUrl, iParentUrlEnd );
+	}
+
+	if( strRootUrl.empty() )
+	{
+		strRootUrl = strUrl;
+	}
+
+	if( strParentUrl.empty() )
+	{
+		strParentUrl = strUrl;
+	}
+
+	return true;
+}
+
+/**
+ * @ingroup HttpSimulator
  * @brief HTTP 시뮬레이션 명령을 모두 실행한다.
  * @param clsCommandList HTTP 시뮬레이션 명령들을 저장하는 자료구조
  * @returns true 를 리턴한다.
@@ -137,14 +220,48 @@ bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
 			if( SaveBodyToFile( itCL->m_strRecvFileName, strOutputContentType, strOutputBody ) == false ) break;
 		}
 
-		if( bRes )
-		{
-			CLog::Print( LOG_INFO, "url[%s] ok", itCL->m_strUrl.c_str() );
-		}
-		else
+		if( bRes == false )
 		{
 			CLog::Print( LOG_ERROR, "url[%s] error - status code(%d)", itCL->m_strUrl.c_str(), clsClient.GetStatusCode() );
 			break;
+		}
+
+		CLog::Print( LOG_INFO, "url[%s] ok", itCL->m_strUrl.c_str() );
+
+		if( itCL->m_bDownloadAll )
+		{
+			STRING_LIST clsUrlList;
+			STRING_LIST::iterator itSL;
+
+			if( GetHtmlUrlList( strOutputBody, clsUrlList ) )
+			{
+				std::string strRootUrl, strParentUrl, strNewUrl;
+
+				GetRootParentUrl( itCL->m_strUrl, strRootUrl, strParentUrl );
+
+				for( itSL = clsUrlList.begin(); itSL != clsUrlList.end(); ++itSL )
+				{
+					if( (*itSL)[0] == 'h' )
+					{
+						continue;
+					}
+					else if( (*itSL)[0] == '/' )
+					{
+						strNewUrl = strRootUrl + *itSL;
+					}
+					else
+					{
+						strNewUrl = strParentUrl + *itSL;
+					}
+
+					*itSL = strNewUrl;
+				}
+
+				for( itSL = clsUrlList.begin(); itSL != clsUrlList.end(); ++itSL )
+				{
+					clsClient.DoGet( itSL->c_str(), strOutputContentType, strOutputBody );
+				}
+			}
 		}
 	}
 

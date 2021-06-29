@@ -66,7 +66,7 @@ bool CHtmlElementUrl::GetUrlList( HTML_ELEMENT_LIST & clsElementList, STRING_LIS
 		{
 			if( !strcasecmp( pszName, "link" ) )
 			{
-				if( itEL->SelectAttributeTrim( "href", strUrl ) )
+				if( itEL->SelectAttributeTrim( "href", strUrl ) && strUrl.empty() == false )
 				{
 					clsUrlList.push_back( strUrl );
 				}
@@ -79,7 +79,7 @@ bool CHtmlElementUrl::GetUrlList( HTML_ELEMENT_LIST & clsElementList, STRING_LIS
 		{
 			if( !strcasecmp( pszName, "script" ) )
 			{
-				if( itEL->SelectAttributeTrim( "src", strUrl ) )
+				if( itEL->SelectAttributeTrim( "src", strUrl ) && strUrl.empty() == false )
 				{
 					clsUrlList.push_back( strUrl );
 				}
@@ -92,7 +92,7 @@ bool CHtmlElementUrl::GetUrlList( HTML_ELEMENT_LIST & clsElementList, STRING_LIS
 		{
 			if( !strcasecmp( pszName, "img" ) )
 			{
-				if( itEL->SelectAttributeTrim( "src", strUrl ) )
+				if( itEL->SelectAttributeTrim( "src", strUrl ) && strUrl.empty() == false )
 				{
 					clsUrlList.push_back( strUrl );
 				}

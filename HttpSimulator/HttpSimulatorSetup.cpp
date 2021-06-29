@@ -62,6 +62,7 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 			itEL->SelectElementTrimData( "Body", clsCommand.m_strBody );
 			itEL->SelectElementTrimData( "RecvFileName", clsCommand.m_strRecvFileName );
 			itEL->SelectElementTrimData( "BodyExecute", clsCommand.m_strBodyExecute );
+			itEL->SelectElementData( "DownloadAll", clsCommand.m_bDownloadAll );
 
 			if( !strcasecmp( clsCommand.m_strMethod.c_str(), "post" ) )
 			{
