@@ -28,6 +28,12 @@ CHttpSimulatorSetup::~CHttpSimulatorSetup()
 {
 }
 
+/**
+ * @ingroup HttpSimulator
+ * @brief 설정 파일을 읽어서 멤버 변수에 저장한다.
+ * @param pszFileName 설정 파일 (full path)
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHttpSimulatorSetup::Read( const char * pszFileName )
 {
 	CXmlElement clsXml, *pclsElement;

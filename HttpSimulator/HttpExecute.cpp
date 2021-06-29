@@ -19,9 +19,17 @@
 #include "SipPlatformDefine.h"
 #include "HttpSimulator.h"
 #include "HttpClient2.h"
+#include "FileUtility.h"
 #include "StringUtility.h"
 #include "Log.h"
 
+/**
+ * @ingroup HttpSimulator
+ * @brief 프로그램을 실행시켜서 stdout 으로 출력된 내용을 저장한다.
+ * @param strExecute	프로그램 full path
+ * @param strPostBody	[out] 프로그램의 출력 내용을 저장하는 변수
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 static bool GetPostBody( std::string & strExecute, std::string & strPostBody )
 {
 	strPostBody.clear();
@@ -51,6 +59,14 @@ static bool GetPostBody( std::string & strExecute, std::string & strPostBody )
 	return true;
 }
 
+/**
+ * @ingroup HttpSimulator
+ * @brief 수신한 HTTP body 를 파일에 저장한다.
+ * @param strRecvFileName				파일 이름
+ * @param strOutputContentType	HTTP Content-Type
+ * @param strOutputBody					HTTP body
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 static bool SaveBodyToFile( std::string & strRecvFileName, std::string & strOutputContentType, std::string & strOutputBody )
 {
 #ifdef WIN32
@@ -66,6 +82,13 @@ static bool SaveBodyToFile( std::string & strRecvFileName, std::string & strOutp
 		}
 	}
 #endif
+
+	std::string strFolder;
+
+	if( GetFolderPathOfFilePath( strRecvFileName.c_str(), strFolder ) )
+	{
+		CDirectory::Create( strFolder.c_str() );
+	}
 			
 	FILE * fd = fopen( strRecvFileName.c_str(), "wb" );
 	if( fd == NULL )
@@ -80,6 +103,12 @@ static bool SaveBodyToFile( std::string & strRecvFileName, std::string & strOutp
 	return true;
 }
 
+/**
+ * @ingroup HttpSimulator
+ * @brief HTTP 시뮬레이션 명령을 모두 실행한다.
+ * @param clsCommandList HTTP 시뮬레이션 명령들을 저장하는 자료구조
+ * @returns true 를 리턴한다.
+ */
 bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
 {
 	HTTP_SIMULATOR_COMMAND_LIST::iterator itCL;
