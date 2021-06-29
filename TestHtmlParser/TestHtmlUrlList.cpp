@@ -16,51 +16,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SipPlatformDefine.h"
-#include <stdio.h>
-#include "MemoryDebug.h"
+#include "HtmlElementUrl.h"
 
-bool TestHtmlAttribute( );
-bool TestHtmlClass();
-bool TestHtmlElement( );
-bool TestHtmlGetText();
-bool TestHtmlUrlList( const char * pszHtmlFileName );
-
-int main( int argc, char * argv[] )
+bool TestHtmlUrlList( const char * pszHtmlFileName )
 {
-	bool bOk = false;
+	CHtmlElementUrl clsHtml;
+	STRING_LIST clsUrlList;
+	STRING_LIST::iterator itSL;
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	if( argc == 3 )
+	if( clsHtml.ParseFile( pszHtmlFileName ) == false )
 	{
-		if( !strcmp( argv[1], "urllist" ) )
-		{
-			TestHtmlUrlList( argv[2] );
-		}
-
-		return 0;
+		printf( "clsHtml.ParseFile(%s) error\n", pszHtmlFileName );
+		return false;
 	}
 
-	if( TestHtmlGetText() == false ) goto FUNC_END;
-	if( TestHtmlElement() == false ) goto FUNC_END;
-	if( TestHtmlAttribute() == false ) goto FUNC_END;
-	if( TestHtmlClass() == false ) goto FUNC_END;
-
-	bOk = true;
-
-FUNC_END:
-
-	if( bOk )
+	if( clsHtml.GetUrlList( clsUrlList ) == false )
 	{
-		printf( "SUCCESS!!!\n" );
-	}
-	else
-	{
-		printf( "ERROR!!!\n" );
+		printf( "clsHtml.GetUrlList error\n" );
+		return false;
 	}
 
-	return 0;
+	for( itSL = clsUrlList.begin(); itSL != clsUrlList.end(); ++itSL )
+	{
+		printf( "%s\n", itSL->c_str() );
+	}
+
+	return true;
 }

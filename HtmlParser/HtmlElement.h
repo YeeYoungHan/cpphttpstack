@@ -66,6 +66,8 @@ public:
 	int Parse( const char * pszText, int iTextLen );
 	int Parse( std::string & strText );
 
+	bool ParseFile( const char * pszFileName );
+
 	int ToString( char * pszText, int iTextSize, bool bUseTab = false, int iDepth = 0 );
 	void ToString( std::string & strText, bool bUseTab = false, int iDepth = 0 );
 
@@ -95,6 +97,8 @@ public:
 	bool IsDataEmpty();
 	bool IsId( const char * pszId );
 	bool IsClass( const char * pszClass );
+
+	HTML_ELEMENT_LIST * GetElementList();
 
 protected:
 	void SetName( const char * pszText, int iNameLen );

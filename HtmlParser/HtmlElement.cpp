@@ -268,6 +268,37 @@ int CHtmlElement::Parse( std::string & strText )
 
 /**
  * @ingroup HtmlParser
+ * @brief HTML 파일을 파싱한다.
+ * @param pszFileName HTML 파일 full path
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool CHtmlElement::ParseFile( const char * pszFileName )
+{
+	std::string strHtml;
+	char szBuf[8192];
+	int n;
+
+	FILE * fd = fopen( pszFileName, "rb" );
+	if( fd == NULL )
+	{
+		return false;
+	}
+
+	while( 1 )
+	{
+		n = fread( szBuf, 1, sizeof(szBuf), fd );
+		if( n <= 0 ) break;
+
+		strHtml.append( szBuf, n );
+	}
+
+	if( Parse( strHtml ) == -1 ) return false;
+
+	return true;
+}
+
+/**
+ * @ingroup HtmlParser
  * @brief 멤버 변수에 저장된 값을 이용하여서 XML 문자열을 생성한다.
  * @param pszText			XML 문자열을 저장할 변수
  * @param iTextSize		XML 문자열을 저장할 변수의 크기
@@ -618,7 +649,7 @@ CHtmlElement * CHtmlElement::SelectElement( const char * pszName, const int iInd
 
 	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
 	{
-		if( !strcmp( pszName, itEL->m_strName.c_str() ) )
+		if( !strcasecmp( pszName, itEL->m_strName.c_str() ) )
 		{
 			if( iCount == iIndex )
 			{
@@ -673,7 +704,7 @@ bool CHtmlElement::SelectElementList( const char * pszName, HTML_ELEMENT_LIST & 
 
 	for( itEL = m_clsElementList.begin(); itEL != m_clsElementList.end(); ++itEL )
 	{
-		if( !strcmp( pszName, itEL->m_strName.c_str() ) )
+		if( !strcasecmp( pszName, itEL->m_strName.c_str() ) )
 		{
 			clsList.push_back( *itEL );
 		}
@@ -829,6 +860,16 @@ bool CHtmlElement::IsClass( const char * pszClass )
 	}
 
 	return false;
+}
+
+/**
+ * @ingroup HtmlParser
+ * @brief element list 의 포인터를 리턴한다.
+ * @returns element list 의 포인터를 리턴한다.
+ */
+HTML_ELEMENT_LIST * CHtmlElement::GetElementList()
+{
+	return &m_clsElementList;
 }
 
 /**

@@ -192,6 +192,10 @@
 				RelativePath=".\TestHtmlGetText.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TestHtmlUrlList.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

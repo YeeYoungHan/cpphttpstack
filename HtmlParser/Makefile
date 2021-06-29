@@ -14,7 +14,7 @@ INC=-I../SipPlatform
 
 all: libhtmlparser.a
 
-LIB_OBJ=HtmlAttribute.o HtmlElement.o
+LIB_OBJ=HtmlAttribute.o HtmlElement.o HtmlElementUrl.o
 
 libhtmlparser.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)
