@@ -216,6 +216,11 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 
 	pclsRequest->m_strHttpVersion = "HTTP/1.1";
 
+	if( pclsRequest->GetHeader( "User-Agent" ) == NULL )
+	{
+		pclsRequest->AddHeader( "User-Agent", "HttpClent2" );
+	}
+
 	AddCookie( pclsUri, pclsRequest );
 	
 	iBufLen = pclsRequest->ToString( pszBuf, iNewBufLen );
