@@ -21,7 +21,7 @@
 		<!-- POST with executing the program that prints the POST body -->
 		<Command>
 			<Method>POST</Method>
-			<Url>http://192.168.0.201:8080/WebFax/users/login/proc</Url>
+			<Url>http://127.0.0.1/loginc</Url>
 			<BodyExecute>node C:\Temp\HttpSimulator\rsa\login.js</BodyExecute>
 		</Command>
 		
