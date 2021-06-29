@@ -26,6 +26,12 @@ CHtmlElementUrl::~CHtmlElementUrl()
 {
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief URL 리스트를 가져온다.
+ * @param clsUrlList [out] URL 리스트
+ * @returns URL 이 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHtmlElementUrl::GetUrlList( STRING_LIST & clsUrlList )
 {
 	clsUrlList.clear();
@@ -37,6 +43,13 @@ bool CHtmlElementUrl::GetUrlList( STRING_LIST & clsUrlList )
 	return true;
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief elementlist 에 저장된 URL 리스트를 가져온다.
+ * @param clsElementList	element list
+ * @param clsUrlList			[out] URL 리스트
+ * @returns true 를 리턴한다.
+ */
 bool CHtmlElementUrl::GetUrlList( HTML_ELEMENT_LIST & clsElementList, STRING_LIST & clsUrlList )
 {
 	HTML_ELEMENT_LIST::iterator itEL;
@@ -92,6 +105,11 @@ bool CHtmlElementUrl::GetUrlList( HTML_ELEMENT_LIST & clsElementList, STRING_LIS
 	return true;
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief URL 리스트에 저장할 타입을 설정한다.
+ * @param iType E_HUT_LINK, E_HUT_SCRIPT, E_HUT_IMG 를 | 연산으로 묶어서 입력한다.
+ */
 void CHtmlElementUrl::SetType( int iType )
 {
 	m_iType = iType;

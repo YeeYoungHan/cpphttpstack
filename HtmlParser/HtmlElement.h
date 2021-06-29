@@ -32,6 +32,16 @@ class CHtmlElement;
 
 /**
  * @ingroup HtmlParser
+ * @brief HTML element 옵션
+ */
+enum EHtmlElementOption
+{
+	E_HEO_NULL = 0,
+	E_HEO_NOT_CHECK_END_TAG = 0x01		// end tag 유효성을 검사하지 않는다.
+};
+
+/**
+ * @ingroup HtmlParser
  * @brief HTML element 의 종류
  */
 enum EHtmlElementType
@@ -63,10 +73,10 @@ public:
 	CHtmlElement();
 	~CHtmlElement();
 
-	int Parse( const char * pszText, int iTextLen );
-	int Parse( std::string & strText );
+	int Parse( const char * pszText, int iTextLen, int iOption = E_HEO_NULL );
+	int Parse( std::string & strText, int iOption = E_HEO_NULL );
 
-	bool ParseFile( const char * pszFileName );
+	bool ParseFile( const char * pszFileName, int iOption = E_HEO_NULL );
 
 	int ToString( char * pszText, int iTextSize, bool bUseTab = false, int iDepth = 0 );
 	void ToString( std::string & strText, bool bUseTab = false, int iDepth = 0 );

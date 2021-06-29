@@ -24,7 +24,7 @@ bool TestHtmlUrlList( const char * pszHtmlFileName )
 	STRING_LIST clsUrlList;
 	STRING_LIST::iterator itSL;
 
-	if( clsHtml.ParseFile( pszHtmlFileName ) == false )
+	if( clsHtml.ParseFile( pszHtmlFileName, E_HEO_NOT_CHECK_END_TAG ) == false )
 	{
 		printf( "clsHtml.ParseFile(%s) error\n", pszHtmlFileName );
 		return false;

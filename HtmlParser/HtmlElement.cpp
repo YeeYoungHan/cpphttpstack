@@ -44,9 +44,10 @@ CHtmlElement::~CHtmlElement()
  * @brief HTML 문자열을 파싱하여서 멤버 변수에 저장한다.
  * @param pszText		HTML 문자열
  * @param iTextLen	HTML 문자열 길이
+ * @param iOption		파싱 옵션
  * @returns 성공하면 파싱한 HTML 문자열의 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
  */
-int CHtmlElement::Parse( const char * pszText, int iTextLen )
+int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 {
 	int		iPos, iStartPos = -1, iLen;
 	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = -1;
@@ -129,8 +130,24 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 				}
 				else
 				{
-					CLog::Print( LOG_ERROR, "end tag(%.*s) is not correct for start tag(%s)", iLen, pszText + iPos + 2, m_strName.c_str() );
-					return -1;
+					if( iOption & E_HEO_NOT_CHECK_END_TAG )
+					{
+						cType = HTML_ELEMENT_NAME_END;
+						
+						for( iPos += 2; iPos < iTextLen; ++iPos )
+						{
+							if( pszText[iPos] == '>' )
+							{
+								++iPos;
+								break;
+							}
+						}
+					}
+					else
+					{
+						CLog::Print( LOG_ERROR, "end tag(%.*s) is not correct for start tag(%s)", iLen, pszText + iPos + 2, m_strName.c_str() );
+						return -1;
+					}
 				}
 			}
 			else if( m_eType == E_HET_NOT_CLOSED )
@@ -169,7 +186,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
 
 				CHtmlElement clsElement;
 
-				iLen = clsElement.Parse( pszText + iPos, iTextLen - iPos );
+				iLen = clsElement.Parse( pszText + iPos, iTextLen - iPos, iOption );
 				if( iLen == -1 ) return -1;
 
 				m_clsElementList.push_back( clsElement );
@@ -259,20 +276,22 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen )
  * @ingroup HtmlParser
  * @brief XML 문자열을 파싱하여서 멤버 변수에 저장한다.
  * @param strText XML 문자열
+ * @param iOption			파싱 옵션
  * @returns 성공하면 파싱한 XML 문자열의 길이를 리턴하고 그렇지 않으면 -1 를 리턴한다.
  */
-int CHtmlElement::Parse( std::string & strText )
+int CHtmlElement::Parse( std::string & strText, int iOption )
 {
-	return Parse( strText.c_str(), (int)strText.length() );
+	return Parse( strText.c_str(), (int)strText.length(), iOption );
 }
 
 /**
  * @ingroup HtmlParser
  * @brief HTML 파일을 파싱한다.
  * @param pszFileName HTML 파일 full path
+ * @param iOption			파싱 옵션
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CHtmlElement::ParseFile( const char * pszFileName )
+bool CHtmlElement::ParseFile( const char * pszFileName, int iOption )
 {
 	std::string strHtml;
 	char szBuf[8192];
@@ -292,7 +311,7 @@ bool CHtmlElement::ParseFile( const char * pszFileName )
 		strHtml.append( szBuf, n );
 	}
 
-	if( Parse( strHtml ) == -1 ) return false;
+	if( Parse( strHtml, iOption ) == -1 ) return false;
 
 	return true;
 }
