@@ -19,6 +19,7 @@
 #ifndef _HTTP_SIMULATOR_H_
 #define _HTTP_SIMULATOR_H_
 
+#include <stdio.h>
 #include "HttpSimulatorSetup.h"
 
 bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList );
