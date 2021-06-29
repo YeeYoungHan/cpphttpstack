@@ -259,7 +259,10 @@ bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
 
 				for( itSL = clsUrlList.begin(); itSL != clsUrlList.end(); ++itSL )
 				{
-					clsClient.DoGet( itSL->c_str(), strOutputContentType, strOutputBody );
+					if( clsClient.DoGet( itSL->c_str(), strOutputContentType, strOutputBody ) == false )
+					{
+						break;
+					}
 				}
 			}
 		}
