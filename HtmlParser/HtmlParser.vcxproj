@@ -77,10 +77,12 @@
   <ItemGroup>
     <ClCompile Include="HtmlAttribute.cpp" />
     <ClCompile Include="HtmlElement.cpp" />
+    <ClCompile Include="HtmlElementUrl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HtmlAttribute.h" />
     <ClInclude Include="HtmlElement.h" />
+    <ClInclude Include="HtmlElementUrl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

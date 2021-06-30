@@ -94,6 +94,7 @@
     <ClCompile Include="TestHtmlClass.cpp" />
     <ClCompile Include="TestHtmlElement.cpp" />
     <ClCompile Include="TestHtmlGetText.cpp" />
+    <ClCompile Include="TestHtmlUrlList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HtmlParser\HtmlParser.vcxproj">

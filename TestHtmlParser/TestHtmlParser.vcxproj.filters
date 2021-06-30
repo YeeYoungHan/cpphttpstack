@@ -22,5 +22,8 @@
     <ClCompile Include="TestHtmlGetText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestHtmlUrlList.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
