@@ -6,6 +6,7 @@
   * HTTP GET, POST 전송 기능 개발
   * HTTP 응답 body 를 파일로 저장하는 기능 개발
   * HTTP POST body 에 저장할 내용을 출력하는 프로그램을 실행하는 기능 개발
+  * HTTP 응답 html 에 포함된 모든 css, js, img 파일들을 다운로드하는 기능 개
 
 ### 개발자 정보
 
