@@ -206,6 +206,7 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 	int iBufLen, n;
 	bool bRes = false;
 	CHttpMessage * pclsResponse = pclsPacket->GetHttpMessage();
+	CHttpHeader * pclsHeader;
 
 	int iNewBufLen = 8192 + pclsRequest->m_strBody.length();
 	pszBuf = (char *)malloc( iNewBufLen );
@@ -337,6 +338,15 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 
 		pclsResponse->ToString( strLog, true );
 		CLog::Print( LOG_HTTP_HEADER, "Recv(%s:%d) [%s]", pclsUri->m_strHost.c_str(), pclsUri->m_iPort, strLog.c_str() );
+	}
+
+	pclsHeader = pclsResponse->GetHeader( "Connection" );
+	if( pclsHeader )
+	{
+		if( !strcmp( pclsHeader->m_strValue.c_str(), "close" ) )
+		{
+			Close();
+		}
 	}
 
 FUNC_END:
