@@ -41,6 +41,9 @@ C++ STL 기반으로 HTTP 서버 및 클라이언트 개발용 라이브러리�
 * HttpParser
   * HTTP 프로토콜 파서/생성 라이브러리
 
+* HttpSimulator
+  * HTTP 시뮬레이터 프로그램
+
 * HttpSpeed
   * 웹서버 성능 테스트 프로그램
 
@@ -203,6 +206,7 @@ TestJsonParser 폴더의 소스 코드를 참고하세요.
 
 ### 관련 포스트
 
+* https://blog.naver.com/websearch/222414136421 : HTTP 시뮬레이터 프로그램 1차 개발 완료
 * https://blog.naver.com/websearch/222404707445 : HTTP/2 프로토콜 기능 1차 개발 완료
 * https://blog.naver.com/websearch/221511179768 : 읽기 편한 json 문자열 생성 기능 추가 완료
 * https://blog.naver.com/websearch/221416268609 : 안드로이드 FCM 푸시 알림 전송 샘플 프로그램 개발 완료
