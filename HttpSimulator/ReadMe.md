@@ -51,6 +51,12 @@
 			<BodyExecute>java PrintLoginText c:\temp\index.html</BodyExecute>
 		</Command>
 		
+		<!-- GET 명령: 수신한 HTML 페이지에 존재하는 css, js, img 파일을 모두 다운로드한다. -->
+		<Command>
+			<Url>http://127.0.0.1/</Url>
+			<DownloadAll>true</DownloadAll>
+		</Command>
+		
 	</CommandList>
 	<Log>
 		<Level Debug="true" Network="false" HttpHeader="true" />
