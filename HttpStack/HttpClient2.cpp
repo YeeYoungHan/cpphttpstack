@@ -167,6 +167,9 @@ void CHttpClient2::Close()
 		closesocket( m_hSocket );
 		m_hSocket = INVALID_SOCKET;
 	}
+
+	m_strHost.clear();
+	m_iPort = 0;
 }
 
 /**
