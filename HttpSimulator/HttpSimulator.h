@@ -20,6 +20,7 @@
 #define _HTTP_SIMULATOR_H_
 
 #include <stdio.h>
+#include <string.h>
 #include "HttpSimulatorSetup.h"
 
 bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList );
