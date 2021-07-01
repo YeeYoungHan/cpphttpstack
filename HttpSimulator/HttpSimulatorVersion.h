@@ -16,37 +16,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "HttpSimulator.h"
-#include "HttpSimulatorVersion.h"
+#ifndef _HTTP_SIMULATOR_VERSION_H_
+#define _HTTP_SIMULATOR_VERSION_H_
 
-void PrintHelp( const char * pszProgramName )
-{
-	printf( "%s - version %s\n", pszProgramName, HTTP_SIMULATOR_VERSION );
-	printf( "[Usage] %s {setup file}\n", pszProgramName );
-}
+#define HTTP_SIMULATOR_VERSION "0.02"
 
-int main( int argc, char * argv[] )
-{
-	if( argc != 2 )
-	{
-		PrintHelp( argv[0] );
-		return 0;
-	}
+/* 버전 정보
 
-	if( !strcmp( argv[1], "-v" ) )
-	{
-		PrintHelp( argv[0] );
-		return 0;
-	}
+= 버전 0.02 ( 2021년 7월 1일 ) =
+ * UserAgent 설정 기능을 추가함
+ * 버전 정보 출력 기능 추가함
 
-	CHttpSimulatorSetup clsSetup;
+*/
 
-	if( clsSetup.Read( argv[1] ) == false )
-	{
-		return 0;
-	}
-
-	Execute( clsSetup.m_clsCommandList );
-
-	return 0;
-}
+#endif

@@ -186,6 +186,10 @@
 				RelativePath=".\HttpSimulator.h"
 				>
 			</File>
+			<File
+				RelativePath=".\HttpSimulatorVersion.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="설정파일"

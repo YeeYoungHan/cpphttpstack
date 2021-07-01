@@ -27,6 +27,8 @@
 CHttpClient2::CHttpClient2() : m_iRecvTimeout(10), m_iPort(0), m_hSocket(INVALID_SOCKET), m_psttSsl(NULL)
 {
 	InitNetwork();
+
+	m_strUserAgent = "HttpClent2";
 }
 
 CHttpClient2::~CHttpClient2()
@@ -184,6 +186,16 @@ void CHttpClient2::SetRecvTimeout( int iRecvTimeout )
 
 /**
  * @ingroup HttpStack
+ * @brief HTTP 요청 메시지에 저장할 User-Agent 를 설정한다.
+ * @param pszUserAgent 
+ */
+void CHttpClient2::SetUserAgent( const char * pszUserAgent )
+{
+	m_strUserAgent = pszUserAgent;
+}
+
+/**
+ * @ingroup HttpStack
  * @brief HTTP 응답 status code 를 리턴한다.
  * @returns HTTP 응답 status code 를 리턴한다.
  */
@@ -219,11 +231,7 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 	memset( pszBuf, 0, iNewBufLen );
 
 	pclsRequest->m_strHttpVersion = "HTTP/1.1";
-
-	if( pclsRequest->GetHeader( "User-Agent" ) == NULL )
-	{
-		pclsRequest->AddHeader( "User-Agent", "HttpClent2" );
-	}
+	pclsRequest->AddHeader( "User-Agent", m_strUserAgent );
 
 	AddCookie( pclsUri, pclsRequest );
 	

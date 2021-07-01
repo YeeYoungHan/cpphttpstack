@@ -88,6 +88,13 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 		return false;
 	}
 
+	// HTTP 프로토콜
+	pclsElement = clsXml.SelectElement( "Http" );
+	if( pclsElement )
+	{
+		pclsElement->SelectElementTrimData( "UserAgent", m_strUserAgent );
+	}
+
 	// 로그
 	pclsElement = clsXml.SelectElement( "Log" );
 	if( pclsElement )

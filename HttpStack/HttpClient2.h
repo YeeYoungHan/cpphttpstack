@@ -35,6 +35,7 @@ public:
 
 	void Close();
 	void SetRecvTimeout( int iRecvTimeout );
+	void SetUserAgent( const char * pszUserAgent );
 	int GetStatusCode();
 
 private:
@@ -47,6 +48,8 @@ private:
 
 	std::string m_strHost;
 	int	m_iPort;
+
+	std::string m_strUserAgent;
 
 	Socket m_hSocket;
 	SSL * m_psttSsl;
