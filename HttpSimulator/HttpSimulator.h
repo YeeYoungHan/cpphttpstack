@@ -23,6 +23,6 @@
 #include <string.h>
 #include "HttpSimulatorSetup.h"
 
-bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList );
+bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList, int iLoopCount );
 
 #endif

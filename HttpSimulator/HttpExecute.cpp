@@ -190,12 +190,11 @@ bool GetRootParentUrl( std::string & strUrl, std::string & strRootUrl, std::stri
  * @ingroup HttpSimulator
  * @brief HTTP 시뮬레이션 명령을 모두 실행한다.
  * @param clsCommandList HTTP 시뮬레이션 명령들을 저장하는 자료구조
- * @returns true 를 리턴한다.
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
+bool Execute( CHttpClient2 & clsClient, HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
 {
 	HTTP_SIMULATOR_COMMAND_LIST::iterator itCL;
-	CHttpClient2 clsClient;
 	std::string strOutputContentType, strOutputBody;
 	bool bRes;
 
@@ -268,5 +267,26 @@ bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList )
 		}
 	}
 
-	return true;
+	return bRes;
+}
+
+/**
+ * @ingroup HttpSimulator
+ * @brief HTTP 시뮬레이션 명령을 모두 실행한다.
+ * @param clsCommandList	HTTP 시뮬레이션 명령들을 저장하는 자료구조
+ * @param iLoopCount			반복 횟수
+ * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
+bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList, int iLoopCount )
+{
+	CHttpClient2 clsClient;
+	bool bRes;
+
+	for( int i = 0; i < iLoopCount; ++i )
+	{
+		bRes = Execute( clsClient, clsCommandList );
+		if( bRes == false ) break;
+	}
+
+	return bRes;
 }

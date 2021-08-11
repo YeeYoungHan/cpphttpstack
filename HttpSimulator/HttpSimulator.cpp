@@ -46,10 +46,7 @@ int main( int argc, char * argv[] )
 		return 0;
 	}
 
-	for( int i = 0; i < clsSetup.m_iLoopCount; ++i )
-	{
-		Execute( clsSetup.m_clsCommandList );
-	}
+	Execute( clsSetup.m_clsCommandList, clsSetup.m_iLoopCount );
 
 	return 0;
 }
