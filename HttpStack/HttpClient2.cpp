@@ -158,6 +158,8 @@ bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType
  */
 void CHttpClient2::Close()
 {
+	CLog::Print( LOG_INFO, "TcpClose(%s:%d)", m_strHost.c_str(), m_iPort );
+
 	if( m_psttSsl )
 	{
 		SSLClose( m_psttSsl );
@@ -249,7 +251,7 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 		m_hSocket = TcpConnect( pclsUri->m_strHost.c_str(), pclsUri->m_iPort );
 		if( m_hSocket == INVALID_SOCKET )
 		{
-			CLog::Print( LOG_ERROR, "%s TcpConnect(%s:%d) error", __FUNCTION__, pclsUri->m_strHost.c_str(), pclsUri->m_iPort );
+			CLog::Print( LOG_ERROR, "%s TcpConnect(%s:%d) error(%d)", __FUNCTION__, pclsUri->m_strHost.c_str(), pclsUri->m_iPort, GetError() );
 			goto FUNC_END;
 		}
 
