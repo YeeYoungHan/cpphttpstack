@@ -53,6 +53,7 @@ public:
 
 	HTTP_SIMULATOR_COMMAND_LIST m_clsCommandList;
 	std::string m_strUserAgent;
+	int m_iLoopCount;
 };
 
 #endif

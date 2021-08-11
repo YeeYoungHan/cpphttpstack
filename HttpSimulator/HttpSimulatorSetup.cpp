@@ -20,7 +20,7 @@
 #include "XmlElement.h"
 #include "Log.h"
 
-CHttpSimulatorSetup::CHttpSimulatorSetup()
+CHttpSimulatorSetup::CHttpSimulatorSetup() : m_iLoopCount(1)
 {
 }
 
@@ -45,6 +45,14 @@ bool CHttpSimulatorSetup::Read( const char * pszFileName )
 	{
 		CLog::Print( LOG_ERROR, "%s clsXml.ParseFile(%s) error", __FUNCTION__, pszFileName );
 		return false;
+	}
+
+	// 설정
+	pclsElement = clsXml.SelectElement( "Setup" );
+	if( pclsElement )
+	{
+		pclsElement->SelectElementData( "LoopCount", m_iLoopCount );
+		if( m_iLoopCount <= 0 ) m_iLoopCount = 1;
 	}
 
 	// 명령
