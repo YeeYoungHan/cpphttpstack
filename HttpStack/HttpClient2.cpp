@@ -158,7 +158,7 @@ bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType
  */
 void CHttpClient2::Close()
 {
-	CLog::Print( LOG_INFO, "TcpClose(%s:%d)", m_strHost.c_str(), m_iPort );
+	CLog::Print( LOG_NETWORK, "TcpClose(%s:%d)", m_strHost.c_str(), m_iPort );
 
 	if( m_psttSsl )
 	{
