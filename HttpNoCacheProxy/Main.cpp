@@ -27,7 +27,7 @@ int main( int argc, char * argv[] )
 {
 	if( argc == 1 )
 	{
-		printf( "[Usage] %s {HTTP Server IP} {HTTP Server port]\n", argv[0] );
+		printf( "[Usage] %s {HTTP Server IP} {HTTP Server port} {Listen Port}\n", argv[0] );
 		return 0;
 	}
 
@@ -35,13 +35,20 @@ int main( int argc, char * argv[] )
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
 #endif
 
+	int iLocalPort = 8080;
+
+	if( argc >= 4 )
+	{
+		iLocalPort = atoi( argv[3] );
+	}
+
 	CHttpNoCacheProxy clsServer;
 	CTcpStackSetup clsSetup;
 
 	CLog::SetLevel( LOG_DEBUG );
 
 	// HTTP 수신 포트 번호를 설정한다.
-	clsSetup.m_iListenPort = 8080;
+	clsSetup.m_iListenPort = iLocalPort;
 	clsSetup.m_iMaxSocketPerThread = 1;
 	clsSetup.m_iThreadMaxCount = 0;
 	clsSetup.m_bUseThreadPipe = false;
