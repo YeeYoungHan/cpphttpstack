@@ -48,6 +48,7 @@ bool CHttpNoCacheProxy::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	const char * pszUrl = pclsRequest->m_strReqUri.c_str();
 	const char * pszPath;
 	std::string strUrl, strContentType, strContent;
+	HTTP_HEADER_LIST clsHeaderList;
 
 	pclsResponse->AddHeader( "Cache-Control", "no-cache, no-store, must-revalidate" );
 
@@ -73,9 +74,15 @@ bool CHttpNoCacheProxy::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 
 	strUrl.append( pszPath );
 
+	CHttpHeader * pclsHeader = pclsRequest->GetHeader( "Cookie" );
+	if( pclsHeader )
+	{
+		clsHeaderList.push_back( *pclsHeader );
+	}
+
 	if( !strcmp( pszMethod, "GET" ) )
 	{
-		if( clsClient.DoGet( strUrl.c_str(), strContentType, strContent ) )
+		if( clsClient.DoGet( strUrl.c_str(), &clsHeaderList, strContentType, strContent ) )
 		{
 			pclsResponse->m_iStatusCode = HTTP_OK;
 
@@ -89,8 +96,6 @@ bool CHttpNoCacheProxy::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	}
 	else if( !strcmp( pszMethod, "POST" ) )
 	{
-		HTTP_HEADER_LIST clsHeaderList;
-
 		if( clsClient.DoPost( strUrl.c_str(), &clsHeaderList, pclsRequest->m_strContentType.c_str(), pclsRequest->m_strBody.c_str(), pclsRequest->m_strBody.length(), strContentType, strContent ) )
 		{
 			pclsResponse->m_iStatusCode = HTTP_OK;

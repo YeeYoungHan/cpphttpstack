@@ -137,6 +137,57 @@ bool CHttpClient::DoGet( const char * pszUrl, const char * pszInputContentType, 
 
 /**
  * @ingroup HttpStack
+ * @brief	HTTP GET 명령을 실행한다.
+ * @param pszUrl								HTTP URL (예:http://www.naver.com)
+ * @param pclsHeaderList				전송 헤더에 포함될 헤더 항목 리스트
+ * @param strOutputContentType	수신 Content-Type
+ * @param strOutputBody					수신 body
+ * @returns 성공하면 true 를 리턴하고 실패하면 false 를 리턴한다.
+ */
+bool CHttpClient::DoGet( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList, std::string & strOutputContentType, std::string & strOutputBody )
+{
+	strOutputContentType.clear();
+	strOutputBody.clear();
+
+	if( pszUrl == NULL )
+	{
+		CLog::Print( LOG_ERROR, "%s pszUrl is null", __FUNCTION__ );
+		return false;
+	}
+
+	CHttpUri clsUri;
+	int iUrlLen = strlen( pszUrl );
+
+	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
+	{
+		CLog::Print( LOG_ERROR, "%s clsUri.Parse(%s) error", __FUNCTION__, pszUrl );
+		return false;
+	}
+
+	CHttpMessage clsRequest;
+	CHttpPacket	clsPacket;
+
+	clsRequest.SetRequest( "GET", &clsUri );
+
+	if( pclsHeaderList )
+	{
+		clsRequest.m_clsHeaderList.insert( clsRequest.m_clsHeaderList.end(), pclsHeaderList->begin(), pclsHeaderList->end() );
+	}
+
+	if( Execute( &clsUri, &clsRequest, &clsPacket ) )
+	{
+		CHttpMessage * pclsMessage = clsPacket.GetHttpMessage();
+
+		strOutputContentType = pclsMessage->m_strContentType;
+		strOutputBody = pclsMessage->m_strBody;
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @ingroup HttpStack
  * @brief	HTTP POST 명령을 실행한다.
  * @param pszUrl								HTTP URL (예:http://wsf.cdyne.com/WeatherWS/Weather.asmx)
  * @param pszInputContentType		전송 Content-Type
