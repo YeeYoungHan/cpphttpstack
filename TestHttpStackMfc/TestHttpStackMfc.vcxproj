@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../HttpStack;../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../HttpStack;../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../HttpStack;../TcpStack;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../HttpStack;../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -217,6 +217,9 @@
     <Image Include="res\Toolbar256.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Http2Parser\Http2Parser.vcxproj">
+      <Project>{a977b675-c94d-4b57-a368-20ffb07dd660}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\HttpParser\HttpParser.vcxproj">
       <Project>{fdc90de9-6824-47be-b089-2b22cf515d7f}</Project>
     </ProjectReference>

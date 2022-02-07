@@ -42,6 +42,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWebRtc", "TestWebRtc\TestWebRtc.vcxproj", "{B379E72F-5159-4092-AB3A-FDCE75D956DA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestHttpStackMfc", "TestHttpStackMfc\TestHttpStackMfc.vcxproj", "{C3148EF9-D42E-4D97-BA8D-4205CAF43ACE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A977B675-C94D-4B57-A368-20FFB07DD660} = {A977B675-C94D-4B57-A368-20FFB07DD660}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HtmlParser", "HtmlParser\HtmlParser.vcxproj", "{497BD037-0795-441E-AEE3-973753BA2DDD}"
 EndProject
