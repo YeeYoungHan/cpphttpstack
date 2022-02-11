@@ -70,7 +70,7 @@ bool CHttpDomainCookieInfo::Insert( CHttpSetCookie * pclsSetCookie )
 bool CHttpDomainCookieInfo::Select( const char * pszPath, std::string & strCookie )
 {
 	HTTP_DOMAIN_COOKIE_PATH_LIST::iterator itPL;
-	int iPathLen = strlen( pszPath );
+	int iPathLen = (int)strlen( pszPath );
 	int iLen;
 
 	strCookie.clear();

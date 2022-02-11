@@ -33,7 +33,7 @@ static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody,
 	CHttpPacket clsPacket;
 
 	// 하나의 패킷으로 모두 수신된 경우
-	if( clsPacket.AddPacket( strPacket.c_str(), strPacket.length() ) == false )
+	if( clsPacket.AddPacket( strPacket.c_str(), (int)strPacket.length() ) == false )
 	{
 		printf( "%s line(%d) clsPacket.AddPacket error\n", __FUNCTION__, iLine );
 		return false;
@@ -56,7 +56,7 @@ static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody,
 	clsPacket.ClearMessage();
 
 	// 패킷에 1byte 씩 수신된 경우
-	int iPacketLen = strPacket.length();
+	int iPacketLen = (int)strPacket.length();
 	for( int i = 0; i < iPacketLen; ++i )
 	{
 		if( clsPacket.AddPacket( strPacket.c_str() + i, 1 ) == false )
@@ -89,7 +89,7 @@ static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody,
 
 	int iPos = 0, iLen;
 
-	iPacketLen = strNPacket.length();
+	iPacketLen = (int)strNPacket.length();
 	for( int i = 0; i < iPacketLen; ++i )
 	{
 		iLen = rand() / 255;
@@ -125,7 +125,7 @@ static bool TestHttpPacketChunk( const char * pszRecvBody, const char * pszBody,
 static bool TestHttpPacketContentLength( const char * pszRecvBody, const char * pszBody, int iLine )
 {
 	char szPacket[1024];
-	int iContentLength = strlen( pszRecvBody );
+	int iContentLength = (int)strlen( pszRecvBody );
 	std::string strPacket;
 
 	snprintf( szPacket, sizeof(szPacket), "HTTP/1.1 200 OK\r\n"
@@ -140,7 +140,7 @@ static bool TestHttpPacketContentLength( const char * pszRecvBody, const char * 
 	CHttpPacket clsPacket;
 
 	// 하나의 패킷으로 모두 수신된 경우
-	if( clsPacket.AddPacket( strPacket.c_str(), strPacket.length() ) == false )
+	if( clsPacket.AddPacket( strPacket.c_str(), (int)strPacket.length() ) == false )
 	{
 		printf( "%s line(%d) clsPacket.AddPacket error\n", __FUNCTION__, iLine );
 		return false;
@@ -175,7 +175,7 @@ static bool TestHttpPacketNoContentLength( const char * pszRecvBody, const char 
 	CHttpPacket clsPacket;
 
 	// 하나의 패킷으로 모두 수신된 경우
-	if( clsPacket.AddPacket( strPacket.c_str(), strPacket.length() ) == false )
+	if( clsPacket.AddPacket( strPacket.c_str(), (int)strPacket.length() ) == false )
 	{
 		printf( "%s line(%d) clsPacket.AddPacket error\n", __FUNCTION__, iLine );
 		return false;

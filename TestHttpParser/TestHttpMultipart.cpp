@@ -41,7 +41,7 @@ bool TestHttpMultipart( )
 	std::string strText;
 
 	clsMultipart.SetBoundary( pszBoundary );
-	if( clsMultipart.Parse( pszBody, strlen(pszBody) ) == -1 )
+	if( clsMultipart.Parse( pszBody, (int)strlen(pszBody) ) == -1 )
 	{
 		printf( "clsMultipart.Parse error\n" );
 		return false;

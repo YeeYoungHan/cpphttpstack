@@ -36,7 +36,7 @@ bool TestHtmlClass( const char * pszInput )
 {
 	CHtmlElement clsHtml;
 
-	if( clsHtml.Parse( pszInput, strlen(pszInput) ) == -1 )
+	if( clsHtml.Parse( pszInput, (int)strlen(pszInput) ) == -1 )
 	{
 		printf( "%s line(%d) Parse error\n", __FUNCTION__, __LINE__ );
 		return false;

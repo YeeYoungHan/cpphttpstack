@@ -24,7 +24,7 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 	CJsonObject clsObject;
 	std::string strOutput;
 
-	if( clsObject.Parse( pszInput, strlen(pszInput) ) == -1 )
+	if( clsObject.Parse( pszInput, (int)strlen(pszInput) ) == -1 )
 	{
 		printf( "%s parse(%s) error\n", __FUNCTION__, pszInput );
 		return false;

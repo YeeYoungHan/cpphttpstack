@@ -44,7 +44,7 @@ bool TestHtmlAttribute( )
 	const char * pszHtml = "<abbr id=\"anId\" class='aClass' style=\"color:blue;\" title='Hypertext \"Markup\" Language'>HTML</abbr>";
 	CHtmlElement clsHtml;
 
-	if( clsHtml.Parse( pszHtml, strlen(pszHtml) ) == -1 )
+	if( clsHtml.Parse( pszHtml, (int)strlen(pszHtml) ) == -1 )
 	{
 		printf( "%s line(%d) Parse error - input(%s)\n", __FUNCTION__, __LINE__, pszHtml );
 		return false;

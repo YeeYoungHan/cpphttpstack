@@ -238,7 +238,7 @@ bool CHttp2Conversion::MakeMessage( CHttp2Frame & clsFrame, CHttpMessage & clsMe
 	else
 	{
 		clsMessage.m_strBody.append( (char *)clsFrame.GetBody(), clsFrame.GetBodyLen() );
-		clsMessage.m_iContentLength += clsMessage.m_strBody.length();
+		clsMessage.m_iContentLength += (int)clsMessage.m_strBody.length();
 	}
 
 	return true;

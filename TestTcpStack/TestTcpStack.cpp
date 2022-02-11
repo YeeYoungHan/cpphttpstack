@@ -55,7 +55,7 @@ int main( int argc, char * argv[] )
 
 	snprintf( szBuf, sizeof(szBuf), "Test Message#1234567890" );
 
-	TcpSend( hSocket, szBuf, strlen(szBuf) );
+	TcpSend( hSocket, szBuf, (int)strlen(szBuf) );
 	
 	memset( szBuf, 0, sizeof(szBuf) );
 	TcpRecv( hSocket, szBuf, sizeof(szBuf), 5 );

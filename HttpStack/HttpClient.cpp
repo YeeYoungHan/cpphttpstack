@@ -53,7 +53,7 @@ bool CHttpClient::DoGet( const char * pszUrl, std::string & strOutputContentType
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
+	int iUrlLen = (int)strlen( pszUrl );
 
 	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
 	{
@@ -100,8 +100,8 @@ bool CHttpClient::DoGet( const char * pszUrl, const char * pszInputContentType, 
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
-	int iContentLength = strlen( pszInputBody );
+	int iUrlLen = (int)strlen( pszUrl );
+	int iContentLength = (int)strlen( pszInputBody );
 
 	if( iContentLength <= 0 )
 	{
@@ -156,7 +156,7 @@ bool CHttpClient::DoGet( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList,
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
+	int iUrlLen = (int)strlen( pszUrl );
 
 	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
 	{
@@ -225,7 +225,7 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
+	int iUrlLen = (int)strlen( pszUrl );
 	int iContentLength = 0;
 
 	if( iInputBodyLen > 0 )
@@ -234,7 +234,7 @@ bool CHttpClient::DoPost( const char * pszUrl, HTTP_HEADER_LIST * pclsHeaderList
 	}
 	else
 	{
-		iContentLength = strlen( pszInputBody );
+		iContentLength = (int)strlen( pszInputBody );
 	}
 
 	if( iContentLength <= 0 )
@@ -373,7 +373,7 @@ bool CHttpClient::DoUpload( const char * pszUrl, const char * pszFilePath, const
 
 	while( 1 )
 	{
-		iLen = fread( szBuf, 1, sizeof(szBuf), fd );
+		iLen = (int)fread( szBuf, 1, sizeof(szBuf), fd );
 		if( iLen <= 0 ) break;
 
 		strBody.append( szBuf, iLen );
@@ -386,7 +386,7 @@ bool CHttpClient::DoUpload( const char * pszUrl, const char * pszFilePath, const
 	strBody.append( strBoundary );
 	strBody.append( "--\r\n" );
 
-	return DoPost( pszUrl, NULL, strContentType.c_str(), strBody.c_str(), strBody.length(), strOutputContentType, strOutputBody );
+	return DoPost( pszUrl, NULL, strContentType.c_str(), strBody.c_str(), (int)strBody.length(), strOutputContentType, strOutputBody );
 }
 
 /**
@@ -436,7 +436,7 @@ bool CHttpClient::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHttp
 	SSL * psttSsl = NULL;
 	CHttpMessage * pclsResponse = pclsPacket->GetHttpMessage();
 
-	int iNewBufLen = 8192 + pclsRequest->m_strBody.length();
+	int iNewBufLen = 8192 + (int)pclsRequest->m_strBody.length();
 	pszBuf = (char *)malloc( iNewBufLen );
 	if( pszBuf == NULL )
 	{
@@ -563,7 +563,7 @@ FUNC_END:
 		{
 			CHttpUri clsUri;
 
-			if( clsUri.Parse( pclsHeader->m_strValue.c_str(), pclsHeader->m_strValue.length() ) )
+			if( clsUri.Parse( pclsHeader->m_strValue.c_str(), (int)pclsHeader->m_strValue.length() ) )
 			{
 				if( clsUri.m_strHost.empty() )
 				{

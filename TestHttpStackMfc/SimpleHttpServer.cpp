@@ -190,7 +190,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	int n;
 	char szBuf[8192];
 
-	while( ( n = fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
+	while( ( n = (int)fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
 	{
 		pclsResponse->m_strBody.append( szBuf, n );
 	}

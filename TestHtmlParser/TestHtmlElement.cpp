@@ -25,7 +25,7 @@ static bool TestHtmlElement( int iLine, const char * pszInput, const char * pszO
 	CHtmlElement clsHtml;
 	std::string strOutput;
 
-	if( clsHtml.Parse( pszInput, strlen(pszInput) ) == -1 )
+	if( clsHtml.Parse( pszInput, (int)strlen(pszInput) ) == -1 )
 	{
 		printf( "%s line(%d) Parse error - input(%s)\n", __FUNCTION__, iLine, pszInput );
 		return false;

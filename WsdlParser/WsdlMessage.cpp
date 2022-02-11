@@ -51,7 +51,7 @@ bool CWsdlMessage::Parse( const char * pszText, int iTextLen )
  */
 bool CWsdlMessage::Parse( std::string & strText )
 {
-	return Parse( strText.c_str(), strText.length() );
+	return Parse( strText.c_str(), (int)strText.length() );
 }
 
 /**

@@ -164,7 +164,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 					TrimString( strData );
 
 					const char * pszData = strData.c_str();
-					int iDataLen = strData.length();
+					int iDataLen = (int)strData.length();
 					bool bFound = false;
 
 					for( int i = 0; i < iDataLen; ++i )
@@ -305,7 +305,7 @@ bool CHtmlElement::ParseFile( const char * pszFileName, int iOption )
 
 	while( 1 )
 	{
-		n = fread( szBuf, 1, sizeof(szBuf), fd );
+		n = (int)fread( szBuf, 1, sizeof(szBuf), fd );
 		if( n <= 0 ) break;
 
 		strHtml.append( szBuf, n );
@@ -943,7 +943,7 @@ void CHtmlElement::AddAttribute( std::string & strName, std::string & strValue, 
 	else if( !strcasecmp( pszName, "class" ) )
 	{
 		const char * pszValue = strValue.c_str();
-		int iLen = strValue.length();
+		int iLen = (int)strValue.length();
 		int iStartPos = -1;
 
 		for( int i = 0; i < iLen; ++i )

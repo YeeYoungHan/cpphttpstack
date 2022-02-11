@@ -191,7 +191,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 	int n;
 	char szBuf[8192];
 
-	while( ( n = fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
+	while( ( n = (int)fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
 	{
 		pclsResponse->m_strBody.append( szBuf, n );
 	}
@@ -237,7 +237,7 @@ bool CSimpleHttpServer::WebSocketData( const char * pszClientIp, int iClientPort
 {
 	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
 
-	gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), strData.length() );
+	gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), (int)strData.length() );
 
 	return true;
 }

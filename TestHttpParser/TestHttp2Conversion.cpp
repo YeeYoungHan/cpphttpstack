@@ -37,7 +37,7 @@ bool TestHttp2ConversionMessage( const char * pszPacket, const char * pszMessage
 
 	HexToString( pszPacket, strPacket );
 
-	clsFrame.Set( HTTP2_FRAME_TYPE_HEADERS, HTTP2_FLAG_END_HEADER, 0x03, (uint8_t*)strPacket.c_str(), strPacket.length() );
+	clsFrame.Set( HTTP2_FRAME_TYPE_HEADERS, HTTP2_FLAG_END_HEADER, 0x03, (uint8_t*)strPacket.c_str(), (int)strPacket.length() );
 
 	if( clsConversion.MakeMessage( clsFrame, clsMessage ) == false )
 	{

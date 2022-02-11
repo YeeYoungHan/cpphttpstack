@@ -189,7 +189,7 @@ bool CHttpStack::RecvPacket( char * pszPacket, int iPacketLen, CTcpSessionInfo *
 				}
 			}
 
-			int iNewBufLen = 8192 + clsSend.m_strBody.length();
+			int iNewBufLen = 8192 + (int)clsSend.m_strBody.length();
 			char * pszBuf = (char *)malloc( iNewBufLen );
 			if( pszBuf == NULL )
 			{

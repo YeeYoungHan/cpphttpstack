@@ -85,7 +85,7 @@ void CHttpMultipart::Clear()
  */
 int CHttpMultipart::Parse( const std::string & strText )
 {
-	return Parse( strText.c_str(), strText.length() );
+	return Parse( strText.c_str(), (int)strText.length() );
 }
 
 /**
@@ -189,7 +189,7 @@ int CHttpMultipart::ToString( std::string & strText )
 	strText.append( "--" );
 	strText.append( "\r\n" );
 
-	return strText.length();
+	return (int)strText.length();
 }
 
 /**

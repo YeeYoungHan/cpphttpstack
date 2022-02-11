@@ -247,7 +247,7 @@ bool CTcpThreadList::Send( int iThreadIndex, int iSessionIndex, const char * psz
 	bool bRes = false;
 
 	m_clsMutex.acquire();
-	int iCount = m_clsList.size();
+	int iCount = (int)m_clsList.size();
 	for( int i = 0; i < iCount; ++i )
 	{
 		if( m_clsList[i]->m_iIndex == iThreadIndex )
@@ -528,7 +528,7 @@ int CTcpThreadList::GetCount()
 	int iCount = 0;
 
 	m_clsMutex.acquire();
-	iCount = m_clsList.size();
+	iCount = (int)m_clsList.size();
 	m_clsMutex.release();
 
 	return iCount;

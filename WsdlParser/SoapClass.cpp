@@ -92,7 +92,7 @@ bool CSoapClass::MakeSource( const char * pszFolder )
  */
 void CSoapClass::GetDefineName( const char * pszName, std::string & strDefine )
 {
-	int iLen = strlen( pszName );
+	int iLen = (int)strlen( pszName );
 	char szOne[2];
 
 	memset( szOne, 0, sizeof(szOne) );

@@ -33,7 +33,7 @@ int TestHttpClient2Loop( int argc, char * argv[] )
 	memset( szCommand, 0, sizeof(szCommand) );
 	while( fgets( szCommand, sizeof(szCommand), stdin ) )
 	{
-		iLen = strlen( szCommand );
+		iLen = (int)strlen( szCommand );
 		if( iLen >= 2 && szCommand[iLen-2] == '\r' )
 		{
 			szCommand[iLen - 2] = '\0';

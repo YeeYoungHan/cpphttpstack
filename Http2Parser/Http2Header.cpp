@@ -72,7 +72,7 @@ bool CHttp2Header::AddIndexValue( uint32_t iIndex, const char * pszValue, bool b
 
 	m_iPacketLen += iIndexLen;
 
-	int iValueLen = strlen( pszValue );
+	int iValueLen = (int)strlen( pszValue );
 	int iIntLen = AddInt( 0x00, 1, iValueLen );
 	if( iIntLen == 0 )
 	{
@@ -119,7 +119,7 @@ bool CHttp2Header::AddNameValue( const char * pszName, const char * pszValue, bo
 	int iPacketLen = iIntLen;
 	m_iPacketLen += iIntLen;
 	
-	int iNameLen = strlen( pszName );
+	int iNameLen = (int)strlen( pszName );
 	iIntLen = AddInt( 0x00, 1, iNameLen );
 	if( iIntLen == 0 )
 	{
@@ -140,7 +140,7 @@ bool CHttp2Header::AddNameValue( const char * pszName, const char * pszValue, bo
 	m_iPacketLen += iNameLen;
 	iPacketLen += iNameLen;
 
-	int iValueLen = strlen( pszValue );
+	int iValueLen = (int)strlen( pszValue );
 	iIntLen = AddInt( 0x00, 1, iValueLen );
 	if( iIntLen == 0 )
 	{

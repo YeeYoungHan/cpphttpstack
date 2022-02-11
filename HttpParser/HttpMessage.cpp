@@ -177,7 +177,7 @@ int CHttpMessage::ToString( char * pszText, int iTextSize, bool bHeaderOnly )
 		iLen += snprintf( pszText + iLen, iTextSize - iLen, "Content-Type: %s\r\n", m_strContentType.c_str() );
 	}
 
-	m_iContentLength = m_strBody.length();
+	m_iContentLength = (int)m_strBody.length();
 	iLen += snprintf( pszText + iLen, iTextSize - iLen, "Content-Length: %d\r\n", m_iContentLength );
 
 	for( HTTP_HEADER_LIST::iterator itList = m_clsHeaderList.begin(); itList != m_clsHeaderList.end(); ++itList )
@@ -239,7 +239,7 @@ int CHttpMessage::ToString( std::string & strText, bool bHeaderOnly )
 		strText.append( szBuf );
 	}
 
-	m_iContentLength = m_strBody.length();
+	m_iContentLength = (int)m_strBody.length();
 	snprintf( szBuf, sizeof(szBuf), "Content-Length: %d\r\n", m_iContentLength );
 	strText.append( szBuf );
 
@@ -258,7 +258,7 @@ int CHttpMessage::ToString( std::string & strText, bool bHeaderOnly )
 		strText.append( m_strBody );
 	}
 
-	return strText.length();
+	return (int)strText.length();
 }
 
 bool CHttpMessage::AddHeader( const char * pszName, std::string & strValue )

@@ -27,7 +27,7 @@ bool _TestHuffmanCodeEncode( const char * pszInput, const char * pszOutputHex )
 	int n;
 	std::string strHex;
 	
-	n = HuffmanCodeEncode( (uint8_t *)pszInput, strlen(pszInput), szOutput, sizeof(szOutput) );
+	n = HuffmanCodeEncode( (uint8_t *)pszInput, (uint32_t)strlen(pszInput), szOutput, (uint32_t)sizeof(szOutput) );
 	if( n == -1 )
 	{
 		printf( "HuffmanCodeEncode(%s) error\n", pszInput );
@@ -170,7 +170,7 @@ bool _TestHuffmanCodeDecode( const char * pszInputHex, const char * pszOutput )
 
 	HexToString( pszInputHex, strInput );
 
-	int n = HuffmanCodeDecode( (uint8_t *)strInput.c_str(), strInput.length(), szOutput, sizeof(szOutput) );
+	int n = HuffmanCodeDecode( (uint8_t *)strInput.c_str(), (uint32_t)strInput.length(), szOutput, (uint32_t)sizeof(szOutput) );
 	if( n == -1 )
 	{
 		printf( "HuffmanCodeDecode(%s) error\n", pszInputHex );
@@ -191,7 +191,7 @@ bool _TestHuffmanCodeEncodeDecode( const char * pszInput )
 	uint8_t szOutput[1000], szResult[1000];
 	int n;
 	
-	n = HuffmanCodeEncode( (uint8_t *)pszInput, strlen(pszInput), szOutput, sizeof(szOutput) );
+	n = HuffmanCodeEncode( (uint8_t *)pszInput, (uint32_t)strlen(pszInput), szOutput, (uint32_t)sizeof(szOutput) );
 	if( n == -1 )
 	{
 		printf( "HuffmanCodeEncode(%s) error\n", pszInput );

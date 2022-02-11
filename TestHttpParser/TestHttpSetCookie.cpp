@@ -26,7 +26,7 @@ bool TestHttpSetCookie( )
 	CHttpSetCookie clsSetCookie;
 	const char * pszSetCookie = "JSESSIONID=1C1A4301CA917C57A8D39A316D91081B; Path=/test; HttpOnly";
 
-	if( clsSetCookie.Parse( pszSetCookie, strlen(pszSetCookie) ) == -1 )
+	if( clsSetCookie.Parse( pszSetCookie, (int)strlen(pszSetCookie) ) == -1 )
 	{
 		printf( "%s clsSetCookie.Parse() error", __FUNCTION__ );
 		return false;

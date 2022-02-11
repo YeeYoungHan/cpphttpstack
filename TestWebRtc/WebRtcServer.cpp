@@ -127,7 +127,7 @@ bool CWebRtcServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * 
 	int n;
 	char szBuf[8192];
 
-	while( ( n = fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
+	while( ( n = (int)fread( szBuf, 1, sizeof(szBuf), fd ) ) > 0 )
 	{
 		pclsResponse->m_strBody.append( szBuf, n );
 	}
@@ -182,7 +182,7 @@ bool CWebRtcServer::WebSocketData( const char * pszClientIp, int iClientPort, st
 
 	SplitString( strData.c_str(), clsList, '|' );
 
-	int iCount = clsList.size();
+	int iCount = (int)clsList.size();
 
 	if( iCount < 2 )
 	{

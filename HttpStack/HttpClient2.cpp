@@ -56,7 +56,7 @@ bool CHttpClient2::DoGet( const char * pszUrl, std::string & strOutputContentTyp
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
+	int iUrlLen = (int)strlen( pszUrl );
 
 	if( clsUri.Parse( pszUrl, iUrlLen ) == -1 )
 	{
@@ -106,7 +106,7 @@ bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType
 	}
 
 	CHttpUri clsUri;
-	int iUrlLen = strlen( pszUrl );
+	int iUrlLen = (int)strlen( pszUrl );
 	int iContentLength = 0;
 
 	if( iInputBodyLen > 0 )
@@ -115,7 +115,7 @@ bool CHttpClient2::DoPost( const char * pszUrl, const char * pszInputContentType
 	}
 	else
 	{
-		iContentLength = strlen( pszInputBody );
+		iContentLength = (int)strlen( pszInputBody );
 	}
 
 	if( iContentLength <= 0 )
@@ -222,7 +222,7 @@ bool CHttpClient2::Execute( CHttpUri * pclsUri, CHttpMessage * pclsRequest, CHtt
 	CHttpMessage * pclsResponse = pclsPacket->GetHttpMessage();
 	CHttpHeader * pclsHeader;
 
-	int iNewBufLen = 8192 + pclsRequest->m_strBody.length();
+	int iNewBufLen = 8192 + (int)pclsRequest->m_strBody.length();
 	pszBuf = (char *)malloc( iNewBufLen );
 	if( pszBuf == NULL )
 	{
@@ -374,7 +374,7 @@ FUNC_END:
 		{
 			CHttpUri clsUri;
 
-			if( clsUri.Parse( pclsHeader->m_strValue.c_str(), pclsHeader->m_strValue.length() ) )
+			if( clsUri.Parse( pclsHeader->m_strValue.c_str(), (int)pclsHeader->m_strValue.length() ) )
 			{
 				if( clsUri.m_strHost.empty() )
 				{
@@ -442,7 +442,7 @@ void CHttpClient2::SetCookie( CHttpMessage * pclsMessage )
 	{
 		if( !strcasecmp( itHL->m_strName.c_str(), "Set-Cookie" ) )
 		{
-			if( clsSetCookie.Parse( itHL->m_strValue.c_str(), itHL->m_strValue.length() ) != -1 )
+			if( clsSetCookie.Parse( itHL->m_strValue.c_str(), (int)itHL->m_strValue.length() ) != -1 )
 			{
 				if( clsSetCookie.m_strDomain.empty() ) clsSetCookie.m_strDomain = m_strHost;
 

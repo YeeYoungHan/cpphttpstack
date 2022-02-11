@@ -111,7 +111,7 @@ THREAD_API TcpPipeThread( LPVOID lpParameter )
 							pclsStack->m_clsClientMap.DeleteSendPacketList( clsTcpComm.m_szIp, clsTcpComm.m_iPort, clsSendPacketList );
 							for( itList = clsSendPacketList.begin(); itList != clsSendPacketList.end(); ++itList )
 							{
-								pclsSessionList->Send( iIndex, (*itList)->c_str(), (*itList)->length() );
+								pclsSessionList->Send( iIndex, (*itList)->c_str(), (int)(*itList)->length() );
 								delete *itList;
 							}
 						}

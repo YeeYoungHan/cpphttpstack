@@ -36,7 +36,7 @@ CHttpParameterList::~CHttpParameterList()
  */
 int CHttpParameterList::Parse( const char * pszText )
 {
-	int iLen = strlen( pszText );
+	int iLen = (int)strlen( pszText );
 
 	return Parse( pszText, iLen );
 }
@@ -49,7 +49,7 @@ int CHttpParameterList::Parse( const char * pszText )
  */
 int CHttpParameterList::Parse( const std::string & strText )
 {
-	return Parse( strText.c_str(), strText.length() );
+	return Parse( strText.c_str(), (int)strText.length() );
 }
 
 /**
@@ -98,7 +98,7 @@ int CHttpParameterList::Parse( const char * pszText, int iTextLen )
  */
 int CHttpParameterList::ParseUrl( const char * pszText )
 {
-	int iLen = strlen( pszText );
+	int iLen = (int)strlen( pszText );
 
 	return ParseUrl( pszText, iLen );
 }
@@ -111,7 +111,7 @@ int CHttpParameterList::ParseUrl( const char * pszText )
  */
 int CHttpParameterList::ParseUrl( const std::string & strText )
 {
-	return ParseUrl( strText.c_str(), strText.length() );
+	return ParseUrl( strText.c_str(), (int)strText.length() );
 }
 
 /**

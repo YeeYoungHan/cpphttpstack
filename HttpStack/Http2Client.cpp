@@ -240,7 +240,7 @@ bool CHttp2Client::DoPost( const char * pszPath, HTTP_HEADER_LIST * pclsHeaderLi
 	}
 	else
 	{
-		iContentLength = strlen( pszInputBody );
+		iContentLength = (int)strlen( pszInputBody );
 	}
 
 	if( iContentLength <= 0 )

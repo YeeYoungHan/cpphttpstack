@@ -24,7 +24,7 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 	CJsonObject clsObject;
 	std::string strOutput;
 
-	if( clsObject.Parse( pszInput, strlen(pszInput) ) == -1 )
+	if( clsObject.Parse( pszInput, (int)strlen(pszInput) ) == -1 )
 	{
 		printf( "%s parse(%s) error\n", __FUNCTION__, pszInput );
 		return false;
@@ -39,7 +39,7 @@ static bool TestJsonObject( const char * pszInput, const char * pszOutput )
 		return false;
 	}
 
-	int iWantLen = strlen( pszOutput );
+	int iWantLen = (int)strlen( pszOutput );
 	if( iOutputLen != iWantLen )
 	{
 		printf( "%s input(%s) output(%s) outputLen(%d) wantLen(%d) error\n", __FUNCTION__, pszInput, pszOutput, iOutputLen, iWantLen );
@@ -89,7 +89,7 @@ bool TestJsonObject( )
 	CJsonObject * pclsObject = NULL;
 	const char * pszText = "{ \"strName\" : \"strValue\", \"iName\" : 1234, \"bName\" : true, \"arrName\" : [ 1, 2, 3 ], \"clsName\" : { \"childName\" : \"childValue\" } }";
 
-	Check( clsObject.Parse( pszText, strlen(pszText) ) );
+	Check( clsObject.Parse( pszText, (int)strlen(pszText) ) );
 	Check( clsObject.SelectData( "strName", strValue ) );
 	Check( !strcmp( strValue.c_str(), "strValue" ) );
 	Check( clsObject.SelectData( "iName", iValue ) );
