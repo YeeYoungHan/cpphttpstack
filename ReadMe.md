@@ -206,6 +206,7 @@ TestJsonParser 폴더의 소스 코드를 참고하세요.
 
 ### 관련 포스트
 
+* https://blog.naver.com/websearch/222645809188 : 리눅스에서 빌드할 때에 nonrepresentable section on output 오류 해결하는 방법
 * https://blog.naver.com/websearch/222414136421 : HTTP 시뮬레이터 프로그램 1차 개발 완료
 * https://blog.naver.com/websearch/222404707445 : HTTP/2 프로토콜 기능 1차 개발 완료
 * https://blog.naver.com/websearch/221511179768 : 읽기 편한 json 문자열 생성 기능 추가 완료
