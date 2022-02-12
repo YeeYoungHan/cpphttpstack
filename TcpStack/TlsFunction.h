@@ -49,7 +49,9 @@ bool SSLClose( SSL * ssl );
 
 void SSLServerSetHttp2();
 
+#if 0
 void SSLPrintLogServerCipherList();
 void SSLPrintLogClientCipherList();
+#endif
 
 #endif
