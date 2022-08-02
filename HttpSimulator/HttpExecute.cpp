@@ -196,7 +196,7 @@ bool Execute( CHttpClient2 & clsClient, HTTP_SIMULATOR_COMMAND_LIST & clsCommand
 {
 	HTTP_SIMULATOR_COMMAND_LIST::iterator itCL;
 	std::string strOutputContentType, strOutputBody;
-	bool bRes;
+	bool bRes = false;
 
 	for( itCL = clsCommandList.begin(); itCL != clsCommandList.end(); ++itCL )
 	{
@@ -280,7 +280,7 @@ bool Execute( CHttpClient2 & clsClient, HTTP_SIMULATOR_COMMAND_LIST & clsCommand
 bool Execute( HTTP_SIMULATOR_COMMAND_LIST & clsCommandList, int iLoopCount )
 {
 	CHttpClient2 clsClient;
-	bool bRes;
+	bool bRes = true;
 
 	for( int i = 0; i < iLoopCount; ++i )
 	{
