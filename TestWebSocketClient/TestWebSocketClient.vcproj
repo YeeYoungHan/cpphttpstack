@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="HttpStack"
-	ProjectGUID="{4E8CF57C-470C-4445-9382-6C3A2A3648D6}"
-	RootNamespace="HttpStack"
+	Name="TestWebSocketClient"
+	ProjectGUID="{DDD1EB04-AB0A-44F4-B5F1-EC4A9F66D5FB}"
+	RootNamespace="TestWebSocketClient"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPcap;../SipPlatform;../openssl/window/32bit/include;../WpdPack/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,10 +60,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,6 +83,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -82,7 +93,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -105,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../TcpStack;../HttpParser;../Http2Parser;../XmlParser;../SipPcap;../SipPlatform;../openssl/window/32bit/include;../WpdPack/include"
+				AdditionalIncludeDirectories="../HttpStack;../TcpStack;../Http2Parser;../HttpParser;../XmlParser;../SipPlatform;../openssl/window/32bit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -123,10 +134,20 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../openssl/window/32bit/lib"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,6 +157,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -151,81 +175,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Http2Client.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient2.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStack.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackHttp2.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackVersion.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackWebSocket.hpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="헤더 파일"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\Http2Client.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpClient2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStack.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpStackCallBack.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="WebSocket"
-			>
-			<File
-				RelativePath=".\WebSocketClient.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebSocketClient.h"
-				>
-			</File>
-			<File
-				RelativePath=".\WebSocketClientThread.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebSocketPacket.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebSocketPacket.h"
+				RelativePath=".\TestWebSocketClient.cpp"
 				>
 			</File>
 		</Filter>

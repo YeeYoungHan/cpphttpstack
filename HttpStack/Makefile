@@ -15,7 +15,8 @@ INC=-I../TcpStack -I../Http2Parser -I../HttpParser -I../XmlParser \
 
 all: libhttpstack.a
 
-LIB_OBJ=HttpClient.o HttpClient2.o Http2Client.o HttpStack.o WebSocketPacket.o
+LIB_OBJ=HttpClient.o HttpClient2.o Http2Client.o \
+	HttpStack.o WebSocketPacket.o WebSocketClient.o
 
 libhttpstack.a: $(LIB_OBJ)
 	ar crv $@ $(LIB_OBJ)

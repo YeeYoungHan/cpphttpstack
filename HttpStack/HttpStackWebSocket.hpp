@@ -117,7 +117,7 @@ bool CHttpStack::RecvPacketWebSocket( char * pszPacket, int iPacketLen, CTcpSess
 			char szPacket[2];
 
 			memset( szPacket, 0, sizeof(szPacket) );
-			szPacket[0] = (uint8_t)0xFA;
+			szPacket[0] = (uint8_t)0x8A;
 
 			if( pclsSessionInfo->Send( szPacket, 2 ) == false )
 			{

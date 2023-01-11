@@ -19,6 +19,7 @@
 #ifndef _WEB_SOCKET_PACKET_H_
 #define _WEB_SOCKET_PACKET_H_
 
+#include "SipPlatformDefine.h"
 #include <string>
 
 /**
