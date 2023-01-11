@@ -108,7 +108,6 @@ bool CWebSocketClient::Connect( const char * pszUrl, IWebSocketClientCallBack * 
 	
 	char szPacket[8192];
 	int iBufLen, n;
-	bool bRes = false;
 	std::string strPacket;
 	CHttpMessage * pclsResponse = clsPacket.GetHttpMessage();
 
