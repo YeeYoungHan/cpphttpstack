@@ -70,12 +70,7 @@ THREAD_API WebSocketClientThread( LPVOID lpParameter )
 			else if( clsHeader.m_iOpCode == 8 )
 			{
 				CLog::Print( LOG_DEBUG, "%s recv Close", __FUNCTION__ );
-
-				if( pclsClient->SendTcp( szPacket, n ) == false )
-				{
-					CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
-					break;
-				}
+				break;
 			}
 			else if( clsHeader.m_iOpCode == 9 )
 			{
@@ -85,6 +80,7 @@ THREAD_API WebSocketClientThread( LPVOID lpParameter )
 
 				memset( szPacket, 0, sizeof(szPacket) );
 				szPacket[0] = (uint8_t)0x8A;
+				szPacket[1] = (uint8_t)0x80;
 
 				if( pclsClient->SendTcp( szPacket, 2 ) == false )
 				{

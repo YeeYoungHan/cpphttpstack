@@ -313,6 +313,8 @@ bool CWebSocketClient::Send( const char * pszData, int iDataLen )
 		pszPacket[1] = iDataLen;
 	}
 
+	pszPacket[1] |= 0x80;
+
 	memcpy( pszPacket + iPayLoadPos, pszData, iDataLen );
 
 	bool bRes = SendTcp( pszPacket, iPacketLen );
