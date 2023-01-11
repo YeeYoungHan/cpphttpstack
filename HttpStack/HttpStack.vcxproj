@@ -132,6 +132,7 @@
     <ClCompile Include="HttpClient.cpp" />
     <ClCompile Include="HttpClient2.cpp" />
     <ClCompile Include="HttpStack.cpp" />
+    <ClCompile Include="WebSocketClient.cpp" />
     <ClCompile Include="WebSocketPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +143,8 @@
     <ClInclude Include="HttpStackCallBack.h" />
     <ClInclude Include="HttpStackHttp2.hpp" />
     <ClInclude Include="HttpStackWebSocket.hpp" />
+    <ClInclude Include="WebSocketClient.h" />
+    <ClInclude Include="WebSocketClientThread.hpp" />
     <ClInclude Include="WebSocketPacket.h" />
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,9 @@
     <ClCompile Include="Http2Client.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="WebSocketClient.cpp">
+      <Filter>WebSocket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HttpClient.h">
@@ -54,6 +57,12 @@
     </ClInclude>
     <ClInclude Include="HttpStackWebSocket.hpp">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocketClient.h">
+      <Filter>WebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocketClientThread.hpp">
+      <Filter>WebSocket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
