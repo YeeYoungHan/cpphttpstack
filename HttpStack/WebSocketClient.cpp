@@ -24,6 +24,7 @@
 #include "ServerUtility.h"
 #include "TimeUtility.h"
 #include "TimeString.h"
+#include "StringUtility.h"
 #include "Base64.h"
 #include "Log.h"
 #include "MemoryDebug.h"
@@ -119,6 +120,9 @@ bool CWebSocketClient::Connect( const char * pszUrl, IWebSocketClientCallBack * 
 		CLog::Print( LOG_ERROR, "%s clsRequest.ToString() error", __FUNCTION__ );
 		return false;
 	}
+
+	m_strServerIp = clsUri.m_strHost;
+	m_iServerPort = clsUri.m_iPort;
 
 	m_hSocket = TcpConnect( clsUri.m_strHost.c_str(), clsUri.m_iPort );
 	if( m_hSocket == INVALID_SOCKET )
@@ -250,17 +254,18 @@ void CWebSocketClient::Close()
  */
 bool CWebSocketClient::Send( std::string & strData )
 {
-	return Send( strData.c_str(), strData.length() );
+	return Send( E_WST_TEXT, strData.c_str(), strData.length() );
 }
 
 /**
  * @ingroup HttpStack
  * @brief 입력받은 데이터를 WebSocket 패킷으로 변환하여 전송한다.
+ * @param eType			WebSocket 패킷 타입
  * @param pszData		전송할 데이터
  * @param iDataLen	전송할 데이터 길이
  * @returns 성공하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CWebSocketClient::Send( const char * pszData, int iDataLen )
+bool CWebSocketClient::Send( EWebSocketType eType, const char * pszData, int iDataLen )
 {
 	int iPacketLen = 0;
 
@@ -284,7 +289,18 @@ bool CWebSocketClient::Send( const char * pszData, int iDataLen )
 		return false;
 	}
 
-	pszPacket[0] = (uint8_t)0x81;
+	switch( eType )
+	{
+	case E_WST_TEXT:
+		pszPacket[0] = (uint8_t)0x81;
+		break;
+	case E_WST_PING:
+		pszPacket[0] = (uint8_t)0x89;
+		break;
+	case E_WST_PONG:
+		pszPacket[0] = (uint8_t)0x8A;
+		break;
+	}
 
 	int iPayLoadPos = 2;
 
@@ -355,6 +371,19 @@ bool CWebSocketClient::SendTcp( const char * pszPacket, int iPacketLen )
 	}
 
 	m_clsMutex.release();
+
+	std::string strHex;
+
+	StringToHex( pszPacket, iPacketLen, strHex );
+
+	if( bRes )
+	{
+		CLog::Print( LOG_NETWORK, "WsSend(%s:%d) hex[%s]", m_strServerIp.c_str(), m_iServerPort, strHex.c_str() );
+	}
+	else
+	{
+		CLog::Print( LOG_ERROR, "WsSend(%s:%d) hex[%s] error", m_strServerIp.c_str(), m_iServerPort, strHex.c_str() );
+	}
 
 	return bRes;
 }

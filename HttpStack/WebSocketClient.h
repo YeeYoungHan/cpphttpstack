@@ -38,6 +38,17 @@ public:
 
 /**
  * @ingroup HttpStack
+ * @brief WebSocket 패킷 타입
+ */
+enum EWebSocketType
+{
+	E_WST_TEXT = 0,
+	E_WST_PING,
+	E_WST_PONG
+};
+
+/**
+ * @ingroup HttpStack
  * @brief WebSocket Client
  */
 class CWebSocketClient
@@ -50,7 +61,7 @@ public:
 	void Close();
 
 	bool Send( std::string & strData );
-	bool Send( const char * pszData, int iDataLen );
+	bool Send( EWebSocketType eType, const char * pszData, int iDataLen );
 	bool SendTcp( const char * pszPacket, int iPacketLen );
 
 	bool IsClosed();
@@ -62,6 +73,8 @@ public:
 	SSL * m_psttSsl;
 	CSipMutex	m_clsMutex;
 	IWebSocketClientCallBack * m_pclsCallBack;
+	std::string m_strServerIp;
+	int					m_iServerPort;
 };
 
 #endif
