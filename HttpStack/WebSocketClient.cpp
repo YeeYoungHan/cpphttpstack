@@ -266,15 +266,15 @@ bool CWebSocketClient::Send( const char * pszData, int iDataLen )
 
 	if( iDataLen > 65536 )
 	{
-		iPacketLen = 2 + 8 + iDataLen;
+		iPacketLen = 2 + 8 + iDataLen + 4;
 	}
 	else if( iDataLen > 125 )
 	{
-		iPacketLen = 2 + 2 + iDataLen;
+		iPacketLen = 2 + 2 + iDataLen + 4;
 	}
 	else
 	{
-		iPacketLen = 2 + iDataLen;
+		iPacketLen = 2 + iDataLen + 4;
 	}
 
 	char * pszPacket = (char *)malloc( iPacketLen );
@@ -314,6 +314,8 @@ bool CWebSocketClient::Send( const char * pszData, int iDataLen )
 	}
 
 	pszPacket[1] |= 0x80;
+	memset( pszPacket + iPayLoadPos, 0, 4 );
+	iPayLoadPos += 4;
 
 	memcpy( pszPacket + iPayLoadPos, pszData, iDataLen );
 

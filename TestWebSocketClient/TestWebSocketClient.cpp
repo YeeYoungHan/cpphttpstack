@@ -49,17 +49,19 @@ int main( int argc, char * argv[] )
 
 	CLog::SetLevel( LOG_NETWORK | LOG_INFO | LOG_DEBUG );
 
-	if( clsClient.Connect( "wss://ws.postman-echo.com/raw", &clsCallBack ) )
+	if( clsClient.Connect( "wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self", &clsCallBack ) )
+	//if( clsClient.Connect( "wss://ws.postman-echo.com/raw", &clsCallBack ) )
 	{
 		if( clsClient.Send( strData ) )
 		{
 			printf( "send[%s]\n", strData.c_str() );
 		}
 
-		/*while( clsCallBack.m_bRecv == false && clsClient.IsClosed() == false )
+		//while( clsCallBack.m_bRecv == false && clsClient.IsClosed() == false )
+		while( clsClient.IsClosed() == false )
 		{
 			MiliSleep(20);
-		}*/
+		}
 	}
 
 	clsClient.Close();

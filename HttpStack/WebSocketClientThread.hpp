@@ -56,7 +56,6 @@ THREAD_API WebSocketClientThread( LPVOID lpParameter )
 
 		if( n <= 0 ) break;
 
-		
 		std::string strData;
 
 		clsWsPacket.AddPacket( szPacket, n );
@@ -76,13 +75,13 @@ THREAD_API WebSocketClientThread( LPVOID lpParameter )
 			{
 				CLog::Print( LOG_DEBUG, "%s recv Ping", __FUNCTION__ );
 
-				char szPacket[2];
+				char szPacket[6];
 
 				memset( szPacket, 0, sizeof(szPacket) );
 				szPacket[0] = (uint8_t)0x8A;
 				szPacket[1] = (uint8_t)0x80;
 
-				if( pclsClient->SendTcp( szPacket, 2 ) == false )
+				if( pclsClient->SendTcp( szPacket, 6 ) == false )
 				{
 					CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
 					break;
