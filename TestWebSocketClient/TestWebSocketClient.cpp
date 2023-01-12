@@ -43,9 +43,12 @@ int main( int argc, char * argv[] )
 	CCallBack clsCallBack;
 	std::string strData = "Hello";
 
+#ifdef WIN32
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+#endif
+
 	CLog::SetLevel( LOG_NETWORK | LOG_INFO | LOG_DEBUG );
 
-	//if( clsClient.Connect( "wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self", &clsCallBack ) )
 	if( clsClient.Connect( "wss://ws.postman-echo.com/raw", &clsCallBack ) )
 	{
 		if( clsClient.Send( strData ) )
@@ -53,11 +56,16 @@ int main( int argc, char * argv[] )
 			printf( "send[%s]\n", strData.c_str() );
 		}
 
-		while( clsClient.IsClosed() == false )
+		/*while( clsCallBack.m_bRecv == false && clsClient.IsClosed() == false )
 		{
 			MiliSleep(20);
-		}
+		}*/
 	}
+
+	clsClient.Close();
+
+	SSLClientStop();
+	SSLFinal();
 
 	return 0;
 }
