@@ -208,6 +208,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWebSocketClient", "Test
 		{FDC90DE9-6824-47BE-B089-2B22CF515D7F} = {FDC90DE9-6824-47BE-B089-2B22CF515D7F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestTimbelSTT", "TestTimbelSTT\TestTimbelSTT.vcproj", "{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{890E7A34-CA21-498B-B5F2-12665DC54D43} = {890E7A34-CA21-498B-B5F2-12665DC54D43}
+		{4E8CF57C-470C-4445-9382-6C3A2A3648D6} = {4E8CF57C-470C-4445-9382-6C3A2A3648D6}
+		{FDC90DE9-6824-47BE-B089-2B22CF515D7F} = {FDC90DE9-6824-47BE-B089-2B22CF515D7F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -412,6 +419,12 @@ Global
 		{DDD1EB04-AB0A-44F4-B5F1-EC4A9F66D5FB}.Release|Win32.ActiveCfg = Release|Win32
 		{DDD1EB04-AB0A-44F4-B5F1-EC4A9F66D5FB}.Release|Win32.Build.0 = Release|Win32
 		{DDD1EB04-AB0A-44F4-B5F1-EC4A9F66D5FB}.Release|x64.ActiveCfg = Release|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Debug|Win32.Build.0 = Debug|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Debug|x64.ActiveCfg = Debug|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Release|Win32.ActiveCfg = Release|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Release|Win32.Build.0 = Release|Win32
+		{AAE29702-3FFD-4C59-9093-EF34B2D63FD7}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
