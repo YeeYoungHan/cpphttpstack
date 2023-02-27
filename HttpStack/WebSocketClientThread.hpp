@@ -73,6 +73,7 @@ THREAD_API WebSocketClientThread( LPVOID lpParameter )
 			else if( clsHeader.m_iOpCode == 8 )
 			{
 				CLog::Print( LOG_DEBUG, "%s recv Close", __FUNCTION__ );
+				pclsClient->m_bStop = true;
 				break;
 			}
 			else if( clsHeader.m_iOpCode == 9 )

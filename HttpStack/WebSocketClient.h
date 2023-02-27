@@ -43,6 +43,7 @@ public:
 enum EWebSocketType
 {
 	E_WST_TEXT = 0,
+	E_WST_BINARY,
 	E_WST_PING,
 	E_WST_PONG
 };

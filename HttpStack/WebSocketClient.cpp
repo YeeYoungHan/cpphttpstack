@@ -294,6 +294,9 @@ bool CWebSocketClient::Send( EWebSocketType eType, const char * pszData, int iDa
 	case E_WST_TEXT:
 		pszPacket[0] = (uint8_t)0x81;
 		break;
+	case E_WST_BINARY:
+		pszPacket[0] = (uint8_t)0x82;
+		break;
 	case E_WST_PING:
 		pszPacket[0] = (uint8_t)0x89;
 		break;
