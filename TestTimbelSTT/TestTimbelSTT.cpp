@@ -45,16 +45,10 @@ public:
 	bool m_bRecv;
 };
 
-int main( int argc, char * argv[] )
+void TestPcmStt()
 {
 	CWebSocketClient clsClient;
 	CCallBack clsCallBack;
-
-#ifdef WIN32
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
-#endif
-
-	//CLog::SetLevel( LOG_NETWORK | LOG_INFO | LOG_DEBUG );
 
 	if( clsClient.Connect( "ws://ailab.sorizava.co.kr:40000/client/ws/speech?single=false&model=KOREAN_ONLINE_16K&verbosity=final&content-type=audio%2Fx-raw%2C+layout%3D%28string%29interleaved%2C+rate%3D%28int%298000%2C+format%3D%28string%29S16LE%2C+channels%3D%28int%291", &clsCallBack ) )
 	{
@@ -86,6 +80,30 @@ int main( int argc, char * argv[] )
 	}
 
 	clsClient.Close();
+}
+
+void TestMultiStt()
+{
+	CWebSocketClient clsClient[100];
+	CCallBack clsCallBack;
+
+	CLog::SetLevel( LOG_NETWORK | LOG_INFO | LOG_DEBUG );
+
+	// 20번째 websocket 연결에서 503 응답을 수신함
+	for( int i = 0; i < 100; ++i )
+	{
+		printf( "#%d\n", i + 1 );
+
+		if( clsClient[i].Connect( "ws://ailab.sorizava.co.kr:40000/client/ws/speech?single=false&model=KOREAN_ONLINE_16K&verbosity=final&content-type=audio%2Fx-raw%2C+layout%3D%28string%29interleaved%2C+rate%3D%28int%298000%2C+format%3D%28string%29S16LE%2C+channels%3D%28int%291", &clsCallBack ) == false )
+		{
+			break;
+		}
+	}
+}
+
+int main( int argc, char * argv[] )
+{
+	TestMultiStt();
 
 	SSLClientStop();
 	SSLFinal();
