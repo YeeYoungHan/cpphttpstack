@@ -108,7 +108,7 @@ bool CJsonNumber::IsDouble( )
 
 	for( int i = 0; i < iLen; ++i )
 	{
-		if( pszValue[i] == 'e' ) return true;
+		if( pszValue[i] == 'e' || pszValue[i] == '.' ) return true;
 	}
 
 	return false;
