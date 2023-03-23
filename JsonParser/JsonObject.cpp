@@ -331,7 +331,7 @@ bool CJsonObject::SelectData( const char * pszName, std::string & strValue )
 	if( SelectData( pszName, &pclsType ) == false ) return false;
 	if( pclsType->m_cType != JSON_TYPE_STRING )
 	{
-		if( pclsType->m_cType != JSON_TYPE_NULL )
+		if( pclsType->m_cType != JSON_TYPE_NULL && pclsType->m_cType != JSON_TYPE_NUMBER )
 		{
 			CLog::Print( LOG_ERROR, "%s name(%s)'s type is not string (%s)", __FUNCTION__, pszName, pclsType->GetTypeString() );
 		}
