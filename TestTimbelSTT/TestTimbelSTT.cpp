@@ -82,6 +82,43 @@ void TestPcmStt()
 	clsClient.Close();
 }
 
+void TestPcmSttPcmu()
+{
+	CWebSocketClient clsClient;
+	CCallBack clsCallBack;
+
+	if( clsClient.Connect( "ws://ailab.sorizava.co.kr:40000/client/ws/speech?single=false&model=KOREAN_ONLINE_8K&verbosity=final&content-type=audio%2Fx-muraw%2C+layout%3D%28string%29interleaved%2C+rate%3D%28int%298000%2C+format%3D%28string%29S8LE%2C+channels%3D%28int%291", &clsCallBack ) )
+	{
+		// Send 8k 8bit pcmu file
+		FILE * fd = fopen( "c:\\temp\\out.pcmu", "rb" );
+		if( fd == NULL )
+		{
+			printf( "file open error\n" );
+		}
+		else
+		{
+			char szBuf[4000];
+
+			while( 1 )
+			{
+				int n = fread( szBuf, 1, 4000, fd );
+				if( n <= 0 ) break;
+
+				clsClient.Send( E_WST_BINARY, szBuf, n );
+			}
+
+			clsClient.Send( E_WST_TEXT, "EOS", 3 );
+
+			while( clsClient.IsClosed() == false )
+			{
+				MiliSleep(20);
+			}
+		}
+	}
+
+	clsClient.Close();
+}
+
 void TestMultiStt()
 {
 	CWebSocketClient clsClient[100];
@@ -103,7 +140,8 @@ void TestMultiStt()
 
 int main( int argc, char * argv[] )
 {
-	TestMultiStt();
+	TestPcmSttPcmu();
+	//TestMultiStt();
 
 	SSLClientStop();
 	SSLFinal();
