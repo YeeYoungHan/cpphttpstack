@@ -87,7 +87,7 @@ void TestPcmSttPcmu()
 	CWebSocketClient clsClient;
 	CCallBack clsCallBack;
 
-	if( clsClient.Connect( "ws://ailab.sorizava.co.kr:40000/client/ws/speech?single=false&model=KOREAN_ONLINE_8K&verbosity=final&content-type=audio%2Fx-muraw%2C+layout%3D%28string%29interleaved%2C+rate%3D%28int%298000%2C+format%3D%28string%29S8LE%2C+channels%3D%28int%291", &clsCallBack ) )
+	if( clsClient.Connect( "ws://ailab.sorizava.co.kr:40000/client/ws/speech?single=false&model=KOREAN_ONLINE_8K&verbosity=final&content-type=audio%2Fx-mulaw%2C+layout%3D%28string%29interleaved%2C+rate%3D%28int%298000%2C+format%3D%28string%29S8LE%2C+channels%3D%28int%291", &clsCallBack ) )
 	{
 		// Send 8k 8bit pcmu file
 		FILE * fd = fopen( "c:\\temp\\out.pcmu", "rb" );
