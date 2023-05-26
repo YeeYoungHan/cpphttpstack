@@ -20,17 +20,16 @@
 #define _SIMPLE_HTTP_SERVER_H_
 
 #include "HttpStack.h"
-#include "StringUtility.h"
 
 /**
- * @ingroup TestWebRtc
- * @brief HTTP 요청 및 WebSocket callback 클래스
+ * @ingroup TestHttpStack
+ * @brief HTTP 요청 callback 클래스
  */
-class CWebRtcServer : public IHttpStackCallBack
+class CWhisperHttpServer : public IHttpStackCallBack
 {
 public:
-	CWebRtcServer();
-	virtual ~CWebRtcServer();
+	CWhisperHttpServer();
+	virtual ~CWhisperHttpServer();
 
 	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
 
@@ -40,10 +39,6 @@ public:
 
 	std::string m_strDocumentRoot;
 	bool m_bStop;
-
-private:
-	bool Send( const char * pszClientIp, int iClientPort, const char * fmt, ... );
-	bool SendCall( const char * pszClientIp, int iClientPort, std::string & strData, std::string & strUserId );
 };
 
 #endif

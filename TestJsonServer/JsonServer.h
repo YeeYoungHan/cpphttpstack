@@ -33,7 +33,7 @@ public:
 
 	virtual bool RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse );
 
-	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort );
+	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest );
 	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort );
 	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData );
 

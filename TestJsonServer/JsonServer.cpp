@@ -78,8 +78,9 @@ bool CJsonServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pc
  * @brief WebSocket 클라이언트 TCP 연결 시작 이벤트 callback
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호
+ * @param pclsRequest	HTTP 요청 메시지
  */
-void CJsonServer::WebSocketConnected( const char * pszClientIp, int iClientPort )
+void CJsonServer::WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest )
 {
 }
 

@@ -144,8 +144,9 @@ bool CWebRtcServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * 
  * @brief WebSocket 클라이언트 TCP 연결 시작 이벤트 callback
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호
+ * @param pclsRequest	HTTP 요청 메시지
  */
-void CWebRtcServer::WebSocketConnected( const char * pszClientIp, int iClientPort )
+void CWebRtcServer::WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest )
 {
 	printf( "WebSocket[%s:%d] connected\n", pszClientIp, iClientPort );
 }

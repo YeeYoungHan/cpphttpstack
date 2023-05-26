@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include "SimpleHttpServer.h"
+#include "WhisperHttpServer.h"
 #include "HttpStatusCode.h"
 #include "HttpParameterList.h"
 #include "HttpMultipart.h"
@@ -28,11 +28,11 @@
 
 extern CHttpStack gclsStack;
 
-CSimpleHttpServer::CSimpleHttpServer() : m_bStop(false)
+CWhisperHttpServer::CWhisperHttpServer() : m_bStop(false)
 {
 }
 
-CSimpleHttpServer::~CSimpleHttpServer()
+CWhisperHttpServer::~CWhisperHttpServer()
 {
 }
 
@@ -43,7 +43,7 @@ CSimpleHttpServer::~CSimpleHttpServer()
  * @param pclsResponse	HTTP 응답 메시지 - 응용에서 저장한다.
  * @returns 응용에서 HTTP 응답 메시지를 정상적으로 생성하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
+bool CWhisperHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
 	std::string strPath = m_strDocumentRoot;
 	std::string strExt;
@@ -56,16 +56,6 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
 		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
 		return true;
 	}
-
-#ifdef _DEBUG
-	// 메모리 누수 검사를 위해서 exit.html 을 수신하면 프로그램을 종료한다.
-	if( !strcmp( pclsRequest->m_strReqUri.c_str(), "/exit.html" ) )
-	{
-		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
-		m_bStop = true;
-		return true;
-	}
-#endif
 
 	if( !strcmp( pclsRequest->m_strReqUri.c_str(), "/" ) )
 	{
@@ -210,7 +200,7 @@ bool CSimpleHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessag
  * @param iClientPort WebSocket 클라이언트 포트 번호
  * @param pclsRequest	HTTP 요청 메시지
  */
-void CSimpleHttpServer::WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest )
+void CWhisperHttpServer::WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest )
 {
 	printf( "WebSocket[%s:%d] connected\n", pszClientIp, iClientPort );
 }
@@ -221,7 +211,7 @@ void CSimpleHttpServer::WebSocketConnected( const char * pszClientIp, int iClien
  * @param pszClientIp WebSocket 클라이언트 IP 주소
  * @param iClientPort WebSocket 클라이언트 포트 번호
  */
-void CSimpleHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
+void CWhisperHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 {
 	printf( "WebSocket[%s:%d] closed\n", pszClientIp, iClientPort );
 }
@@ -234,7 +224,7 @@ void CSimpleHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPo
  * @param strData			WebSocket 클라이언트가 전송한 데이터
  * @returns WebSocket 클라이언트 연결을 유지하려면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
  */
-bool CSimpleHttpServer::WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData )
+bool CWhisperHttpServer::WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData )
 {
 	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
 

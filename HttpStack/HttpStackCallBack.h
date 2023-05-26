@@ -45,8 +45,9 @@ public:
 	 * @brief WebSocket 클라이언트 TCP 연결 시작 이벤트 callback
 	 * @param pszClientIp WebSocket 클라이언트 IP 주소
 	 * @param iClientPort WebSocket 클라이언트 포트 번호
+	 * @param pclsRequest	HTTP 요청 메시지
 	 */
-	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort ) = 0;
+	virtual void WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest ) = 0;
 
 	/**
 	 * @ingroup HttpStack
