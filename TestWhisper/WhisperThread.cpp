@@ -34,12 +34,18 @@ THREAD_API WhisperThread( LPVOID lpParameter )
 {
 	CWhisperThreadArg * pclsArg = (CWhisperThreadArg *)lpParameter;
 	char szCommand[1024], szBuf[8192];
+	time_t iStartTime, iEndTime;
 
-	snprintf( szCommand, sizeof(szCommand), "time whisper %s --language Korean --model %s --output_dir /tmp --output_format txt", pclsArg->m_strFileName.c_str(), pclsArg->m_strModel.c_str() );
+	time( &iStartTime );
+
+	snprintf( szCommand, sizeof(szCommand), "whisper %s --language Korean --model %s --output_dir /tmp --output_format txt", pclsArg->m_strFileName.c_str(), pclsArg->m_strModel.c_str() );
 
 	FILE * fd = popen( szCommand, "r" );
 	if( fd )
 	{
+		snprintf( szBuf, sizeof(szBuf), "###START###\n" );
+		gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, szBuf, (int)strlen(szBuf) );
+
 		memset( szBuf, 0, sizeof(szBuf) );
 		while( fgets( szBuf, sizeof(szBuf), fd ) )
 		{
@@ -50,6 +56,16 @@ THREAD_API WhisperThread( LPVOID lpParameter )
 
 		pclose( fd );
 	}
+	else
+	{
+		snprintf( szBuf, sizeof(szBuf), "ERROR!!!!\n" );
+		gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, szBuf, (int)strlen(szBuf) );
+	}
+
+	time( &iEndTime );
+
+	snprintf( szBuf, sizeof(szBuf), "time = %d sec\n", (int)(iEndTime - iStartTime) );
+	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, szBuf, (int)strlen(szBuf) );
 
 	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, "###END###", 9 );
 

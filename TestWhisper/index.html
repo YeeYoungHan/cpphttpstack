@@ -32,6 +32,8 @@
 				alert( '선택한 파일은 wav 또는 mp3 파일이 아닙니다. wav 또는 mp3 파일을 선택해 주세요.' );
 				return;
 			}
+			
+			$('#result').html('');
 
 			var clsFileReader = new FileReader();
 			var rawData = new ArrayBuffer();
