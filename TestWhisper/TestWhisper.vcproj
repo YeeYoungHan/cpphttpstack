@@ -179,11 +179,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestWhisper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\WhisperHttpServer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\WhisperHttpServer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WhisperThread.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="자료구조"
+			>
+			<File
+				RelativePath=".\WhisperMap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WhisperMap.h"
 				>
 			</File>
 		</Filter>

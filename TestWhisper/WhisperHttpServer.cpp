@@ -24,6 +24,7 @@
 #include "FileUtility.h"
 #include "Directory.h"
 #include "Log.h"
+#include "WhisperMap.h"
 #include "MemoryDebug.h"
 
 extern CHttpStack gclsStack;
@@ -45,37 +46,7 @@ CWhisperHttpServer::~CWhisperHttpServer()
  */
 bool CWhisperHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
-	std::string strPath = m_strDocumentRoot;
-	std::string strExt;
-
-	//CLog::Print( LOG_DEBUG, "req uri[%s]", pclsRequest->m_strReqUri.c_str() );
-
-	// 보안상 .. 을 포함한 URL 을 무시한다.
-	if( strstr( pclsRequest->m_strReqUri.c_str(), ".." ) )
-	{
-		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
-		return true;
-	}
-
-	if( !strcmp( pclsRequest->m_strReqUri.c_str(), "/" ) )
-	{
-		CDirectory::AppendName( strPath, "index.html" );
-	}
-	else
-	{
-#ifdef WIN32
-		ReplaceString( pclsRequest->m_strReqUri, "/", "\\" );
-#endif
-
-		strPath.append( pclsRequest->m_strReqUri );
-	}
-
-	// 파일 경로에서 GET parameter 를 제거한다.
-	size_t iPos = strPath.find( "?" );
-	if( iPos < std::string::npos )
-	{
-		strPath.erase( iPos );
-	}
+	std::string strPath = "index.html";
 
 	if( IsExistFile( strPath.c_str() ) == false )
 	{
@@ -83,92 +54,7 @@ bool CWhisperHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessa
 		return true;
 	}
 
-	// 파일별 Content-Type 을 설정한다.
-	GetFileExt( strPath.c_str(), strExt );
-	const char * pszExt = strExt.c_str();
-	
-	if( !strcmp( pszExt, "html" ) || !strcmp( pszExt, "htm" ) )
-	{
-		pclsResponse->m_strContentType = "text/html";
-
-		// GET Query parameter list 가져오기
-		CHttpParameterList clsParamList;
-		HTTP_PARAMETER_LIST::iterator itPL;
-
-		if( clsParamList.ParseUrl( pclsRequest->m_strReqUri ) != -1 )
-		{
-			for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
-			{
-				printf( "GET name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
-			}
-		}
-
-		if( !strcmp( pclsRequest->m_strHttpMethod.c_str(), "POST" ) )
-		{
-			if( strstr( pclsRequest->m_strContentType.c_str(), "multipart" ) )
-			{
-				CHttpMultipart clsMultipart;
-
-				clsMultipart.SetContentType( pclsRequest->m_strContentType.c_str() );
-				if( clsMultipart.Parse( pclsRequest->m_strBody ) != -1 )
-				{
-					HTTP_MULTIPART_DATA_MAP::iterator itMD;
-
-					for( itMD = clsMultipart.m_clsMap.begin(); itMD != clsMultipart.m_clsMap.end(); ++itMD )
-					{
-						if( itMD->second->m_strFileName.empty() )
-						{
-							printf( "POST name[%s] = value[%s]\n", itMD->first.c_str(), itMD->second->m_strValue.c_str() );
-						}
-						else
-						{
-							// 업로드한 파일을 저장할 파일 이름을 적절히 설정해야 한다.
-							std::string strFileName = "c:\\temp\\upload.txt";
-
-							FILE * fd = fopen( strFileName.c_str(), "wb" );
-							if( fd )
-							{
-								fwrite( itMD->second->m_strValue.c_str(), 1, itMD->second->m_strValue.length(), fd );
-								fclose( fd );
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				if( clsParamList.Parse( pclsRequest->m_strBody ) != -1 )
-				{
-					for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
-					{
-						printf( "POST name[%s] = value[%s]\n", itPL->m_strName.c_str(), itPL->m_strValue.c_str() );
-					}
-				}
-			}
-		}
-	}
-	else if( !strcmp( pszExt, "css" ) )
-	{
-		pclsResponse->m_strContentType = "text/css";
-	}
-	else if( !strcmp( pszExt, "js" ) )
-	{
-		pclsResponse->m_strContentType = "text/javascript";
-	}
-	else if( !strcmp( pszExt, "png" ) || !strcmp( pszExt, "gif" ) )
-	{
-		pclsResponse->m_strContentType = "image/";
-		pclsResponse->m_strContentType.append( pszExt );
-	}
-	else if( !strcmp( pszExt, "jpg" ) || !strcmp( pszExt, "jpeg" ) )
-	{
-		pclsResponse->m_strContentType = "image/jpeg";
-	}
-	else
-	{
-		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
-		return true;
-	}
+	pclsResponse->m_strContentType = "text/html";
 
 	// 파일을 읽어서 HTTP body 에 저장한다.
 	FILE * fd = fopen( strPath.c_str(), "rb" );
@@ -203,6 +89,38 @@ bool CWhisperHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessa
 void CWhisperHttpServer::WebSocketConnected( const char * pszClientIp, int iClientPort, CHttpMessage * pclsRequest )
 {
 	printf( "WebSocket[%s:%d] connected\n", pszClientIp, iClientPort );
+
+	// GET Query parameter list 가져오기
+	CHttpParameterList clsParamList;
+	HTTP_PARAMETER_LIST::iterator itPL;
+	std::string strModel, strExt;
+	int iFileSize;
+
+	if( clsParamList.ParseUrl( pclsRequest->m_strReqUri ) != -1 )
+	{
+		for( itPL = clsParamList.m_clsParamList.begin(); itPL != clsParamList.m_clsParamList.end(); ++itPL )
+		{
+			const char * pszName = itPL->m_strName.c_str();
+			const char * pszValue = itPL->m_strValue.c_str();
+
+			printf( "GET name[%s] = value[%s]\n", pszName, pszValue );
+
+			if( !strcmp( pszName, "model" ) )
+			{
+				strModel = pszValue;
+			}
+			else if( !strcmp( pszName, "ext" ) )
+			{
+				strExt = pszValue;
+			}
+			else if( !strcmp( pszName, "size" ) )
+			{
+				iFileSize = atoi( pszValue );
+			}
+		}
+	}
+
+	gclsWhisperMap.Insert( pszClientIp, iClientPort, strModel.c_str(), strExt.c_str(), iFileSize );
 }
 
 /**
@@ -214,6 +132,8 @@ void CWhisperHttpServer::WebSocketConnected( const char * pszClientIp, int iClie
 void CWhisperHttpServer::WebSocketClosed( const char * pszClientIp, int iClientPort )
 {
 	printf( "WebSocket[%s:%d] closed\n", pszClientIp, iClientPort );
+
+	gclsWhisperMap.Delete( pszClientIp, iClientPort );
 }
 
 /**
@@ -226,9 +146,9 @@ void CWhisperHttpServer::WebSocketClosed( const char * pszClientIp, int iClientP
  */
 bool CWhisperHttpServer::WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData )
 {
-	printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
+	//printf( "WebSocket[%s:%d] recv[%s]\n", pszClientIp, iClientPort, strData.c_str() );
 
-	gclsStack.SendWebSocketPacket( pszClientIp, iClientPort, strData.c_str(), (int)strData.length() );
+	gclsWhisperMap.SaveFile( pszClientIp, iClientPort, strData );
 
 	return true;
 }

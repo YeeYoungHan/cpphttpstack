@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Whisper</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript">
+
+		var ws = null;
+
+		function SendFile()
+		{
+			if( ws != null )
+			{
+				alert( 'STT 변환 중입니다. STT 변환 완료후, 다시 시도해 주세요.' );
+				return;
+			}
+		
+			var clsFile = document.getElementById('file').files[0];
+			if( clsFile == undefined )
+			{
+				alert( 'wav 또는 mp3 파일을 선택해 주세요.' );
+				return;
+			}
+			
+			var strFileName = clsFile.name;
+			var strExt = strFileName.split('.').pop();
+			
+			if( strExt != 'wav' && strExt != 'mp3' )
+			{
+				alert( '선택한 파일은 wav 또는 mp3 파일이 아닙니다. wav 또는 mp3 파일을 선택해 주세요.' );
+				return;
+			}
+
+			var clsFileReader = new FileReader();
+			var rawData = new ArrayBuffer();
+
+			clsFileReader.onload = function(e) {
+				rawData = e.target.result;
+
+				var url = "ws://localhost:8080/whisper?model=small&ext=" + strExt + "&size=" + rawData.byteLength;
+				ws = new WebSocket(url);
+			
+				ws.binaryType="arraybuffer";
+				ws.onopen = function(){
+					ws.send(rawData);
+				};
+				
+				ws.onmessage = function(e){
+					var strText = e.data;
+					var strHtml = $('result').html();
+					$('result').html( strHtml + strText );
+					
+					if( strText.indexOf( '###END###' ) != -1 )
+					{
+						ws.close();
+						ws = null;
+					}
+				};
+				
+				ws.onclose = function() {
+					ws = null;
+				};
+				
+				ws.onerror = function(e) {
+					ws = null;
+				}
+			}
+
+			clsFileReader.readAsArrayBuffer( clsFile );
+		}
+	</script>
+</head>
+<body>
+
+	음원 파일 : <input id="file" type="file" accept=".wav, .mp3"><br>
+	<input id="send" type="button" value="STT 변환" onclick="SendFile()"><br>
+
+	<pre id="result">
+	</pre>
+
+</body>
+</html>

@@ -37,7 +37,6 @@ public:
 	virtual void WebSocketClosed( const char * pszClientIp, int iClientPort );
 	virtual bool WebSocketData( const char * pszClientIp, int iClientPort, std::string & strData );
 
-	std::string m_strDocumentRoot;
 	bool m_bStop;
 };
 
