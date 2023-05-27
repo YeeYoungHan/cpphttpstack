@@ -106,7 +106,13 @@ bool CHttpStack::RecvPacketWebSocket( char * pszPacket, int iPacketLen, CTcpSess
 		}
 		else if( clsHeader.m_iOpCode == 8 )
 		{
-			if( pclsSessionInfo->Send( pszPacket, iPacketLen ) == false )
+			char szPacket[255];
+
+			memset( szPacket, 0, sizeof(szPacket) );
+			szPacket[0] = (uint8_t)0x88;
+			iPacketLen = 2;
+
+			if( pclsSessionInfo->Send( szPacket, iPacketLen ) == false )
 			{
 				CLog::Print( LOG_ERROR, "%s Send error", __FUNCTION__ );
 				return false;
