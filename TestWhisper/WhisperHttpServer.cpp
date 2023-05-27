@@ -46,6 +46,13 @@ CWhisperHttpServer::~CWhisperHttpServer()
  */
 bool CWhisperHttpServer::RecvHttpRequest( CHttpMessage * pclsRequest, CHttpMessage * pclsResponse )
 {
+	const char * pszUri = pclsRequest->m_strReqUri.c_str();
+	if( strcmp( pszUri, "/" ) && strcmp( pszUri, "/index.html" ) )
+	{
+		pclsResponse->m_iStatusCode = HTTP_NOT_FOUND;
+		return true;
+	}
+
 	std::string strPath = "index.html";
 
 	if( IsExistFile( strPath.c_str() ) == false )
@@ -94,7 +101,7 @@ void CWhisperHttpServer::WebSocketConnected( const char * pszClientIp, int iClie
 	CHttpParameterList clsParamList;
 	HTTP_PARAMETER_LIST::iterator itPL;
 	std::string strModel, strExt;
-	int iFileSize;
+	int iFileSize = 0;
 
 	if( clsParamList.ParseUrl( pclsRequest->m_strReqUri ) != -1 )
 	{
