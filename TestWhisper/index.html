@@ -39,7 +39,7 @@
 			clsFileReader.onload = function(e) {
 				rawData = e.target.result;
 
-				var url = "ws://" + window.location.host + ":8080/whisper?model=small&ext=" + strExt + "&size=" + rawData.byteLength;
+				var url = "ws://" + window.location.host + "/whisper?model=small&ext=" + strExt + "&size=" + rawData.byteLength;
 				ws = new WebSocket(url);
 			
 				ws.binaryType="arraybuffer";
