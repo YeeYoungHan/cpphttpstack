@@ -39,7 +39,9 @@
 			clsFileReader.onload = function(e) {
 				rawData = e.target.result;
 
-				var url = "ws://" + window.location.host + "/whisper?model=small&ext=" + strExt + "&size=" + rawData.byteLength;
+				var strModel = $('#model').val();
+
+				var url = "ws://" + window.location.host + "/whisper?model=" + strModel + "&ext=" + strExt + "&size=" + rawData.byteLength;
 				ws = new WebSocket(url);
 			
 				ws.binaryType="arraybuffer";
@@ -75,6 +77,13 @@
 <body>
 
 	음원 파일 : <input id="file" type="file" accept=".wav, .mp3"><br>
+	<select id="model">
+		<option>tiny</option>
+		<option>base</option>
+		<option selected>small</option>
+		<option>medium</option>
+		<option>large</option>
+	</select><br>
 	<input id="send" type="button" value="STT 변환" onclick="SendFile()"><br>
 
 	<pre id="result">

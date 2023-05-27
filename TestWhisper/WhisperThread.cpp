@@ -33,13 +33,9 @@ public:
 THREAD_API WhisperThread( LPVOID lpParameter )
 {
 	CWhisperThreadArg * pclsArg = (CWhisperThreadArg *)lpParameter;
-
-#ifdef _DEBUG
-	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, "1234", 4 );
-#else
 	char szCommand[1024], szBuf[8192];
 
-	snprintf( szCommand, sizeof(szCommand), "whisper %s --language Korean --model %s --output_dir /tmp --output_format txt", pclsArg->m_strFileName.c_str(), pclsArg->m_strModel.c_str() );
+	snprintf( szCommand, sizeof(szCommand), "time whisper %s --language Korean --model %s --output_dir /tmp --output_format txt", pclsArg->m_strFileName.c_str(), pclsArg->m_strModel.c_str() );
 
 	FILE * fd = popen( szCommand, "r" );
 	if( fd )
@@ -54,7 +50,6 @@ THREAD_API WhisperThread( LPVOID lpParameter )
 
 		pclose( fd );
 	}
-#endif
 
 	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, "###END###", 9 );
 
