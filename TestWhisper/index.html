@@ -49,8 +49,8 @@
 				
 				ws.onmessage = function(e){
 					var strText = e.data;
-					var strHtml = $('result').html();
-					$('result').html( strHtml + strText );
+					var strHtml = $('#result').html();
+					$('#result').html( strHtml + strText );
 					
 					if( strText.indexOf( '###END###' ) != -1 )
 					{
