@@ -18,6 +18,7 @@
 
 #include "SipPlatformDefine.h"
 #include "ServerUtility.h"
+#include "FileUtility.h"
 #include "TestWhisper.h"
 #include "MemoryDebug.h"
 
@@ -68,6 +69,7 @@ THREAD_API WhisperThread( LPVOID lpParameter )
 	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, szBuf, (int)strlen(szBuf) );
 
 	gclsStack.SendWebSocketPacket( pclsArg->m_strClientIp.c_str(), pclsArg->m_iClientPort, "###END###", 9 );
+	DelFile( pclsArg->m_strFileName.c_str() );
 
 	delete pclsArg;
 
