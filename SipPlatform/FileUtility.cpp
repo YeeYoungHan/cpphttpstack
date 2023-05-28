@@ -166,3 +166,17 @@ bool GetFileNameOfFilePath( const char * pszFilePath, std::string & strFileName 
 
 	return false;
 }
+
+/**
+ * @ingroup SipPlatform
+ * @brief 파일을 삭제한다.
+ * @param pszFileName 파일 이름
+ */
+void DelFile( const char * pszFileName )
+{
+#ifdef WIN32
+	DeleteFile( pszFileName );
+#else
+	unlink( pszFileName );
+#endif
+}
