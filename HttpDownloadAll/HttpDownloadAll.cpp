@@ -101,9 +101,9 @@ int main( int argc, char * argv[] )
 		{
 			if( !strncmp( strFileName.c_str(), "..", 2 ) ) continue;
 			if( strstr( strFileName.c_str(), "/" ) ) continue;
+			if( IsExistFile( strFileName.c_str() ) ) continue;
 
 			printf( "[%s]\n", strFileName.c_str() );
-
 			DownloadFile( pszUrl, strFileName.c_str() );
 		}
 	}

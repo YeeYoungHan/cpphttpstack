@@ -21,5 +21,6 @@
 
 #include "HttpClient.h"
 #include "HtmlElement.h"
+#include "FileUtility.h"
 
 #endif
