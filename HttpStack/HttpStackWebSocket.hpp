@@ -128,7 +128,7 @@ bool CHttpStack::RecvPacketWebSocket( char * pszPacket, int iPacketLen, CTcpSess
 			
 			if( strData.empty() == false && strData.length() < 125 )
 			{
-				szPacket[1] = strData.length();
+				szPacket[1] = (uint8_t)strData.length();
 				memcpy( szPacket + 2, strData.c_str(), strData.length() );
 				iPacketLen += strData.length();
 			}
