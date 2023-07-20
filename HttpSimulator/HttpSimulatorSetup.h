@@ -31,6 +31,7 @@ class CHttpSimulatorCommand
 public:
 	std::string m_strMethod;				// GET or POST
 	std::string m_strUrl;						// URL
+	std::string m_strContentType;		// POST content-type
 	std::string m_strBody;					// POST body
 	std::string m_strRecvFileName;	// 수신한 HTTP body 를 저장할 파일 full path
 	std::string m_strBodyExecute;		// POST body 에 저장할 문자열을 출력하는 프로그램 full path

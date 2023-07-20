@@ -207,7 +207,14 @@ bool Execute( CHttpClient2 & clsClient, HTTP_SIMULATOR_COMMAND_LIST & clsCommand
 				if( GetPostBody( itCL->m_strBodyExecute, itCL->m_strBody ) == false ) break;
 			}
 
-			bRes = clsClient.DoPost( itCL->m_strUrl.c_str(), "application/x-www-form-urlencoded", itCL->m_strBody.c_str(), itCL->m_strBody.length(), strOutputContentType, strOutputBody );
+			std::string strContentType = itCL->m_strContentType;
+
+			if( strContentType.empty() )
+			{
+				strContentType = "application/x-www-form-urlencoded";
+			}
+
+			bRes = clsClient.DoPost( itCL->m_strUrl.c_str(), strContentType.c_str(), itCL->m_strBody.c_str(), itCL->m_strBody.length(), strOutputContentType, strOutputBody );
 		}
 		else
 		{
