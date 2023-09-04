@@ -169,7 +169,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 
 					for( int i = 0; i < iDataLen; ++i )
 					{
-						if( isspace( pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
+						if( isspace( (uint8_t)pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
 
 						bFound = true;
 						break;
