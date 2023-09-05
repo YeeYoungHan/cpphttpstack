@@ -49,7 +49,7 @@ CHtmlElement::~CHtmlElement()
  */
 int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 {
-	int		iPos, iStartPos = -1, iLen;
+	int		iPos, iStartPos = -1, iDataStartPos = 0, iLen;
 	char	cType = HTML_ELEMENT_NULL, cTypeOld = HTML_ELEMENT_NULL, cAttrSep = -1;
 	std::string	strName, strValue;
 
@@ -156,11 +156,14 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 			}
 			else if( m_eType != E_HET_SCRIPT )
 			{
-				if( cType == HTML_ELEMENT_DATA )
+				if( cType == HTML_ELEMENT_DATA || cType == HTML_ELEMENT_DATA_PARSE )
 				{
 					std::string strData;
+					int iTextStartPos = iStartPos;
 
-					strData.append( pszText + iStartPos, iPos - iStartPos );
+					if( cType == HTML_ELEMENT_DATA_PARSE ) iTextStartPos = iDataStartPos;
+
+					strData.append( pszText + iTextStartPos, iPos - iTextStartPos );
 					TrimString( strData );
 
 					const char * pszData = strData.c_str();
@@ -199,6 +202,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 				else
 				{
 					cType = HTML_ELEMENT_DATA_PARSE;
+					iDataStartPos = iPos + 1;
 				}
 			}
 		}

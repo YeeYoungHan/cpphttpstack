@@ -16,13 +16,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TEST_NAVER_CAFE_SEARCH_H_
-#define _TEST_NAVER_CAFE_SEARCH_H_
+#ifndef _HTML_SEARCH_H_
+#define _HTML_SEARCH_H_
 
-#include "HttpClient.h"
-#include "HtmlSearch.h"
-#include "StringUtility.h"
-#include "Log.h"
-#include "MemoryDebug.h"
+#include "HtmlElement.h"
+
+class CHtmlSearch : public CHtmlElement
+{
+public:
+	CHtmlSearch();
+	~CHtmlSearch();
+
+	bool SelectClassElementList( const char * pszClassName, HTML_ELEMENT_LIST & clsList );
+
+private:
+	void SelectClassElementList( CHtmlElement & clsHtml, const char * pszClassName, HTML_ELEMENT_LIST & clsList );
+};
 
 #endif

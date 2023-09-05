@@ -162,6 +162,10 @@
 				RelativePath=".\HtmlElementUrl.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\HtmlSearch.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -178,6 +182,10 @@
 			</File>
 			<File
 				RelativePath=".\HtmlElementUrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HtmlSearch.h"
 				>
 			</File>
 		</Filter>

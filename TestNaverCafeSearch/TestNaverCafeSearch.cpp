@@ -18,29 +18,37 @@
 
 #include "TestNaverCafeSearch.h"
 
-// https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&tqi=inTAHwp0JXVssQmO%2FywssssssPV-505980&nso=so%3Ar%2Cp%3A1w&stnm=rel&query=NT930XED-KU71S
+// https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&tqi=inTAHwp0JXVssQmO%2FywssssssPV-505980&nso=so%3Ar%2Cp%3A1w&stnm=rel&query=NT930XED-KC51S
 
-bool ParseHtml( std::string & strBodyType, std::string & strBody )
+bool ParseHtml( std::string & strHtml )
 {
-	CHtmlElement clsHtml;
+	CHtmlSearch clsHtml;
+	HTML_ELEMENT_LIST clsTAList;
+	HTML_ELEMENT_LIST::iterator itTA;
 
-	if( clsHtml.Parse( strBody.c_str(), (int)strBody.length() ) == -1 )
+	if( clsHtml.Parse( strHtml.c_str(), (int)strHtml.length() ) == -1 )
 	{
 		printf( "html parse error\n" );
 		return false;
 	}
 
-	CHtmlElement * pclsBody = clsHtml.SelectElement( "body" );
-	if( pclsBody == NULL )
+	clsHtml.SelectClassElementList( "total_area", clsTAList );
+
+	for( itTA = clsTAList.begin(); itTA != clsTAList.end(); ++itTA )
 	{
-		printf( "body is not found\n" );
-		return false;
+		CHtmlElement * pclsA = itTA->SelectElement( 1 );
+		if( pclsA == NULL ) continue;
+
+		if( !strcasecmp( pclsA->GetName(), "a" ) )
+		{
+			printf( "%s\n", pclsA->GetData() );
+		}
 	}
 
 	return true;
 }
 
-bool DoGet( const char * pszQuery )
+bool GetHtml( const char * pszQuery, std::string & strHtml )
 {
 	CHttpClient clsClient;
 	std::string strBodyType, strBody;
@@ -50,7 +58,9 @@ bool DoGet( const char * pszQuery )
 
 	if( clsClient.DoGet( strUrl.c_str(), strBodyType, strBody ) )
 	{
-		return ParseHtml( strBodyType, strBody );
+		strHtml = strBody;
+
+		return true;
 	}
 
 	return false;
@@ -58,7 +68,16 @@ bool DoGet( const char * pszQuery )
 
 int main( int argc, char * argv[] )
 {
-	DoGet( "NT930XED-KC51S" );
+	std::string strHtml;
+
+	if( GetHtml( "NT930XED-KC51S", strHtml ) )
+	{
+#ifdef WIN32
+		Utf8ToAnsi( strHtml.c_str(), strHtml );
+#endif
+
+		ParseHtml( strHtml );
+	}
 
 	return 0;
 }

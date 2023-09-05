@@ -16,13 +16,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef _TEST_NAVER_CAFE_SEARCH_H_
-#define _TEST_NAVER_CAFE_SEARCH_H_
-
-#include "HttpClient.h"
 #include "HtmlSearch.h"
-#include "StringUtility.h"
-#include "Log.h"
-#include "MemoryDebug.h"
 
-#endif
+CHtmlSearch::CHtmlSearch()
+{
+}
+
+CHtmlSearch::~CHtmlSearch()
+{
+}
+
+bool CHtmlSearch::SelectClassElementList( const char * pszClassName, HTML_ELEMENT_LIST & clsList )
+{
+	clsList.clear();
+
+	SelectClassElementList( *this, pszClassName, clsList );
+
+	if( clsList.empty() == false ) return true;
+
+	return false;
+}
+
+void CHtmlSearch::SelectClassElementList( CHtmlElement & clsHtml, const char * pszClassName, HTML_ELEMENT_LIST & clsList )
+{
+	HTML_ELEMENT_LIST::iterator	itEL;
+	HTML_ELEMENT_LIST * pclsElementList = clsHtml.GetElementList();
+
+	for( itEL = pclsElementList->begin(); itEL != pclsElementList->end(); ++itEL )
+	{
+		if( itEL->IsClass( pszClassName ) )
+		{
+			clsList.push_back( *itEL );
+		}
+
+		SelectClassElementList( *itEL, pszClassName, clsList );
+	}
+}
