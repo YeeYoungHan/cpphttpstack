@@ -18,13 +18,13 @@
 
 #include "TestNaverCafeSearch.h"
 
-// https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&tqi=inTAHwp0JXVssQmO%2FywssssssPV-505980&nso=so%3Ar%2Cp%3A1w&stnm=rel&query=NT930XED-KC51S
+// https://search.naver.com/search.naver?nso_open=1&prdtype=4&sm=mtb_opt&st=rel&stnm=rel&where=articlec&opt_tab=0&nso=so%3Ar%2Cp%3A1w&query=NT930XED-KC51S
 
 bool ParseHtml( std::string & strHtml )
 {
 	CHtmlSearch clsHtml;
 	HTML_ELEMENT_LIST clsTAList;
-	HTML_ELEMENT_LIST::iterator itTA;
+	HTML_ELEMENT_LIST::iterator itTA, itDL;
 
 	if( clsHtml.Parse( strHtml.c_str(), (int)strHtml.length() ) == -1 )
 	{
@@ -41,7 +41,15 @@ bool ParseHtml( std::string & strHtml )
 
 		if( !strcasecmp( pclsA->GetName(), "a" ) )
 		{
-			printf( "%s\n", pclsA->GetData() );
+			HTML_ELEMENT_LIST * pclsDL = pclsA->GetElementList();
+
+			for( itDL = pclsDL->begin(); itDL != pclsDL->end(); ++itDL )
+			{
+				if( !strcmp( itDL->GetName(), "" ) )
+				{
+					printf( "%s\n", itDL->GetData() );
+				}
+			}
 		}
 	}
 
@@ -52,7 +60,7 @@ bool GetHtml( const char * pszQuery, std::string & strHtml )
 {
 	CHttpClient clsClient;
 	std::string strBodyType, strBody;
-	std::string strUrl = "https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&tqi=inTAHwp0JXVssQmO%2FywssssssPV-505980&nso=so%3Ar%2Cp%3A1w&stnm=rel&query=";
+	std::string strUrl = "https://search.naver.com/search.naver?nso_open=1&prdtype=4&sm=mtb_opt&st=rel&stnm=rel&where=articlec&opt_tab=0&nso=so%3Ar%2Cp%3A1w&query=";
 
 	strUrl.append( pszQuery );
 
