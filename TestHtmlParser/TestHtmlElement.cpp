@@ -98,9 +98,13 @@ bool TestHtmlElement( )
 	if( TestHtmlElement( __LINE__, "<html><head><title>TITLE</title></head><body>BODY<hr class='hr1'>BODY2<hr class='hr2'>BODY3<hr class='hr3'></body></html>"
 		, "<html>\n<head>\n<title>TITLE</title>\n</head>\n<body>\nBODY<hr class='hr1'>\nBODY2<hr class='hr2'>\nBODY3<hr class='hr3'>\n</body>\n</html>\n" ) == false ) return false;
 
-	// tag + data + tab ÆÄ½Ì Å×½ºÆ®
+	// tag + data + tag ÆÄ½Ì Å×½ºÆ®
 	if( TestHtmlElement( __LINE__, "<a><i>i-test</i>1234<mark>mark-test</mark></a>"
 		, "<a>\n<i>i-test</i>\n1234<mark>mark-test</mark>\n</a>\n" ) == false ) return false;
+
+	// tag + data ÆÄ½Ì Å×½ºÆ®
+	if( TestHtmlElement( __LINE__, "<a><i>i-test</i>1234</a>"
+		, "<a>\n<i>i-test</i>\n1234</a>\n" ) == false ) return false;
 
 	return true;
 }

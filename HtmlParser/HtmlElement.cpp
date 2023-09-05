@@ -114,6 +114,33 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 				{
 					m_strData.append( pszText + iStartPos, iPos - iStartPos );
 				}
+				else if( cType == HTML_ELEMENT_DATA_PARSE )
+				{
+					std::string strData;
+
+					strData.append( pszText + iDataStartPos, iPos - iDataStartPos );
+					TrimString( strData );
+
+					const char * pszData = strData.c_str();
+					int iDataLen = (int)strData.length();
+					bool bFound = false;
+
+					for( int i = 0; i < iDataLen; ++i )
+					{
+						if( isspace( (uint8_t)pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
+
+						bFound = true;
+						break;
+					}
+
+					if( bFound )
+					{
+						CHtmlElement clsElement;
+
+						clsElement.m_strData = strData;
+						m_clsElementList.push_back( clsElement );
+					}
+				}
 
 				iLen = (int)m_strName.length();
 
