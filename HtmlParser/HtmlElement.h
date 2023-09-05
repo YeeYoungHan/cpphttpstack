@@ -114,6 +114,7 @@ protected:
 	void SetName( const char * pszText, int iNameLen );
 	void AddAttribute( std::string & strName, std::string & strValue, char cSep );
 	void AddClass( const char * pszClass, int iClassLen = -1 );
+	void AddDataElement( std::string & strData );
 
 	std::string	m_strName;
 	std::string m_strData;

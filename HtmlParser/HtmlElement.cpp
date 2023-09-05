@@ -119,27 +119,7 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 					std::string strData;
 
 					strData.append( pszText + iDataStartPos, iPos - iDataStartPos );
-					TrimString( strData );
-
-					const char * pszData = strData.c_str();
-					int iDataLen = (int)strData.length();
-					bool bFound = false;
-
-					for( int i = 0; i < iDataLen; ++i )
-					{
-						if( isspace( (uint8_t)pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
-
-						bFound = true;
-						break;
-					}
-
-					if( bFound )
-					{
-						CHtmlElement clsElement;
-
-						clsElement.m_strData = strData;
-						m_clsElementList.push_back( clsElement );
-					}
+					AddDataElement( strData );
 				}
 
 				iLen = (int)m_strName.length();
@@ -183,35 +163,19 @@ int CHtmlElement::Parse( const char * pszText, int iTextLen, int iOption )
 			}
 			else if( m_eType != E_HET_SCRIPT )
 			{
-				if( cType == HTML_ELEMENT_DATA || cType == HTML_ELEMENT_DATA_PARSE )
+				if( cType == HTML_ELEMENT_DATA )
 				{
 					std::string strData;
-					int iTextStartPos = iStartPos;
 
-					if( cType == HTML_ELEMENT_DATA_PARSE ) iTextStartPos = iDataStartPos;
+					strData.append( pszText + iStartPos, iPos - iStartPos );
+					AddDataElement( strData );
+				}
+				else if( cType == HTML_ELEMENT_DATA_PARSE )
+				{
+					std::string strData;
 
-					strData.append( pszText + iTextStartPos, iPos - iTextStartPos );
-					TrimString( strData );
-
-					const char * pszData = strData.c_str();
-					int iDataLen = (int)strData.length();
-					bool bFound = false;
-
-					for( int i = 0; i < iDataLen; ++i )
-					{
-						if( isspace( (uint8_t)pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
-
-						bFound = true;
-						break;
-					}
-
-					if( bFound )
-					{
-						CHtmlElement clsElement;
-
-						clsElement.m_strData = strData;
-						m_clsElementList.push_back( clsElement );
-					}
+					strData.append( pszText + iDataStartPos, iPos - iDataStartPos );
+					AddDataElement( strData );
 				}
 
 				CHtmlElement clsElement;
@@ -1024,5 +988,30 @@ void CHtmlElement::AddClass( const char * pszClass, int iClassLen )
 	if( itMap == m_clsClassMap.end() )
 	{
 		m_clsClassMap.insert( HTML_CLASS_MAP::value_type( strClass, 'c' ) );
+	}
+}
+
+void CHtmlElement::AddDataElement( std::string & strData )
+{
+	TrimString( strData );
+
+	const char * pszData = strData.c_str();
+	int iDataLen = (int)strData.length();
+	bool bFound = false;
+
+	for( int i = 0; i < iDataLen; ++i )
+	{
+		if( isspace( (uint8_t)pszData[i] ) || pszData[i] == '\n' || pszData[i] == '\r' ) continue;
+
+		bFound = true;
+		break;
+	}
+
+	if( bFound )
+	{
+		CHtmlElement clsElement;
+
+		clsElement.m_strData = strData;
+		m_clsElementList.push_back( clsElement );
 	}
 }
