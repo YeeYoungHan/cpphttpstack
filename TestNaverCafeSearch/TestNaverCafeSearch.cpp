@@ -20,6 +20,9 @@
 
 // https://search.naver.com/search.naver?nso_open=1&prdtype=4&sm=mtb_opt&st=rel&stnm=rel&where=articlec&opt_tab=0&nso=so%3Ar%2Cp%3A1w&query=NT930XED-KC51S
 
+const char * garrQuery[] = { "NT930XED-KC51S", "NT930XED-KC51G", "NT930XED-K71A", "NT930XED-KD71S", "NT930XED-KD71G", "NT930XED-KU71S", "NT930XED-KU71G", NULL };
+const char * garrExcept[] = { "·»Å»", "¸ÅÀÔ", NULL };
+
 bool ParseHtml( std::string & strHtml )
 {
 	CHtmlSearch clsHtml;
@@ -47,7 +50,24 @@ bool ParseHtml( std::string & strHtml )
 			{
 				if( !strcmp( itDL->GetName(), "" ) )
 				{
-					printf( "%s\n", itDL->GetData() );
+					const char * pszData = itDL->GetData();
+					bool bFound = false;
+
+					for( int i = 0; garrExcept[i]; ++i )
+					{
+						if( strstr( pszData, garrExcept[i] ) )
+						{
+							bFound = true;
+							break;
+						}
+					}
+
+					if( bFound == false )
+					{
+						printf( "%s\n", itDL->GetData() );
+					}
+
+					break;
 				}
 			}
 		}
@@ -78,13 +98,18 @@ int main( int argc, char * argv[] )
 {
 	std::string strHtml;
 
-	if( GetHtml( "NT930XED-KC51S", strHtml ) )
+	for( int i = 0; garrQuery[i]; ++i )
 	{
+		printf( "[%s]\n", garrQuery[i] );
+
+		if( GetHtml( garrQuery[i], strHtml ) )
+		{
 #ifdef WIN32
-		Utf8ToAnsi( strHtml.c_str(), strHtml );
+			Utf8ToAnsi( strHtml.c_str(), strHtml );
 #endif
 
-		ParseHtml( strHtml );
+			ParseHtml( strHtml );
+		}
 	}
 
 	return 0;
