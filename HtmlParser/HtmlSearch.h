@@ -21,6 +21,10 @@
 
 #include "HtmlElement.h"
 
+/**
+ * @ingroup HtmlParser
+ * @brief HTML element 를 편리하게 검색할 수 있는 클래스
+ */
 class CHtmlSearch : public CHtmlElement
 {
 public:

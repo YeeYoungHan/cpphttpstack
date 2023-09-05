@@ -26,6 +26,13 @@ CHtmlSearch::~CHtmlSearch()
 {
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief 클래스 이름으로 저장된 HTML element 리스트를 생성한다.
+ * @param pszClassName	클래스 이름
+ * @param clsList				[out] 클래스 이름으로 저장된 HTML element 리스트
+ * @returns 클래스 이름으로 저장된 HTML element 가 존재하면 true 를 리턴하고 그렇지 않으면 false 를 리턴한다.
+ */
 bool CHtmlSearch::SelectClassElementList( const char * pszClassName, HTML_ELEMENT_LIST & clsList )
 {
 	clsList.clear();
@@ -37,6 +44,13 @@ bool CHtmlSearch::SelectClassElementList( const char * pszClassName, HTML_ELEMEN
 	return false;
 }
 
+/**
+ * @ingroup HtmlParser
+ * @brief 클래스 이름으로 저장된 HTML element 리스트를 생성한다.
+ * @param clsHtml				HTML element
+ * @param pszClassName	클래스 이름
+ * @param clsList				[out] 클래스 이름으로 저장된 HTML element 리스트
+ */
 void CHtmlSearch::SelectClassElementList( CHtmlElement & clsHtml, const char * pszClassName, HTML_ELEMENT_LIST & clsList )
 {
 	HTML_ELEMENT_LIST::iterator	itEL;
