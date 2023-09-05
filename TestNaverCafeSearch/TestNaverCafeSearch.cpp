@@ -23,6 +23,19 @@
 const char * garrQuery[] = { "NT930XED-KC51S", "NT930XED-KC51G", "NT930XED-K71A", "NT930XED-KD71S", "NT930XED-KD71G", "NT930XED-KU71S", "NT930XED-KU71G", NULL };
 const char * garrExcept[] = { "·»Å»", "¸ÅÀÔ", NULL };
 
+bool HasExcept( const char * pszText )
+{
+	for( int i = 0; garrExcept[i]; ++i )
+	{
+		if( strstr( pszText, garrExcept[i] ) )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool ParseHtml( std::string & strHtml )
 {
 	CHtmlSearch clsHtml;
@@ -39,6 +52,15 @@ bool ParseHtml( std::string & strHtml )
 
 	for( itTA = clsTAList.begin(); itTA != clsTAList.end(); ++itTA )
 	{
+		CHtmlElement * pclsDiv = itTA->SelectElement( 0 );
+		if( pclsDiv == NULL ) continue;
+
+		std::string strText;
+
+		pclsDiv->ToString( strText );
+
+		if( HasExcept( strText.c_str() ) ) continue;
+
 		CHtmlElement * pclsA = itTA->SelectElement( 1 );
 		if( pclsA == NULL ) continue;
 
@@ -50,19 +72,7 @@ bool ParseHtml( std::string & strHtml )
 			{
 				if( !strcmp( itDL->GetName(), "" ) )
 				{
-					const char * pszData = itDL->GetData();
-					bool bFound = false;
-
-					for( int i = 0; garrExcept[i]; ++i )
-					{
-						if( strstr( pszData, garrExcept[i] ) )
-						{
-							bFound = true;
-							break;
-						}
-					}
-
-					if( bFound == false )
+					if( HasExcept( itDL->GetData() ) == false )
 					{
 						printf( "%s\n", itDL->GetData() );
 					}
